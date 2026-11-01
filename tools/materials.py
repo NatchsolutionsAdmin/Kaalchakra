@@ -49,7 +49,10 @@ ERAS = {
 }
 # Only 2026 shows a dry waterline on the basin — in 1900 BCE the water is
 # still there, and in 2087 it is over the top of everything.
-WATERLINE = {"past": None, "present": -4.6, "future": None}
+# 2026 shows the dry ring where the reservoir used to reach; 2087 shows
+# algae at the surface of the water that is there now.
+WATERLINE = {"past": None, "present": -4.6, "future": 1.6}
+WATERLINE_TINT = {"present": "#6F6A52", "future": "#3F5F4A"}
 
 for era, p in ERAS.items():
     for suffix, key in [("", "base"), ("_light", "light"), ("_dark", "dark"), ("_accent", "accent")]:
@@ -67,8 +70,8 @@ for era, p in ERAS.items():
             params.update({
                 "waterline_enabled": "true",
                 "waterline_height": WATERLINE[era],
-                "waterline_width": 0.5,
-                "waterline_color": col("#6F6A52"),
+                "waterline_width": 0.5 if era == "present" else 0.9,
+                "waterline_color": col(WATERLINE_TINT[era]),
             })
         write("mat_%s%s" % (era, suffix), STONE, params)
 

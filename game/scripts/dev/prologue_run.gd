@@ -19,7 +19,7 @@ func _ready() -> void:
 	var eva := main.get_node_or_null("Eva") as Node3D
 	if eva:
 		# Out on the basin floor, so walking up to Trench 4 is a real walk.
-		eva.global_position = Vector3(-7.5, -6.6, -9.5)
+		eva.global_position = Vector3(-6.0, -6.6, -6.0)
 		var pivot := eva.get_node_or_null("CameraPivot") as Node3D
 		if pivot:
 			pivot.rotation.y = PI

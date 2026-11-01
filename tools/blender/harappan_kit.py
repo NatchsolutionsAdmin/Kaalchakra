@@ -25,6 +25,7 @@ No UV unwrap for the same reason: the shader is world-space.
 import json
 import math
 import os
+import random
 import sys
 
 import bpy
@@ -37,6 +38,9 @@ GRID = 0.4                 # everything snaps to this
 COURSE = 0.2               # one visible course = two bricks
 SETBACK_EVERY = 3          # courses between silhouette steps
 SETBACK = 0.015
+# Most of the height a worn piece may lose, so the visual top never strays far
+# from the collision box Godot keeps at full size.
+MAX_LOSS = 0.22
 
 SIZES = {}
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
@@ -53,19 +57,53 @@ def box(bm, center, size):
     return verts
 
 
-def coursed_wall(bm, length, height, thickness, origin=(0.0, 0.0, 0.0)):
+def coursed_wall(bm, length, height, thickness, origin=(0.0, 0.0, 0.0),
+                 wear=0.0, seed=1):
     """A wall built as a stack of courses, stepping back every few rows.
+
+    `wear` 0 is newly built; higher values eat the wall from the top down,
+    which is how masonry actually fails — rain takes the capping first, then
+    works down. Courses near the top lose individual bricks before whole rows
+    go.
+
+    Loss is deliberately capped at MAX_LOSS of the height. The collision box
+    in Godot is the full original size, so a wall that looked half gone would
+    be a wall you could not see but could not walk through either.
 
     Blender is Z-up; Godot is Y-up. The glTF exporter converts, so build in
     Blender's convention and forget about it.
     """
     ox, oy, oz = origin
+    rnd = random.Random(seed)
     rows = max(1, int(round(height / COURSE)))
+    keep_rows = rows if wear <= 0.0 else max(1, int(round(rows * (1.0 - MAX_LOSS * wear))))
+
     for i in range(rows):
         inset = SETBACK * (i // SETBACK_EVERY)
         t = max(0.08, thickness - inset * 2.0)
         z = oz + COURSE * (i + 0.5)
-        box(bm, (ox, oy, z), (length, t, COURSE * 0.98))
+
+        if i >= keep_rows:
+            continue
+
+        # How exposed this course is: the top ones are chewed, the base is not.
+        exposure = 0.0 if keep_rows < 2 else (i / float(keep_rows - 1))
+        chew = wear * exposure
+
+        if chew < 0.25:
+            box(bm, (ox, oy, z), (length, t, COURSE * 0.98))
+            continue
+
+        # Near the top, lay the course brick by brick and drop some of them.
+        n = max(1, int(round(length / BRICK_L)))
+        bl = length / n
+        for b in range(n):
+            if rnd.random() < chew * 0.55:
+                continue
+            x = ox - length * 0.5 + bl * (b + 0.5)
+            jitter = (rnd.random() - 0.5) * 0.02 * chew
+            drop = rnd.random() * 0.035 * chew
+            box(bm, (x + jitter, oy, z - drop), (bl * 0.97, t, COURSE * 0.98))
     return rows
 
 
@@ -214,9 +252,65 @@ def signboard_frame():
     return finish(bm, n)
 
 
+# --- era variants -------------------------------------------------------
+# Same pieces, chewed. 2026 has lost its capping to four thousand years of
+# monsoon; 2087 has been underwater for sixty on top of that.
+WEAR = {"eroded": 0.45, "collapsed": 0.8}
+
+
+def worn_wall(suffix, wear):
+    def build():
+        bm, n = new_mesh("wall_straight_" + suffix)
+        coursed_wall(bm, 2.4, 2.4, 0.4, wear=wear, seed=hash(suffix) & 0xffff)
+        return finish(bm, n)
+    return build
+
+
+def worn_low(suffix, wear):
+    def build():
+        bm, n = new_mesh("wall_low_" + suffix)
+        coursed_wall(bm, 2.4, 1.2, 0.4, wear=wear, seed=7 + len(suffix))
+        if wear < 0.6:
+            box(bm, (0, 0, 1.2 + 0.06), (2.2, 0.48, 0.12))  # capping, part gone
+        return finish(bm, n)
+    return build
+
+
+def worn_tower(suffix, wear):
+    def build():
+        bm, n = new_mesh("tower_section_" + suffix)
+        rnd = random.Random(31 + len(suffix))
+        rows = int(round(2.4 / COURSE))
+        keep = max(1, int(round(rows * (1.0 - MAX_LOSS * wear))))
+        for i in range(keep):
+            shrink = i * 0.012
+            z = COURSE * (i + 0.5)
+            side = 3.0 - shrink * 2
+            if i / float(max(1, keep - 1)) > 0.55 and rnd.random() < wear * 0.5:
+                # A corner gone from an upper course.
+                box(bm, (-side * 0.15, 0, z), (side * 0.7, side, COURSE * 0.98))
+            else:
+                box(bm, (0, 0, z), (side, side, COURSE * 0.98))
+        return finish(bm, n)
+    return build
+
+
+def worn_platform(suffix, wear):
+    def build():
+        bm, n = new_mesh("platform_edge_" + suffix)
+        box(bm, (0, 0, 0.15), (2.4, 1.2, 0.3))
+        if wear < 0.6:
+            box(bm, (-0.3, -0.5, 0.38), (1.6, 0.2, 0.16))  # nosing, part lost
+        return finish(bm, n)
+    return build
+
+
 PIECES = [wall_straight, wall_low, wall_corner, doorway, stair_flight,
           reservoir_step, drain_channel, pillar_base, tower_section,
           platform_edge, signboard_frame]
+for _suffix, _wear in WEAR.items():
+    PIECES += [worn_wall(_suffix, _wear), worn_low(_suffix, _wear),
+               worn_tower(_suffix, _wear), worn_platform(_suffix, _wear)]
 
 
 def main():

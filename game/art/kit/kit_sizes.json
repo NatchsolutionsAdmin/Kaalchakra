@@ -35,6 +35,24 @@
     ],
     "tris": 24
   },
+  "platform_edge_collapsed": {
+    "base_offset": 0.0,
+    "size": [
+      2.4,
+      0.3,
+      1.2
+    ],
+    "tris": 12
+  },
+  "platform_edge_eroded": {
+    "base_offset": 0.0,
+    "size": [
+      2.4,
+      0.46,
+      1.2
+    ],
+    "tris": 24
+  },
   "reservoir_step": {
     "base_offset": 0.0,
     "size": [
@@ -71,6 +89,24 @@
     ],
     "tris": 144
   },
+  "tower_section_collapsed": {
+    "base_offset": 0.002,
+    "size": [
+      3.0,
+      1.996,
+      3.0
+    ],
+    "tris": 120
+  },
+  "tower_section_eroded": {
+    "base_offset": 0.002,
+    "size": [
+      3.0,
+      2.196,
+      3.0
+    ],
+    "tris": 132
+  },
   "wall_corner": {
     "base_offset": 0.002,
     "size": [
@@ -89,6 +125,24 @@
     ],
     "tris": 84
   },
+  "wall_low_collapsed": {
+    "base_offset": 0.002,
+    "size": [
+      2.4,
+      0.9917,
+      0.4
+    ],
+    "tris": 180
+  },
+  "wall_low_eroded": {
+    "base_offset": 0.002,
+    "size": [
+      2.4,
+      1.318,
+      0.48
+    ],
+    "tris": 168
+  },
   "wall_straight": {
     "base_offset": 0.002,
     "size": [
@@ -97,5 +151,23 @@
       0.4
     ],
     "tris": 144
+  },
+  "wall_straight_collapsed": {
+    "base_offset": 0.002,
+    "size": [
+      2.4004,
+      1.9912,
+      0.4
+    ],
+    "tris": 408
+  },
+  "wall_straight_eroded": {
+    "base_offset": 0.002,
+    "size": [
+      2.4,
+      2.1951,
+      0.4
+    ],
+    "tris": 372
   }
 }

@@ -1,6 +1,6 @@
 ; Greybox of Dholarath's north gate, reservoir and market street, in three eras.
 ; Generated once by tools/greybox_northgate.py — this file is now the source of truth.
-[gd_scene load_steps=211 format=3]
+[gd_scene load_steps=217 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/era_root.gd" id="ext_1"]
 [ext_resource type="Script" path="res://scripts/interact/lore_marker.gd" id="ext_2"]
@@ -19,20 +19,26 @@
 [ext_resource type="PackedScene" path="res://art/kit/platform_edge.glb" id="ext_15"]
 [ext_resource type="Material" path="res://materials/mat_water_past.tres" id="ext_16"]
 [ext_resource type="Material" path="res://materials/mat_present.tres" id="ext_17"]
-[ext_resource type="Material" path="res://materials/mat_present_accent.tres" id="ext_18"]
-[ext_resource type="Material" path="res://materials/mat_rubble.tres" id="ext_19"]
-[ext_resource type="Material" path="res://materials/mat_present_light.tres" id="ext_20"]
-[ext_resource type="Material" path="res://materials/mat_present_dark.tres" id="ext_21"]
-[ext_resource type="Material" path="res://materials/mat_hills_present.tres" id="ext_22"]
-[ext_resource type="Material" path="res://materials/mat_helix.tres" id="ext_23"]
-[ext_resource type="Material" path="res://materials/mat_future.tres" id="ext_24"]
-[ext_resource type="Material" path="res://materials/mat_future_accent.tres" id="ext_25"]
-[ext_resource type="Material" path="res://materials/mat_future_light.tres" id="ext_26"]
-[ext_resource type="Material" path="res://materials/mat_future_dark.tres" id="ext_27"]
-[ext_resource type="Material" path="res://materials/mat_drone.tres" id="ext_28"]
-[ext_resource type="Material" path="res://materials/mat_hills_future.tres" id="ext_29"]
-[ext_resource type="Material" path="res://materials/mat_water_future.tres" id="ext_30"]
-[ext_resource type="Material" path="res://materials/mat_dig.tres" id="ext_31"]
+[ext_resource type="PackedScene" path="res://art/kit/wall_straight_eroded.glb" id="ext_18"]
+[ext_resource type="Material" path="res://materials/mat_present_accent.tres" id="ext_19"]
+[ext_resource type="PackedScene" path="res://art/kit/tower_section_eroded.glb" id="ext_20"]
+[ext_resource type="Material" path="res://materials/mat_rubble.tres" id="ext_21"]
+[ext_resource type="Material" path="res://materials/mat_present_light.tres" id="ext_22"]
+[ext_resource type="Material" path="res://materials/mat_present_dark.tres" id="ext_23"]
+[ext_resource type="Material" path="res://materials/mat_hills_present.tres" id="ext_24"]
+[ext_resource type="PackedScene" path="res://art/kit/platform_edge_eroded.glb" id="ext_25"]
+[ext_resource type="Material" path="res://materials/mat_helix.tres" id="ext_26"]
+[ext_resource type="Material" path="res://materials/mat_future.tres" id="ext_27"]
+[ext_resource type="PackedScene" path="res://art/kit/wall_straight_collapsed.glb" id="ext_28"]
+[ext_resource type="Material" path="res://materials/mat_future_accent.tres" id="ext_29"]
+[ext_resource type="PackedScene" path="res://art/kit/tower_section_collapsed.glb" id="ext_30"]
+[ext_resource type="Material" path="res://materials/mat_future_light.tres" id="ext_31"]
+[ext_resource type="Material" path="res://materials/mat_future_dark.tres" id="ext_32"]
+[ext_resource type="Material" path="res://materials/mat_drone.tres" id="ext_33"]
+[ext_resource type="Material" path="res://materials/mat_hills_future.tres" id="ext_34"]
+[ext_resource type="PackedScene" path="res://art/kit/platform_edge_collapsed.glb" id="ext_35"]
+[ext_resource type="Material" path="res://materials/mat_water_future.tres" id="ext_36"]
+[ext_resource type="Material" path="res://materials/mat_dig.tres" id="ext_37"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
 radius = 2.6
@@ -2727,11 +2733,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.25, -3.5, -13)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/BasinWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(0.625, 0, 0, 0, 2.92154, 0, 0, 0, 45, 0, -3.5, 0)
+[node name="Kit" parent="Present/BasinWallWest" instance=ExtResource("ext_18")]
+transform = Transform3D(0.625, 0, 0, 0, 3.18892, 0, 0, 0, 45, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Present/BasinWallWest/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/BasinWallWest/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinWallWest"]
 shape = SubResource("BoxShape3D_9")
@@ -2741,11 +2747,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, -3.5, -13)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/BasinWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(0.625, 0, 0, 0, 2.92154, 0, 0, 0, 45, 0, -3.5, 0)
+[node name="Kit" parent="Present/BasinWallEast" instance=ExtResource("ext_18")]
+transform = Transform3D(0.625, 0, 0, 0, 3.18892, 0, 0, 0, 45, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Present/BasinWallEast/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/BasinWallEast/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinWallEast"]
 shape = SubResource("BoxShape3D_9")
@@ -2755,11 +2761,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -3.5, -4.75)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/BasinWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(9.16667, 0, 0, 0, 2.92154, 0, 0, 0, 3.75, 0, -3.5, 0)
+[node name="Kit" parent="Present/BasinWallSouth" instance=ExtResource("ext_18")]
+transform = Transform3D(9.16667, 0, 0, 0, 3.18892, 0, 0, 0, 3.75, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Present/BasinWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/BasinWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinWallSouth"]
 shape = SubResource("BoxShape3D_10")
@@ -2773,7 +2779,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 10.5191, 0, 0, 0, 0.931677, 0, -3.20833, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep00/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep00"]
 shape = SubResource("BoxShape3D_11")
@@ -2787,7 +2793,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 9.56284, 0, 0, 0, 0.931677, 0, -2.91667, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep01/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep01"]
 shape = SubResource("BoxShape3D_12")
@@ -2801,7 +2807,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 8.60656, 0, 0, 0, 0.931677, 0, -2.625, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep02/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep02"]
 shape = SubResource("BoxShape3D_13")
@@ -2815,7 +2821,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 7.65027, 0, 0, 0, 0.931677, 0, -2.33333, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep03/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep03"]
 shape = SubResource("BoxShape3D_14")
@@ -2829,7 +2835,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 6.69399, 0, 0, 0, 0.931677, 0, -2.04167, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep04/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep04"]
 shape = SubResource("BoxShape3D_15")
@@ -2843,7 +2849,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 5.7377, 0, 0, 0, 0.931677, 0, -1.75, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep05/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep05"]
 shape = SubResource("BoxShape3D_16")
@@ -2857,7 +2863,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 4.78142, 0, 0, 0, 0.931677, 0, -1.45833, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep06/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep06"]
 shape = SubResource("BoxShape3D_17")
@@ -2871,7 +2877,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 3.82514, 0, 0, 0, 0.931677, 0, -1.16667, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep07/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep07"]
 shape = SubResource("BoxShape3D_18")
@@ -2885,7 +2891,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 2.86885, 0, 0, 0, 0.931677, 0, -0.875, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep08/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep08"]
 shape = SubResource("BoxShape3D_19")
@@ -2899,7 +2905,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 1.91257, 0, 0, 0, 0.931677, 0, -0.583333, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep09/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep09"]
 shape = SubResource("BoxShape3D_20")
@@ -2913,7 +2919,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 0.956284, 0, 0, 0, 0.931677, 0, -0.291667, 0)
 
 [node name="reservoir_step" parent="Present/BasinStep10/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/BasinStep10"]
 shape = SubResource("BoxShape3D_21")
@@ -2923,11 +2929,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.55, -20)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/LedgeA" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 0.459098, 0, 0, 0, 7.5, 0, -0.55, 0)
+[node name="Kit" parent="Present/LedgeA" instance=ExtResource("ext_18")]
+transform = Transform3D(1.25, 0, 0, 0, 0.501116, 0, 0, 0, 7.5, 0, -0.55, 0)
 
-[node name="wall_straight" parent="Present/LedgeA/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/LedgeA/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/LedgeA"]
 shape = SubResource("BoxShape3D_22")
@@ -2937,11 +2943,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 1.45, -17)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/LedgeB" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 1.21035, 0, 0, 0, 7.5, 0, -1.45, 0)
+[node name="Kit" parent="Present/LedgeB" instance=ExtResource("ext_18")]
+transform = Transform3D(1.25, 0, 0, 0, 1.32112, 0, 0, 0, 7.5, 0, -1.45, 0)
 
-[node name="wall_straight" parent="Present/LedgeB/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/LedgeB/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/LedgeB"]
 shape = SubResource("BoxShape3D_23")
@@ -2951,11 +2957,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 2.45, -14)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/LedgeC" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 2.04508, 0, 0, 0, 7.5, 0, -2.45, 0)
+[node name="Kit" parent="Present/LedgeC" instance=ExtResource("ext_18")]
+transform = Transform3D(1.25, 0, 0, 0, 2.23224, 0, 0, 0, 7.5, 0, -2.45, 0)
 
-[node name="wall_straight" parent="Present/LedgeC/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/LedgeC/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/LedgeC"]
 shape = SubResource("BoxShape3D_24")
@@ -2965,10 +2971,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 2, -30)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/GateWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(9.58333, 0, 0, 0, 1.66945, 0, 0, 0, 5, 0, -2, 0)
+[node name="Kit" parent="Present/GateWallWest" instance=ExtResource("ext_18")]
+transform = Transform3D(9.58333, 0, 0, 0, 1.82224, 0, 0, 0, 5, 0, -2, 0)
 
-[node name="wall_straight" parent="Present/GateWallWest/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/GateWallWest/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateWallWest"]
@@ -2979,10 +2985,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 2.25, -30)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/GateWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(12.9167, 0, 0, 0, 1.87813, 0, 0, 0, 5, 0, -2.25, 0)
+[node name="Kit" parent="Present/GateWallEast" instance=ExtResource("ext_18")]
+transform = Transform3D(12.9167, 0, 0, 0, 2.05002, 0, 0, 0, 5, 0, -2.25, 0)
 
-[node name="wall_straight" parent="Present/GateWallEast/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/GateWallEast/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateWallEast"]
@@ -2993,11 +2999,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3, -30)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/GateTowerWest" instance=ExtResource("ext_9")]
-transform = Transform3D(1, 0, 0, 0, 2.50417, 0, 0, 0, 1.33333, 0, -3, 0)
+[node name="Kit" parent="Present/GateTowerWest" instance=ExtResource("ext_20")]
+transform = Transform3D(1, 0, 0, 0, 2.73224, 0, 0, 0, 1.33333, 0, -3, 0)
 
-[node name="tower_section" parent="Present/GateTowerWest/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="tower_section_eroded" parent="Present/GateTowerWest/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateTowerWest"]
 shape = SubResource("BoxShape3D_97")
@@ -3007,11 +3013,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 2.5, -30)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/GateTowerEast" instance=ExtResource("ext_9")]
-transform = Transform3D(1, 0, 0, 0, 2.08681, 0, 0, 0, 1.33333, 0, -2.5, 0)
+[node name="Kit" parent="Present/GateTowerEast" instance=ExtResource("ext_20")]
+transform = Transform3D(1, 0, 0, 0, 2.27687, 0, 0, 0, 1.33333, 0, -2.5, 0)
 
-[node name="tower_section" parent="Present/GateTowerEast/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="tower_section_eroded" parent="Present/GateTowerEast/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateTowerEast"]
 shape = SubResource("BoxShape3D_98")
@@ -3021,11 +3027,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -30)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/GateLintel" instance=ExtResource("ext_6")]
-transform = Transform3D(2.5, 0, 0, 0, 0.417362, 0, 0, 0, 5, 0, -0.5, 0)
+[node name="Kit" parent="Present/GateLintel" instance=ExtResource("ext_18")]
+transform = Transform3D(2.5, 0, 0, 0, 0.45556, 0, 0, 0, 5, 0, -0.5, 0)
 
-[node name="wall_straight" parent="Present/GateLintel/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/GateLintel/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateLintel"]
 shape = SubResource("BoxShape3D_99")
@@ -3038,7 +3044,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Signboard"]
 transform = Transform3D(5.5, 0, 0, 0, 1.2, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Signboard"]
 shape = SubResource("BoxShape3D_100")
@@ -3090,7 +3096,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/GateRubble"]
 transform = Transform3D(6, 0, 0, 0, 2.6, 0, 0, 0, 3, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_19")
+material_override = ExtResource("ext_21")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/GateRubble"]
 shape = SubResource("BoxShape3D_102")
@@ -3100,10 +3106,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.6, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth0" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.500835, 0, 0, 0, 15, 0, -0.6, 0)
+[node name="Kit" parent="Present/StreetNorth0" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.546672, 0, 0, 0, 15, 0, -0.6, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth0/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/StreetNorth0/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth0"]
@@ -3114,11 +3120,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.95, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth1" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.792988, 0, 0, 0, 15, 0, -0.95, 0)
+[node name="Kit" parent="Present/StreetNorth1" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.865564, 0, 0, 0, 15, 0, -0.95, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth1/Kit" index="0"]
-material_override = ExtResource("ext_20")
+[node name="wall_straight_eroded" parent="Present/StreetNorth1/Kit" index="0"]
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth1"]
 shape = SubResource("BoxShape3D_104")
@@ -3128,11 +3134,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.45, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth2" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.375626, 0, 0, 0, 15, 0, -0.45, 0)
+[node name="Kit" parent="Present/StreetNorth2" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.410004, 0, 0, 0, 15, 0, -0.45, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth2/Kit" index="0"]
-material_override = ExtResource("ext_21")
+[node name="wall_straight_eroded" parent="Present/StreetNorth2/Kit" index="0"]
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth2"]
 shape = SubResource("BoxShape3D_105")
@@ -3142,11 +3148,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0.8, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth3" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.66778, 0, 0, 0, 15, 0, -0.8, 0)
+[node name="Kit" parent="Present/StreetNorth3" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.728896, 0, 0, 0, 15, 0, -0.8, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth3/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/StreetNorth3/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth3"]
 shape = SubResource("BoxShape3D_106")
@@ -3156,10 +3162,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.55, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth4" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.459098, 0, 0, 0, 15, 0, -0.55, 0)
+[node name="Kit" parent="Present/StreetNorth4" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.501116, 0, 0, 0, 15, 0, -0.55, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth4/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/StreetNorth4/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth4"]
@@ -3170,11 +3176,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0.85, -21)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetNorth5" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.709516, 0, 0, 0, 15, 0, -0.85, 0)
+[node name="Kit" parent="Present/StreetNorth5" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.774452, 0, 0, 0, 15, 0, -0.85, 0)
 
-[node name="wall_straight" parent="Present/StreetNorth5/Kit" index="0"]
-material_override = ExtResource("ext_20")
+[node name="wall_straight_eroded" parent="Present/StreetNorth5/Kit" index="0"]
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetNorth5"]
 shape = SubResource("BoxShape3D_108")
@@ -3184,11 +3190,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth0" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.584307, 0, 0, 0, 15, 0, -0.7, 0)
+[node name="Kit" parent="Present/StreetSouth0" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.637784, 0, 0, 0, 15, 0, -0.7, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth0/Kit" index="0"]
-material_override = ExtResource("ext_21")
+[node name="wall_straight_eroded" parent="Present/StreetSouth0/Kit" index="0"]
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth0"]
 shape = SubResource("BoxShape3D_109")
@@ -3198,11 +3204,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.45, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth1" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.375626, 0, 0, 0, 15, 0, -0.45, 0)
+[node name="Kit" parent="Present/StreetSouth1" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.410004, 0, 0, 0, 15, 0, -0.45, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth1/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/StreetSouth1/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth1"]
 shape = SubResource("BoxShape3D_105")
@@ -3212,10 +3218,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.65, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth2" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.542571, 0, 0, 0, 15, 0, -0.65, 0)
+[node name="Kit" parent="Present/StreetSouth2" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.592228, 0, 0, 0, 15, 0, -0.65, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth2/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/StreetSouth2/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth2"]
@@ -3226,11 +3232,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0.5, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth3" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.417362, 0, 0, 0, 15, 0, -0.5, 0)
+[node name="Kit" parent="Present/StreetSouth3" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.45556, 0, 0, 0, 15, 0, -0.5, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth3/Kit" index="0"]
-material_override = ExtResource("ext_20")
+[node name="wall_straight_eroded" parent="Present/StreetSouth3/Kit" index="0"]
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth3"]
 shape = SubResource("BoxShape3D_111")
@@ -3240,11 +3246,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.9, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth4" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.751252, 0, 0, 0, 15, 0, -0.9, 0)
+[node name="Kit" parent="Present/StreetSouth4" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.820008, 0, 0, 0, 15, 0, -0.9, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth4/Kit" index="0"]
-material_override = ExtResource("ext_21")
+[node name="wall_straight_eroded" parent="Present/StreetSouth4/Kit" index="0"]
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth4"]
 shape = SubResource("BoxShape3D_112")
@@ -3254,11 +3260,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0.4, -5)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/StreetSouth5" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.33389, 0, 0, 0, 15, 0, -0.4, 0)
+[node name="Kit" parent="Present/StreetSouth5" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 0.364448, 0, 0, 0, 15, 0, -0.4, 0)
 
-[node name="wall_straight" parent="Present/StreetSouth5/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/StreetSouth5/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/StreetSouth5"]
 shape = SubResource("BoxShape3D_113")
@@ -3272,7 +3278,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 5.19126, 0, 0, 0, 0.786335, 0, -1.58333, 0)
 
 [node name="reservoir_step" parent="Present/TrenchStep0/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchStep0"]
 shape = SubResource("BoxShape3D_40")
@@ -3286,7 +3292,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 4.15301, 0, 0, 0, 0.786335, 0, -1.26667, 0)
 
 [node name="reservoir_step" parent="Present/TrenchStep1/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchStep1"]
 shape = SubResource("BoxShape3D_41")
@@ -3300,7 +3306,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 3.11475, 0, 0, 0, 0.786335, 0, -0.95, 0)
 
 [node name="reservoir_step" parent="Present/TrenchStep2/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchStep2"]
 shape = SubResource("BoxShape3D_42")
@@ -3314,7 +3320,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 2.0765, 0, 0, 0, 0.786335, 0, -0.633333, 0)
 
 [node name="reservoir_step" parent="Present/TrenchStep3/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchStep3"]
 shape = SubResource("BoxShape3D_43")
@@ -3328,7 +3334,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 1.03825, 0, 0, 0, 0.786335, 0, -0.316667, 0)
 
 [node name="reservoir_step" parent="Present/TrenchStep4/Kit" index="0"]
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchStep4"]
 shape = SubResource("BoxShape3D_44")
@@ -3351,11 +3357,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -8.9, -13.85)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/TrenchWallNorth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.58598, 0, 0, 0, 0.75, 0, -1.9, 0)
+[node name="Kit" parent="Present/TrenchWallNorth" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 1.73113, 0, 0, 0, 0.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Present/TrenchWallNorth/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/TrenchWallNorth/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchWallNorth"]
 shape = SubResource("BoxShape3D_46")
@@ -3365,11 +3371,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85, -8.9, -10.75)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/TrenchWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 16.25, 0, -1.9, 0)
+[node name="Kit" parent="Present/TrenchWallEast" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.73113, 0, 0, 0, 16.25, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Present/TrenchWallEast/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/TrenchWallEast/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchWallEast"]
 shape = SubResource("BoxShape3D_47")
@@ -3379,11 +3385,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -8.9, -7.65)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/TrenchWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.58598, 0, 0, 0, 0.75, 0, -1.9, 0)
+[node name="Kit" parent="Present/TrenchWallSouth" instance=ExtResource("ext_18")]
+transform = Transform3D(2.08333, 0, 0, 0, 1.73113, 0, 0, 0, 0.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Present/TrenchWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/TrenchWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchWallSouth"]
 shape = SubResource("BoxShape3D_46")
@@ -3393,11 +3399,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -8.9, -13.7)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/TrenchWallWestA" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 1.5, 0, -1.9, 0)
+[node name="Kit" parent="Present/TrenchWallWestA" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.73113, 0, 0, 0, 1.5, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Present/TrenchWallWestA/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/TrenchWallWestA/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchWallWestA"]
 shape = SubResource("BoxShape3D_48")
@@ -3407,11 +3413,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -8.9, -9.85)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/TrenchWallWestB" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 11.75, 0, -1.9, 0)
+[node name="Kit" parent="Present/TrenchWallWestB" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.73113, 0, 0, 0, 11.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Present/TrenchWallWestB/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/TrenchWallWestB/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/TrenchWallWestB"]
 shape = SubResource("BoxShape3D_49")
@@ -3421,11 +3427,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -7.9, -12.8)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/DoorLintel" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 0.751252, 0, 0, 0, 3, 0, -0.9, 0)
+[node name="Kit" parent="Present/DoorLintel" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 0.820008, 0, 0, 0, 3, 0, -0.9, 0)
 
-[node name="wall_straight" parent="Present/DoorLintel/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/DoorLintel/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/DoorLintel"]
 shape = SubResource("BoxShape3D_50")
@@ -3461,11 +3467,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.85, -9.5, -13.25)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/ChamberWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 11.25, 0, -1.3, 0)
+[node name="Kit" parent="Present/ChamberWallWest" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.18446, 0, 0, 0, 11.25, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Present/ChamberWallWest/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/ChamberWallWest/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ChamberWallWest"]
 shape = SubResource("BoxShape3D_52")
@@ -3475,11 +3481,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -9.5, -15.35)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/ChamberWallNorth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.91667, 0, 0, 0, 1.08514, 0, 0, 0, 0.75, 0, -1.3, 0)
+[node name="Kit" parent="Present/ChamberWallNorth" instance=ExtResource("ext_18")]
+transform = Transform3D(2.91667, 0, 0, 0, 1.18446, 0, 0, 0, 0.75, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Present/ChamberWallNorth/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/ChamberWallNorth/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ChamberWallNorth"]
 shape = SubResource("BoxShape3D_53")
@@ -3489,11 +3495,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -9.5, -11.15)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/ChamberWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.91667, 0, 0, 0, 1.08514, 0, 0, 0, 0.75, 0, -1.3, 0)
+[node name="Kit" parent="Present/ChamberWallSouth" instance=ExtResource("ext_18")]
+transform = Transform3D(2.91667, 0, 0, 0, 1.18446, 0, 0, 0, 0.75, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Present/ChamberWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/ChamberWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ChamberWallSouth"]
 shape = SubResource("BoxShape3D_53")
@@ -3503,11 +3509,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -9.5, -14.45)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/ChamberWallEastA" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 5.25, 0, -1.3, 0)
+[node name="Kit" parent="Present/ChamberWallEastA" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.18446, 0, 0, 0, 5.25, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Present/ChamberWallEastA/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/ChamberWallEastA/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ChamberWallEastA"]
 shape = SubResource("BoxShape3D_54")
@@ -3517,11 +3523,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -9.5, -11.6)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/ChamberWallEastB" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 3, 0, -1.3, 0)
+[node name="Kit" parent="Present/ChamberWallEastB" instance=ExtResource("ext_18")]
+transform = Transform3D(0.125, 0, 0, 0, 1.18446, 0, 0, 0, 3, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Present/ChamberWallEastB/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/ChamberWallEastB/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ChamberWallEastB"]
 shape = SubResource("BoxShape3D_55")
@@ -3534,7 +3540,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign00"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign00"]
 shape = SubResource("BoxShape3D_56")
@@ -3547,7 +3553,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign01"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign01"]
 shape = SubResource("BoxShape3D_56")
@@ -3560,7 +3566,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign02"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign02"]
 shape = SubResource("BoxShape3D_56")
@@ -3573,7 +3579,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign10"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign10"]
 shape = SubResource("BoxShape3D_56")
@@ -3586,7 +3592,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign11"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign11"]
 shape = SubResource("BoxShape3D_56")
@@ -3599,7 +3605,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign12"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign12"]
 shape = SubResource("BoxShape3D_56")
@@ -3612,7 +3618,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign20"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign20"]
 shape = SubResource("BoxShape3D_56")
@@ -3625,7 +3631,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign21"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign21"]
 shape = SubResource("BoxShape3D_56")
@@ -3638,7 +3644,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign22"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign22"]
 shape = SubResource("BoxShape3D_56")
@@ -3651,7 +3657,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign30"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign30"]
 shape = SubResource("BoxShape3D_56")
@@ -3664,7 +3670,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign31"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign31"]
 shape = SubResource("BoxShape3D_56")
@@ -3677,7 +3683,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign32"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign32"]
 shape = SubResource("BoxShape3D_56")
@@ -3690,7 +3696,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign40"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign40"]
 shape = SubResource("BoxShape3D_56")
@@ -3703,7 +3709,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign41"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign41"]
 shape = SubResource("BoxShape3D_56")
@@ -3716,7 +3722,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign42"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign42"]
 shape = SubResource("BoxShape3D_56")
@@ -3729,7 +3735,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign50"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign50"]
 shape = SubResource("BoxShape3D_56")
@@ -3742,7 +3748,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign51"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign51"]
 shape = SubResource("BoxShape3D_56")
@@ -3755,7 +3761,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign52"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign52"]
 shape = SubResource("BoxShape3D_56")
@@ -3768,7 +3774,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign60"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign60"]
 shape = SubResource("BoxShape3D_56")
@@ -3781,7 +3787,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign61"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign61"]
 shape = SubResource("BoxShape3D_56")
@@ -3794,7 +3800,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign62"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign62"]
 shape = SubResource("BoxShape3D_56")
@@ -3807,7 +3813,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign70"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign70"]
 shape = SubResource("BoxShape3D_56")
@@ -3820,7 +3826,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign71"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign71"]
 shape = SubResource("BoxShape3D_56")
@@ -3833,7 +3839,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ManifestSign72"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ManifestSign72"]
 shape = SubResource("BoxShape3D_56")
@@ -3846,7 +3852,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/SealedDoor"]
 transform = Transform3D(0.5, 0, 0, 0, 2, 0, 0, 0, 1.2, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_19")
+material_override = ExtResource("ext_21")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/SealedDoor"]
 shape = SubResource("BoxShape3D_114")
@@ -3859,7 +3865,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/KeeperPelvis"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.42, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/KeeperPelvis"]
 shape = SubResource("BoxShape3D_115")
@@ -3872,7 +3878,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/KeeperTorso"]
 transform = Transform3D(0.5, 0, 0, 0, 0.7, 0, 0, 0, 0.32, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/KeeperTorso"]
 shape = SubResource("BoxShape3D_116")
@@ -3885,7 +3891,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/KeeperHead"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/KeeperHead"]
 shape = SubResource("BoxShape3D_117")
@@ -3898,7 +3904,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/KeeperArmL"]
 transform = Transform3D(0.6, 0, 0, 0, 0.12, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/KeeperArmL"]
 shape = SubResource("BoxShape3D_118")
@@ -3911,7 +3917,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/KeeperArmR"]
 transform = Transform3D(0.6, 0, 0, 0, 0.12, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/KeeperArmR"]
 shape = SubResource("BoxShape3D_118")
@@ -3937,7 +3943,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa00"]
 transform = Transform3D(46, 0, 0, 0, 14, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa00"]
 shape = SubResource("BoxShape3D_59")
@@ -3950,7 +3956,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa01"]
 transform = Transform3D(68, 0, 0, 0, 23, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa01"]
 shape = SubResource("BoxShape3D_60")
@@ -3963,7 +3969,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa02"]
 transform = Transform3D(90, 0, 0, 0, 32, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa02"]
 shape = SubResource("BoxShape3D_61")
@@ -3976,7 +3982,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa03"]
 transform = Transform3D(46, 0, 0, 0, 41, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa03"]
 shape = SubResource("BoxShape3D_62")
@@ -3989,7 +3995,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa04"]
 transform = Transform3D(68, 0, 0, 0, 14, 0, 0, 0, 102, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa04"]
 shape = SubResource("BoxShape3D_63")
@@ -4002,7 +4008,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa05"]
 transform = Transform3D(90, 0, 0, 0, 23, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa05"]
 shape = SubResource("BoxShape3D_64")
@@ -4015,7 +4021,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa06"]
 transform = Transform3D(46, 0, 0, 0, 32, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa06"]
 shape = SubResource("BoxShape3D_65")
@@ -4028,7 +4034,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa07"]
 transform = Transform3D(68, 0, 0, 0, 41, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa07"]
 shape = SubResource("BoxShape3D_66")
@@ -4041,7 +4047,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa08"]
 transform = Transform3D(90, 0, 0, 0, 14, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa08"]
 shape = SubResource("BoxShape3D_67")
@@ -4054,7 +4060,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa09"]
 transform = Transform3D(46, 0, 0, 0, 23, 0, 0, 0, 102, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa09"]
 shape = SubResource("BoxShape3D_68")
@@ -4067,7 +4073,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa10"]
 transform = Transform3D(68, 0, 0, 0, 32, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa10"]
 shape = SubResource("BoxShape3D_69")
@@ -4080,7 +4086,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa11"]
 transform = Transform3D(90, 0, 0, 0, 41, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa11"]
 shape = SubResource("BoxShape3D_70")
@@ -4093,7 +4099,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa12"]
 transform = Transform3D(46, 0, 0, 0, 14, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa12"]
 shape = SubResource("BoxShape3D_71")
@@ -4106,7 +4112,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Mesa13"]
 transform = Transform3D(68, 0, 0, 0, 23, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_22")
+material_override = ExtResource("ext_24")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Mesa13"]
 shape = SubResource("BoxShape3D_72")
@@ -4116,11 +4122,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 2.5, -15)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelPlatform" instance=ExtResource("ext_15")]
+[node name="Kit" parent="Present/CitadelPlatform" instance=ExtResource("ext_25")]
 transform = Transform3D(13.3333, 0, 0, 0, 10.8696, 0, 0, 0, 28.3333, 0, -2.5, 0)
 
-[node name="platform_edge" parent="Present/CitadelPlatform/Kit" index="0"]
-material_override = ExtResource("ext_21")
+[node name="platform_edge_eroded" parent="Present/CitadelPlatform/Kit" index="0"]
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelPlatform"]
 shape = SubResource("BoxShape3D_73")
@@ -4130,10 +4136,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 7.5, -22)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelBlockA" instance=ExtResource("ext_6")]
-transform = Transform3D(3.75, 0, 0, 0, 2.08681, 0, 0, 0, 22.5, 0, -2.5, 0)
+[node name="Kit" parent="Present/CitadelBlockA" instance=ExtResource("ext_18")]
+transform = Transform3D(3.75, 0, 0, 0, 2.2778, 0, 0, 0, 22.5, 0, -2.5, 0)
 
-[node name="wall_straight" parent="Present/CitadelBlockA/Kit" index="0"]
+[node name="wall_straight_eroded" parent="Present/CitadelBlockA/Kit" index="0"]
 material_override = ExtResource("ext_17")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelBlockA"]
@@ -4144,11 +4150,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44, 9, -12)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelBlockB" instance=ExtResource("ext_6")]
-transform = Transform3D(4.58333, 0, 0, 0, 3.3389, 0, 0, 0, 27.5, 0, -4, 0)
+[node name="Kit" parent="Present/CitadelBlockB" instance=ExtResource("ext_18")]
+transform = Transform3D(4.58333, 0, 0, 0, 3.64448, 0, 0, 0, 27.5, 0, -4, 0)
 
-[node name="wall_straight" parent="Present/CitadelBlockB/Kit" index="0"]
-material_override = ExtResource("ext_20")
+[node name="wall_straight_eroded" parent="Present/CitadelBlockB/Kit" index="0"]
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelBlockB"]
 shape = SubResource("BoxShape3D_75")
@@ -4158,11 +4164,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 6.5, -6)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelBlockC" instance=ExtResource("ext_6")]
-transform = Transform3D(3.33333, 0, 0, 0, 1.25209, 0, 0, 0, 20, 0, -1.5, 0)
+[node name="Kit" parent="Present/CitadelBlockC" instance=ExtResource("ext_18")]
+transform = Transform3D(3.33333, 0, 0, 0, 1.36668, 0, 0, 0, 20, 0, -1.5, 0)
 
-[node name="wall_straight" parent="Present/CitadelBlockC/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="wall_straight_eroded" parent="Present/CitadelBlockC/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelBlockC"]
 shape = SubResource("BoxShape3D_76")
@@ -4172,11 +4178,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.5, 0.75, -15)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelStep0" instance=ExtResource("ext_15")]
+[node name="Kit" parent="Present/CitadelStep0" instance=ExtResource("ext_25")]
 transform = Transform3D(0.75, 0, 0, 0, 3.26087, 0, 0, 0, 28.3333, 0, -0.75, 0)
 
-[node name="platform_edge" parent="Present/CitadelStep0/Kit" index="0"]
-material_override = ExtResource("ext_20")
+[node name="platform_edge_eroded" parent="Present/CitadelStep0/Kit" index="0"]
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelStep0"]
 shape = SubResource("BoxShape3D_77")
@@ -4186,11 +4192,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6, 2.25, -15)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelStep1" instance=ExtResource("ext_15")]
+[node name="Kit" parent="Present/CitadelStep1" instance=ExtResource("ext_25")]
 transform = Transform3D(0.75, 0, 0, 0, 9.78261, 0, 0, 0, 28.3333, 0, -2.25, 0)
 
-[node name="platform_edge" parent="Present/CitadelStep1/Kit" index="0"]
-material_override = ExtResource("ext_21")
+[node name="platform_edge_eroded" parent="Present/CitadelStep1/Kit" index="0"]
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelStep1"]
 shape = SubResource("BoxShape3D_78")
@@ -4200,11 +4206,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.7, 3.75, -15)
 collision_layer = 4
 collision_mask = 0
 
-[node name="Kit" parent="Present/CitadelStep2" instance=ExtResource("ext_15")]
+[node name="Kit" parent="Present/CitadelStep2" instance=ExtResource("ext_25")]
 transform = Transform3D(0.75, 0, 0, 0, 16.3043, 0, 0, 0, 28.3333, 0, -3.75, 0)
 
-[node name="platform_edge" parent="Present/CitadelStep2/Kit" index="0"]
-material_override = ExtResource("ext_18")
+[node name="platform_edge_eroded" parent="Present/CitadelStep2/Kit" index="0"]
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/CitadelStep2"]
 shape = SubResource("BoxShape3D_79")
@@ -4230,7 +4236,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris01"]
 transform = Transform3D(2.58145, 0, 0, 0, 0.618361, 0, 0, 0, 1.57438, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris01"]
 shape = SubResource("BoxShape3D_121")
@@ -4243,7 +4249,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris02"]
 transform = Transform3D(1.40357, 0, 0, 0, 0.322034, 0, 0, 0, 1.70148, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris02"]
 shape = SubResource("BoxShape3D_122")
@@ -4256,7 +4262,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris03"]
 transform = Transform3D(1.24609, 0, 0, 0, 0.399042, 0, 0, 0, 1.76284, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris03"]
 shape = SubResource("BoxShape3D_123")
@@ -4282,7 +4288,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris05"]
 transform = Transform3D(1.83394, 0, 0, 0, 0.763324, 0, 0, 0, 1.36798, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris05"]
 shape = SubResource("BoxShape3D_125")
@@ -4295,7 +4301,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris06"]
 transform = Transform3D(1.32918, 0, 0, 0, 0.26844, 0, 0, 0, 2.35168, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris06"]
 shape = SubResource("BoxShape3D_126")
@@ -4308,7 +4314,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris07"]
 transform = Transform3D(1.14978, 0, 0, 0, 0.742252, 0, 0, 0, 1.33955, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris07"]
 shape = SubResource("BoxShape3D_127")
@@ -4334,7 +4340,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris09"]
 transform = Transform3D(1.8702, 0, 0, 0, 0.580437, 0, 0, 0, 1.87496, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris09"]
 shape = SubResource("BoxShape3D_129")
@@ -4347,7 +4353,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris10"]
 transform = Transform3D(1.74514, 0, 0, 0, 0.733829, 0, 0, 0, 1.35939, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris10"]
 shape = SubResource("BoxShape3D_130")
@@ -4360,7 +4366,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris11"]
 transform = Transform3D(1.46504, 0, 0, 0, 0.759013, 0, 0, 0, 2.47837, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris11"]
 shape = SubResource("BoxShape3D_131")
@@ -4386,7 +4392,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris13"]
 transform = Transform3D(0.940565, 0, 0, 0, 0.564099, 0, 0, 0, 1.6944, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris13"]
 shape = SubResource("BoxShape3D_133")
@@ -4399,7 +4405,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris14"]
 transform = Transform3D(1.04665, 0, 0, 0, 0.594226, 0, 0, 0, 2.20068, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_21")
+material_override = ExtResource("ext_23")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris14"]
 shape = SubResource("BoxShape3D_134")
@@ -4412,7 +4418,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris15"]
 transform = Transform3D(2.17949, 0, 0, 0, 0.241271, 0, 0, 0, 1.33713, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris15"]
 shape = SubResource("BoxShape3D_135")
@@ -4438,7 +4444,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/Debris17"]
 transform = Transform3D(2.277, 0, 0, 0, 0.351231, 0, 0, 0, 2.16247, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_20")
+material_override = ExtResource("ext_22")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/Debris17"]
 shape = SubResource("BoxShape3D_137")
@@ -4477,7 +4483,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/HelixContainer"]
 transform = Transform3D(6, 0, 0, 0, 2.8, 0, 0, 0, 2.6, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_23")
+material_override = ExtResource("ext_26")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/HelixContainer"]
 shape = SubResource("BoxShape3D_140")
@@ -4490,7 +4496,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ScaffoldPole0"]
 transform = Transform3D(0.12, 0, 0, 0, 3, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ScaffoldPole0"]
 shape = SubResource("BoxShape3D_141")
@@ -4503,7 +4509,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ScaffoldPole1"]
 transform = Transform3D(0.12, 0, 0, 0, 3, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ScaffoldPole1"]
 shape = SubResource("BoxShape3D_141")
@@ -4516,7 +4522,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ScaffoldPole2"]
 transform = Transform3D(0.12, 0, 0, 0, 3, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ScaffoldPole2"]
 shape = SubResource("BoxShape3D_141")
@@ -4529,7 +4535,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Present/ScaffoldPole3"]
 transform = Transform3D(0.12, 0, 0, 0, 3, 0, 0, 0, 0.12, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_18")
+material_override = ExtResource("ext_19")
 
 [node name="Shape" type="CollisionShape3D" parent="Present/ScaffoldPole3"]
 shape = SubResource("BoxShape3D_141")
@@ -4624,7 +4630,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/GroundWest"]
 transform = Transform3D(184, 0, 0, 0, 1, 0, 0, 0, 400, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GroundWest"]
 shape = SubResource("BoxShape3D_1")
@@ -4637,7 +4643,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/GroundEast"]
 transform = Transform3D(234, 0, 0, 0, 1, 0, 0, 0, 400, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GroundEast"]
 shape = SubResource("BoxShape3D_2")
@@ -4650,7 +4656,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/GroundNorth"]
 transform = Transform3D(22, 0, 0, 0, 1, 0, 0, 0, 198, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GroundNorth"]
 shape = SubResource("BoxShape3D_3")
@@ -4663,7 +4669,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/GroundSouth"]
 transform = Transform3D(22, 0, 0, 0, 1, 0, 0, 0, 184, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GroundSouth"]
 shape = SubResource("BoxShape3D_4")
@@ -4676,7 +4682,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/BasinFloorWest"]
 transform = Transform3D(14, 0, 0, 0, 1, 0, 0, 0, 18, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinFloorWest"]
 shape = SubResource("BoxShape3D_5")
@@ -4689,7 +4695,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/BasinFloorEast"]
 transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 18, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinFloorEast"]
 shape = SubResource("BoxShape3D_6")
@@ -4702,7 +4708,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/BasinFloorNorth"]
 transform = Transform3D(5, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinFloorNorth"]
 shape = SubResource("BoxShape3D_7")
@@ -4715,7 +4721,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/BasinFloorSouth"]
 transform = Transform3D(5, 0, 0, 0, 1, 0, 0, 0, 3.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinFloorSouth"]
 shape = SubResource("BoxShape3D_8")
@@ -4725,11 +4731,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.25, -3.5, -13)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/BasinWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(0.625, 0, 0, 0, 2.92154, 0, 0, 0, 45, 0, -3.5, 0)
+[node name="Kit" parent="Future/BasinWallWest" instance=ExtResource("ext_28")]
+transform = Transform3D(0.624896, 0, 0, 0, 3.51547, 0, 0, 0, 45, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Future/BasinWallWest/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/BasinWallWest/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinWallWest"]
 shape = SubResource("BoxShape3D_9")
@@ -4739,11 +4745,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, -3.5, -13)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/BasinWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(0.625, 0, 0, 0, 2.92154, 0, 0, 0, 45, 0, -3.5, 0)
+[node name="Kit" parent="Future/BasinWallEast" instance=ExtResource("ext_28")]
+transform = Transform3D(0.624896, 0, 0, 0, 3.51547, 0, 0, 0, 45, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Future/BasinWallEast/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/BasinWallEast/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinWallEast"]
 shape = SubResource("BoxShape3D_9")
@@ -4753,11 +4759,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -3.5, -4.75)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/BasinWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(9.16667, 0, 0, 0, 2.92154, 0, 0, 0, 3.75, 0, -3.5, 0)
+[node name="Kit" parent="Future/BasinWallSouth" instance=ExtResource("ext_28")]
+transform = Transform3D(9.16514, 0, 0, 0, 3.51547, 0, 0, 0, 3.75, 0, -3.5, 0)
 
-[node name="wall_straight" parent="Future/BasinWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/BasinWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinWallSouth"]
 shape = SubResource("BoxShape3D_10")
@@ -4771,7 +4777,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 10.5191, 0, 0, 0, 0.931677, 0, -3.20833, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep00/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep00"]
 shape = SubResource("BoxShape3D_11")
@@ -4785,7 +4791,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 9.56284, 0, 0, 0, 0.931677, 0, -2.91667, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep01/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep01"]
 shape = SubResource("BoxShape3D_12")
@@ -4799,7 +4805,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 8.60656, 0, 0, 0, 0.931677, 0, -2.625, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep02/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep02"]
 shape = SubResource("BoxShape3D_13")
@@ -4813,7 +4819,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 7.65027, 0, 0, 0, 0.931677, 0, -2.33333, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep03/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep03"]
 shape = SubResource("BoxShape3D_14")
@@ -4827,7 +4833,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 6.69399, 0, 0, 0, 0.931677, 0, -2.04167, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep04/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep04"]
 shape = SubResource("BoxShape3D_15")
@@ -4841,7 +4847,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 5.7377, 0, 0, 0, 0.931677, 0, -1.75, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep05/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep05"]
 shape = SubResource("BoxShape3D_16")
@@ -4855,7 +4861,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 4.78142, 0, 0, 0, 0.931677, 0, -1.45833, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep06/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep06"]
 shape = SubResource("BoxShape3D_17")
@@ -4869,7 +4875,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 3.82514, 0, 0, 0, 0.931677, 0, -1.16667, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep07/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep07"]
 shape = SubResource("BoxShape3D_18")
@@ -4883,7 +4889,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 2.86885, 0, 0, 0, 0.931677, 0, -0.875, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep08/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep08"]
 shape = SubResource("BoxShape3D_19")
@@ -4897,7 +4903,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 1.91257, 0, 0, 0, 0.931677, 0, -0.583333, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep09/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep09"]
 shape = SubResource("BoxShape3D_20")
@@ -4911,7 +4917,7 @@ collision_mask = 0
 transform = Transform3D(8.54167, 0, 0, 0, 0.956284, 0, 0, 0, 0.931677, 0, -0.291667, 0)
 
 [node name="reservoir_step" parent="Future/BasinStep10/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/BasinStep10"]
 shape = SubResource("BoxShape3D_21")
@@ -4921,11 +4927,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.55, -20)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/LedgeA" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 0.459098, 0, 0, 0, 7.5, 0, -0.55, 0)
+[node name="Kit" parent="Future/LedgeA" instance=ExtResource("ext_28")]
+transform = Transform3D(1.24979, 0, 0, 0, 0.552431, 0, 0, 0, 7.5, 0, -0.55, 0)
 
-[node name="wall_straight" parent="Future/LedgeA/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/LedgeA/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/LedgeA"]
 shape = SubResource("BoxShape3D_22")
@@ -4935,11 +4941,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 1.45, -17)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/LedgeB" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 1.21035, 0, 0, 0, 7.5, 0, -1.45, 0)
+[node name="Kit" parent="Future/LedgeB" instance=ExtResource("ext_28")]
+transform = Transform3D(1.24979, 0, 0, 0, 1.45641, 0, 0, 0, 7.5, 0, -1.45, 0)
 
-[node name="wall_straight" parent="Future/LedgeB/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/LedgeB/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/LedgeB"]
 shape = SubResource("BoxShape3D_23")
@@ -4949,11 +4955,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 2.45, -14)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/LedgeC" instance=ExtResource("ext_6")]
-transform = Transform3D(1.25, 0, 0, 0, 2.04508, 0, 0, 0, 7.5, 0, -2.45, 0)
+[node name="Kit" parent="Future/LedgeC" instance=ExtResource("ext_28")]
+transform = Transform3D(1.24979, 0, 0, 0, 2.46083, 0, 0, 0, 7.5, 0, -2.45, 0)
 
-[node name="wall_straight" parent="Future/LedgeC/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/LedgeC/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/LedgeC"]
 shape = SubResource("BoxShape3D_24")
@@ -4963,11 +4969,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 0.75, -30)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/GateWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(9.58333, 0, 0, 0, 0.626043, 0, 0, 0, 5, 0, -0.75, 0)
+[node name="Kit" parent="Future/GateWallWest" instance=ExtResource("ext_28")]
+transform = Transform3D(9.58174, 0, 0, 0, 0.753315, 0, 0, 0, 5, 0, -0.75, 0)
 
-[node name="wall_straight" parent="Future/GateWallWest/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/GateWallWest/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GateWallWest"]
 shape = SubResource("BoxShape3D_143")
@@ -4977,11 +4983,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.9, -30)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/GateWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(12.9167, 0, 0, 0, 0.751252, 0, 0, 0, 5, 0, -0.9, 0)
+[node name="Kit" parent="Future/GateWallEast" instance=ExtResource("ext_28")]
+transform = Transform3D(12.9145, 0, 0, 0, 0.903978, 0, 0, 0, 5, 0, -0.9, 0)
 
-[node name="wall_straight" parent="Future/GateWallEast/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/GateWallEast/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GateWallEast"]
 shape = SubResource("BoxShape3D_144")
@@ -4991,11 +4997,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1.5, -30)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/GateTowerWest" instance=ExtResource("ext_9")]
-transform = Transform3D(1, 0, 0, 0, 1.25209, 0, 0, 0, 1.33333, 0, -1.5, 0)
+[node name="Kit" parent="Future/GateTowerWest" instance=ExtResource("ext_30")]
+transform = Transform3D(1, 0, 0, 0, 1.50301, 0, 0, 0, 1.33333, 0, -1.5, 0)
 
-[node name="tower_section" parent="Future/GateTowerWest/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="tower_section_collapsed" parent="Future/GateTowerWest/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GateTowerWest"]
 shape = SubResource("BoxShape3D_145")
@@ -5005,11 +5011,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.1, -30)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/GateTowerEast" instance=ExtResource("ext_9")]
-transform = Transform3D(1, 0, 0, 0, 0.918197, 0, 0, 0, 1.33333, 0, -1.1, 0)
+[node name="Kit" parent="Future/GateTowerEast" instance=ExtResource("ext_30")]
+transform = Transform3D(1, 0, 0, 0, 1.1022, 0, 0, 0, 1.33333, 0, -1.1, 0)
 
-[node name="tower_section" parent="Future/GateTowerEast/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="tower_section_collapsed" parent="Future/GateTowerEast/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/GateTowerEast"]
 shape = SubResource("BoxShape3D_146")
@@ -5019,11 +5025,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.1, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth0" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.918197, 0, 0, 0, 15, 0, -1.1, 0)
+[node name="Kit" parent="Future/StreetNorth0" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.10486, 0, 0, 0, 15, 0, -1.1, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth0/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth0/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth0"]
 shape = SubResource("BoxShape3D_147")
@@ -5033,11 +5039,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1.7, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth1" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.41903, 0, 0, 0, 15, 0, -1.7, 0)
+[node name="Kit" parent="Future/StreetNorth1" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.70751, 0, 0, 0, 15, 0, -1.7, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth1/Kit" index="0"]
-material_override = ExtResource("ext_26")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth1/Kit" index="0"]
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth1"]
 shape = SubResource("BoxShape3D_148")
@@ -5047,11 +5053,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.8, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth2" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.66778, 0, 0, 0, 15, 0, -0.8, 0)
+[node name="Kit" parent="Future/StreetNorth2" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 0.803536, 0, 0, 0, 15, 0, -0.8, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth2/Kit" index="0"]
-material_override = ExtResource("ext_27")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth2/Kit" index="0"]
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth2"]
 shape = SubResource("BoxShape3D_106")
@@ -5061,11 +5067,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 1.45, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth3" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.21035, 0, 0, 0, 15, 0, -1.45, 0)
+[node name="Kit" parent="Future/StreetNorth3" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.45641, 0, 0, 0, 15, 0, -1.45, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth3/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth3/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth3"]
 shape = SubResource("BoxShape3D_149")
@@ -5075,11 +5081,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.95, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth4" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.792988, 0, 0, 0, 15, 0, -0.95, 0)
+[node name="Kit" parent="Future/StreetNorth4" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 0.954198, 0, 0, 0, 15, 0, -0.95, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth4/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth4/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth4"]
 shape = SubResource("BoxShape3D_104")
@@ -5089,11 +5095,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 1.55, -21)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetNorth5" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.29382, 0, 0, 0, 15, 0, -1.55, 0)
+[node name="Kit" parent="Future/StreetNorth5" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.55685, 0, 0, 0, 15, 0, -1.55, 0)
 
-[node name="wall_straight" parent="Future/StreetNorth5/Kit" index="0"]
-material_override = ExtResource("ext_26")
+[node name="wall_straight_collapsed" parent="Future/StreetNorth5/Kit" index="0"]
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetNorth5"]
 shape = SubResource("BoxShape3D_150")
@@ -5103,11 +5109,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.3, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth0" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.08514, 0, 0, 0, 15, 0, -1.3, 0)
+[node name="Kit" parent="Future/StreetSouth0" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.30575, 0, 0, 0, 15, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth0/Kit" index="0"]
-material_override = ExtResource("ext_27")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth0/Kit" index="0"]
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth0"]
 shape = SubResource("BoxShape3D_151")
@@ -5117,11 +5123,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.85, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth1" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.709516, 0, 0, 0, 15, 0, -0.85, 0)
+[node name="Kit" parent="Future/StreetSouth1" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 0.853757, 0, 0, 0, 15, 0, -0.85, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth1/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth1/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth1"]
 shape = SubResource("BoxShape3D_108")
@@ -5131,11 +5137,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 1.15, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth2" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.959933, 0, 0, 0, 15, 0, -1.15, 0)
+[node name="Kit" parent="Future/StreetSouth2" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.15508, 0, 0, 0, 15, 0, -1.15, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth2/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth2/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth2"]
 shape = SubResource("BoxShape3D_152")
@@ -5145,11 +5151,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0.9, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth3" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.751252, 0, 0, 0, 15, 0, -0.9, 0)
+[node name="Kit" parent="Future/StreetSouth3" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 0.903978, 0, 0, 0, 15, 0, -0.9, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth3/Kit" index="0"]
-material_override = ExtResource("ext_26")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth3/Kit" index="0"]
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth3"]
 shape = SubResource("BoxShape3D_112")
@@ -5159,11 +5165,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 1.6, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth4" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.33556, 0, 0, 0, 15, 0, -1.6, 0)
+[node name="Kit" parent="Future/StreetSouth4" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.60707, 0, 0, 0, 15, 0, -1.6, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth4/Kit" index="0"]
-material_override = ExtResource("ext_27")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth4/Kit" index="0"]
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth4"]
 shape = SubResource("BoxShape3D_153")
@@ -5173,11 +5179,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0.7, -5)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/StreetSouth5" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 0.584307, 0, 0, 0, 15, 0, -0.7, 0)
+[node name="Kit" parent="Future/StreetSouth5" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 0.703094, 0, 0, 0, 15, 0, -0.7, 0)
 
-[node name="wall_straight" parent="Future/StreetSouth5/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/StreetSouth5/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/StreetSouth5"]
 shape = SubResource("BoxShape3D_109")
@@ -5191,7 +5197,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 5.19126, 0, 0, 0, 0.786335, 0, -1.58333, 0)
 
 [node name="reservoir_step" parent="Future/TrenchStep0/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchStep0"]
 shape = SubResource("BoxShape3D_40")
@@ -5205,7 +5211,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 4.15301, 0, 0, 0, 0.786335, 0, -1.26667, 0)
 
 [node name="reservoir_step" parent="Future/TrenchStep1/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchStep1"]
 shape = SubResource("BoxShape3D_41")
@@ -5219,7 +5225,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 3.11475, 0, 0, 0, 0.786335, 0, -0.95, 0)
 
 [node name="reservoir_step" parent="Future/TrenchStep2/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchStep2"]
 shape = SubResource("BoxShape3D_42")
@@ -5233,7 +5239,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 2.0765, 0, 0, 0, 0.786335, 0, -0.633333, 0)
 
 [node name="reservoir_step" parent="Future/TrenchStep3/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchStep3"]
 shape = SubResource("BoxShape3D_43")
@@ -5247,7 +5253,7 @@ collision_mask = 0
 transform = Transform3D(2.08333, 0, 0, 0, 1.03825, 0, 0, 0, 0.786335, 0, -0.316667, 0)
 
 [node name="reservoir_step" parent="Future/TrenchStep4/Kit" index="0"]
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchStep4"]
 shape = SubResource("BoxShape3D_44")
@@ -5260,7 +5266,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/TrenchFloor"]
 transform = Transform3D(5, 0, 0, 0, 0.3, 0, 0, 0, 6.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchFloor"]
 shape = SubResource("BoxShape3D_45")
@@ -5270,11 +5276,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -8.9, -13.85)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/TrenchWallNorth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.58598, 0, 0, 0, 0.75, 0, -1.9, 0)
+[node name="Kit" parent="Future/TrenchWallNorth" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.9084, 0, 0, 0, 0.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Future/TrenchWallNorth/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/TrenchWallNorth/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchWallNorth"]
 shape = SubResource("BoxShape3D_46")
@@ -5284,11 +5290,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85, -8.9, -10.75)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/TrenchWallEast" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 16.25, 0, -1.9, 0)
+[node name="Kit" parent="Future/TrenchWallEast" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.9084, 0, 0, 0, 16.25, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Future/TrenchWallEast/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/TrenchWallEast/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchWallEast"]
 shape = SubResource("BoxShape3D_47")
@@ -5298,11 +5304,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -8.9, -7.65)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/TrenchWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.08333, 0, 0, 0, 1.58598, 0, 0, 0, 0.75, 0, -1.9, 0)
+[node name="Kit" parent="Future/TrenchWallSouth" instance=ExtResource("ext_28")]
+transform = Transform3D(2.08299, 0, 0, 0, 1.9084, 0, 0, 0, 0.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Future/TrenchWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/TrenchWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchWallSouth"]
 shape = SubResource("BoxShape3D_46")
@@ -5312,11 +5318,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -8.9, -13.7)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/TrenchWallWestA" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 1.5, 0, -1.9, 0)
+[node name="Kit" parent="Future/TrenchWallWestA" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.9084, 0, 0, 0, 1.5, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Future/TrenchWallWestA/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/TrenchWallWestA/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchWallWestA"]
 shape = SubResource("BoxShape3D_48")
@@ -5326,11 +5332,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -8.9, -9.85)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/TrenchWallWestB" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.58598, 0, 0, 0, 11.75, 0, -1.9, 0)
+[node name="Kit" parent="Future/TrenchWallWestB" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.9084, 0, 0, 0, 11.75, 0, -1.9, 0)
 
-[node name="wall_straight" parent="Future/TrenchWallWestB/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/TrenchWallWestB/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchWallWestB"]
 shape = SubResource("BoxShape3D_49")
@@ -5340,11 +5346,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, -7.9, -12.8)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/DoorLintel" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 0.751252, 0, 0, 0, 3, 0, -0.9, 0)
+[node name="Kit" parent="Future/DoorLintel" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 0.903978, 0, 0, 0, 3, 0, -0.9, 0)
 
-[node name="wall_straight" parent="Future/DoorLintel/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/DoorLintel/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/DoorLintel"]
 shape = SubResource("BoxShape3D_50")
@@ -5357,7 +5363,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ChamberFloor"]
 transform = Transform3D(7, 0, 0, 0, 0.3, 0, 0, 0, 4.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberFloor"]
 shape = SubResource("BoxShape3D_51")
@@ -5370,7 +5376,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ChamberCeiling"]
 transform = Transform3D(7, 0, 0, 0, 0.3, 0, 0, 0, 4.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberCeiling"]
 shape = SubResource("BoxShape3D_51")
@@ -5380,11 +5386,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.85, -9.5, -13.25)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/ChamberWallWest" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 11.25, 0, -1.3, 0)
+[node name="Kit" parent="Future/ChamberWallWest" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.30575, 0, 0, 0, 11.25, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/ChamberWallWest/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/ChamberWallWest/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberWallWest"]
 shape = SubResource("BoxShape3D_52")
@@ -5394,11 +5400,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -9.5, -15.35)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/ChamberWallNorth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.91667, 0, 0, 0, 1.08514, 0, 0, 0, 0.75, 0, -1.3, 0)
+[node name="Kit" parent="Future/ChamberWallNorth" instance=ExtResource("ext_28")]
+transform = Transform3D(2.91618, 0, 0, 0, 1.30575, 0, 0, 0, 0.75, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/ChamberWallNorth/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/ChamberWallNorth/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberWallNorth"]
 shape = SubResource("BoxShape3D_53")
@@ -5408,11 +5414,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -9.5, -11.15)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/ChamberWallSouth" instance=ExtResource("ext_6")]
-transform = Transform3D(2.91667, 0, 0, 0, 1.08514, 0, 0, 0, 0.75, 0, -1.3, 0)
+[node name="Kit" parent="Future/ChamberWallSouth" instance=ExtResource("ext_28")]
+transform = Transform3D(2.91618, 0, 0, 0, 1.30575, 0, 0, 0, 0.75, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/ChamberWallSouth/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/ChamberWallSouth/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberWallSouth"]
 shape = SubResource("BoxShape3D_53")
@@ -5422,11 +5428,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -9.5, -14.45)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/ChamberWallEastA" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 5.25, 0, -1.3, 0)
+[node name="Kit" parent="Future/ChamberWallEastA" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.30575, 0, 0, 0, 5.25, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/ChamberWallEastA/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/ChamberWallEastA/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberWallEastA"]
 shape = SubResource("BoxShape3D_54")
@@ -5436,11 +5442,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -9.5, -11.6)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/ChamberWallEastB" instance=ExtResource("ext_6")]
-transform = Transform3D(0.125, 0, 0, 0, 1.08514, 0, 0, 0, 3, 0, -1.3, 0)
+[node name="Kit" parent="Future/ChamberWallEastB" instance=ExtResource("ext_28")]
+transform = Transform3D(0.124979, 0, 0, 0, 1.30575, 0, 0, 0, 3, 0, -1.3, 0)
 
-[node name="wall_straight" parent="Future/ChamberWallEastB/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/ChamberWallEastB/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberWallEastB"]
 shape = SubResource("BoxShape3D_55")
@@ -5453,7 +5459,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign00"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign00"]
 shape = SubResource("BoxShape3D_56")
@@ -5466,7 +5472,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign01"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign01"]
 shape = SubResource("BoxShape3D_56")
@@ -5479,7 +5485,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign02"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign02"]
 shape = SubResource("BoxShape3D_56")
@@ -5492,7 +5498,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign10"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign10"]
 shape = SubResource("BoxShape3D_56")
@@ -5505,7 +5511,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign11"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign11"]
 shape = SubResource("BoxShape3D_56")
@@ -5518,7 +5524,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign12"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign12"]
 shape = SubResource("BoxShape3D_56")
@@ -5531,7 +5537,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign20"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign20"]
 shape = SubResource("BoxShape3D_56")
@@ -5544,7 +5550,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign21"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign21"]
 shape = SubResource("BoxShape3D_56")
@@ -5557,7 +5563,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign22"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign22"]
 shape = SubResource("BoxShape3D_56")
@@ -5570,7 +5576,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign30"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign30"]
 shape = SubResource("BoxShape3D_56")
@@ -5583,7 +5589,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign31"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign31"]
 shape = SubResource("BoxShape3D_56")
@@ -5596,7 +5602,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign32"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign32"]
 shape = SubResource("BoxShape3D_56")
@@ -5609,7 +5615,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign40"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign40"]
 shape = SubResource("BoxShape3D_56")
@@ -5622,7 +5628,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign41"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign41"]
 shape = SubResource("BoxShape3D_56")
@@ -5635,7 +5641,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign42"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign42"]
 shape = SubResource("BoxShape3D_56")
@@ -5648,7 +5654,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign50"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign50"]
 shape = SubResource("BoxShape3D_56")
@@ -5661,7 +5667,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign51"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign51"]
 shape = SubResource("BoxShape3D_56")
@@ -5674,7 +5680,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign52"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign52"]
 shape = SubResource("BoxShape3D_56")
@@ -5687,7 +5693,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign60"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign60"]
 shape = SubResource("BoxShape3D_56")
@@ -5700,7 +5706,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign61"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign61"]
 shape = SubResource("BoxShape3D_56")
@@ -5713,7 +5719,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign62"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign62"]
 shape = SubResource("BoxShape3D_56")
@@ -5726,7 +5732,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign70"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign70"]
 shape = SubResource("BoxShape3D_56")
@@ -5739,7 +5745,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign71"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign71"]
 shape = SubResource("BoxShape3D_56")
@@ -5752,7 +5758,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ManifestSign72"]
 transform = Transform3D(0.14, 0, 0, 0, 0.3, 0, 0, 0, 0.26, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ManifestSign72"]
 shape = SubResource("BoxShape3D_56")
@@ -5765,7 +5771,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ChamberSilt"]
 transform = Transform3D(6.6, 0, 0, 0, 1, 0, 0, 0, 4.2, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ChamberSilt"]
 shape = SubResource("BoxShape3D_154")
@@ -5778,7 +5784,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/TrenchSilt"]
 transform = Transform3D(4.6, 0, 0, 0, 0.6, 0, 0, 0, 3.8, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/TrenchSilt"]
 shape = SubResource("BoxShape3D_155")
@@ -5791,7 +5797,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/ArchiveDrone"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/ArchiveDrone"]
 shape = SubResource("BoxShape3D_156")
@@ -5804,7 +5810,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa00"]
 transform = Transform3D(46, 0, 0, 0, 14, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa00"]
 shape = SubResource("BoxShape3D_59")
@@ -5817,7 +5823,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa01"]
 transform = Transform3D(68, 0, 0, 0, 23, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa01"]
 shape = SubResource("BoxShape3D_60")
@@ -5830,7 +5836,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa02"]
 transform = Transform3D(90, 0, 0, 0, 32, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa02"]
 shape = SubResource("BoxShape3D_61")
@@ -5843,7 +5849,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa03"]
 transform = Transform3D(46, 0, 0, 0, 41, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa03"]
 shape = SubResource("BoxShape3D_62")
@@ -5856,7 +5862,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa04"]
 transform = Transform3D(68, 0, 0, 0, 14, 0, 0, 0, 102, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa04"]
 shape = SubResource("BoxShape3D_63")
@@ -5869,7 +5875,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa05"]
 transform = Transform3D(90, 0, 0, 0, 23, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa05"]
 shape = SubResource("BoxShape3D_64")
@@ -5882,7 +5888,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa06"]
 transform = Transform3D(46, 0, 0, 0, 32, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa06"]
 shape = SubResource("BoxShape3D_65")
@@ -5895,7 +5901,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa07"]
 transform = Transform3D(68, 0, 0, 0, 41, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa07"]
 shape = SubResource("BoxShape3D_66")
@@ -5908,7 +5914,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa08"]
 transform = Transform3D(90, 0, 0, 0, 14, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa08"]
 shape = SubResource("BoxShape3D_67")
@@ -5921,7 +5927,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa09"]
 transform = Transform3D(46, 0, 0, 0, 23, 0, 0, 0, 102, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa09"]
 shape = SubResource("BoxShape3D_68")
@@ -5934,7 +5940,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa10"]
 transform = Transform3D(68, 0, 0, 0, 32, 0, 0, 0, 38, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa10"]
 shape = SubResource("BoxShape3D_69")
@@ -5947,7 +5953,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa11"]
 transform = Transform3D(90, 0, 0, 0, 41, 0, 0, 0, 54, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa11"]
 shape = SubResource("BoxShape3D_70")
@@ -5960,7 +5966,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa12"]
 transform = Transform3D(46, 0, 0, 0, 14, 0, 0, 0, 70, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa12"]
 shape = SubResource("BoxShape3D_71")
@@ -5973,7 +5979,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Mesa13"]
 transform = Transform3D(68, 0, 0, 0, 23, 0, 0, 0, 86, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_29")
+material_override = ExtResource("ext_34")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Mesa13"]
 shape = SubResource("BoxShape3D_72")
@@ -5983,11 +5989,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 2.5, -15)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelPlatform" instance=ExtResource("ext_15")]
-transform = Transform3D(13.3333, 0, 0, 0, 10.8696, 0, 0, 0, 28.3333, 0, -2.5, 0)
+[node name="Kit" parent="Future/CitadelPlatform" instance=ExtResource("ext_35")]
+transform = Transform3D(13.3333, 0, 0, 0, 16.6667, 0, 0, 0, 28.3333, 0, -2.5, 0)
 
-[node name="platform_edge" parent="Future/CitadelPlatform/Kit" index="0"]
-material_override = ExtResource("ext_27")
+[node name="platform_edge_collapsed" parent="Future/CitadelPlatform/Kit" index="0"]
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelPlatform"]
 shape = SubResource("BoxShape3D_73")
@@ -5997,11 +6003,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 7.5, -22)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelBlockA" instance=ExtResource("ext_6")]
-transform = Transform3D(3.75, 0, 0, 0, 2.08681, 0, 0, 0, 22.5, 0, -2.5, 0)
+[node name="Kit" parent="Future/CitadelBlockA" instance=ExtResource("ext_28")]
+transform = Transform3D(3.74938, 0, 0, 0, 2.51105, 0, 0, 0, 22.5, 0, -2.5, 0)
 
-[node name="wall_straight" parent="Future/CitadelBlockA/Kit" index="0"]
-material_override = ExtResource("ext_24")
+[node name="wall_straight_collapsed" parent="Future/CitadelBlockA/Kit" index="0"]
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelBlockA"]
 shape = SubResource("BoxShape3D_74")
@@ -6011,11 +6017,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44, 9, -12)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelBlockB" instance=ExtResource("ext_6")]
-transform = Transform3D(4.58333, 0, 0, 0, 3.3389, 0, 0, 0, 27.5, 0, -4, 0)
+[node name="Kit" parent="Future/CitadelBlockB" instance=ExtResource("ext_28")]
+transform = Transform3D(4.58257, 0, 0, 0, 4.01768, 0, 0, 0, 27.5, 0, -4, 0)
 
-[node name="wall_straight" parent="Future/CitadelBlockB/Kit" index="0"]
-material_override = ExtResource("ext_26")
+[node name="wall_straight_collapsed" parent="Future/CitadelBlockB/Kit" index="0"]
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelBlockB"]
 shape = SubResource("BoxShape3D_75")
@@ -6025,11 +6031,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 6.5, -6)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelBlockC" instance=ExtResource("ext_6")]
-transform = Transform3D(3.33333, 0, 0, 0, 1.25209, 0, 0, 0, 20, 0, -1.5, 0)
+[node name="Kit" parent="Future/CitadelBlockC" instance=ExtResource("ext_28")]
+transform = Transform3D(3.33278, 0, 0, 0, 1.50663, 0, 0, 0, 20, 0, -1.5, 0)
 
-[node name="wall_straight" parent="Future/CitadelBlockC/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="wall_straight_collapsed" parent="Future/CitadelBlockC/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelBlockC"]
 shape = SubResource("BoxShape3D_76")
@@ -6039,11 +6045,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.5, 0.75, -15)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelStep0" instance=ExtResource("ext_15")]
-transform = Transform3D(0.75, 0, 0, 0, 3.26087, 0, 0, 0, 28.3333, 0, -0.75, 0)
+[node name="Kit" parent="Future/CitadelStep0" instance=ExtResource("ext_35")]
+transform = Transform3D(0.75, 0, 0, 0, 5, 0, 0, 0, 28.3333, 0, -0.75, 0)
 
-[node name="platform_edge" parent="Future/CitadelStep0/Kit" index="0"]
-material_override = ExtResource("ext_26")
+[node name="platform_edge_collapsed" parent="Future/CitadelStep0/Kit" index="0"]
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelStep0"]
 shape = SubResource("BoxShape3D_77")
@@ -6053,11 +6059,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6, 2.25, -15)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelStep1" instance=ExtResource("ext_15")]
-transform = Transform3D(0.75, 0, 0, 0, 9.78261, 0, 0, 0, 28.3333, 0, -2.25, 0)
+[node name="Kit" parent="Future/CitadelStep1" instance=ExtResource("ext_35")]
+transform = Transform3D(0.75, 0, 0, 0, 15, 0, 0, 0, 28.3333, 0, -2.25, 0)
 
-[node name="platform_edge" parent="Future/CitadelStep1/Kit" index="0"]
-material_override = ExtResource("ext_27")
+[node name="platform_edge_collapsed" parent="Future/CitadelStep1/Kit" index="0"]
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelStep1"]
 shape = SubResource("BoxShape3D_78")
@@ -6067,11 +6073,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.7, 3.75, -15)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Kit" parent="Future/CitadelStep2" instance=ExtResource("ext_15")]
-transform = Transform3D(0.75, 0, 0, 0, 16.3043, 0, 0, 0, 28.3333, 0, -3.75, 0)
+[node name="Kit" parent="Future/CitadelStep2" instance=ExtResource("ext_35")]
+transform = Transform3D(0.75, 0, 0, 0, 25, 0, 0, 0, 28.3333, 0, -3.75, 0)
 
-[node name="platform_edge" parent="Future/CitadelStep2/Kit" index="0"]
-material_override = ExtResource("ext_25")
+[node name="platform_edge_collapsed" parent="Future/CitadelStep2/Kit" index="0"]
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/CitadelStep2"]
 shape = SubResource("BoxShape3D_79")
@@ -6084,7 +6090,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris00"]
 transform = Transform3D(0.934826, 0, 0, 0, 0.442581, 0, 0, 0, 1.92889, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris00"]
 shape = SubResource("BoxShape3D_157")
@@ -6097,7 +6103,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris01"]
 transform = Transform3D(2.11555, 0, 0, 0, 0.227585, 0, 0, 0, 1.40571, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_26")
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris01"]
 shape = SubResource("BoxShape3D_158")
@@ -6110,7 +6116,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris02"]
 transform = Transform3D(1.80436, 0, 0, 0, 0.473865, 0, 0, 0, 2.05946, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_27")
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris02"]
 shape = SubResource("BoxShape3D_159")
@@ -6123,7 +6129,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris03"]
 transform = Transform3D(0.833402, 0, 0, 0, 0.520595, 0, 0, 0, 2.31405, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris03"]
 shape = SubResource("BoxShape3D_160")
@@ -6136,7 +6142,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris04"]
 transform = Transform3D(1.282, 0, 0, 0, 0.668835, 0, 0, 0, 1.66848, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris04"]
 shape = SubResource("BoxShape3D_161")
@@ -6149,7 +6155,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris05"]
 transform = Transform3D(2.29611, 0, 0, 0, 0.643867, 0, 0, 0, 1.197, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_26")
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris05"]
 shape = SubResource("BoxShape3D_162")
@@ -6162,7 +6168,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris06"]
 transform = Transform3D(1.07276, 0, 0, 0, 0.205273, 0, 0, 0, 1.85556, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_27")
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris06"]
 shape = SubResource("BoxShape3D_163")
@@ -6175,7 +6181,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris07"]
 transform = Transform3D(0.88945, 0, 0, 0, 0.477011, 0, 0, 0, 1.92147, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris07"]
 shape = SubResource("BoxShape3D_164")
@@ -6188,7 +6194,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris08"]
 transform = Transform3D(1.56792, 0, 0, 0, 0.403906, 0, 0, 0, 1.4987, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris08"]
 shape = SubResource("BoxShape3D_165")
@@ -6201,7 +6207,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris09"]
 transform = Transform3D(2.54745, 0, 0, 0, 0.280777, 0, 0, 0, 2.41262, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_26")
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris09"]
 shape = SubResource("BoxShape3D_166")
@@ -6214,7 +6220,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris10"]
 transform = Transform3D(1.74619, 0, 0, 0, 0.676124, 0, 0, 0, 1.61897, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_27")
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris10"]
 shape = SubResource("BoxShape3D_167")
@@ -6227,7 +6233,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris11"]
 transform = Transform3D(2.27606, 0, 0, 0, 0.60959, 0, 0, 0, 1.21301, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris11"]
 shape = SubResource("BoxShape3D_168")
@@ -6240,7 +6246,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris12"]
 transform = Transform3D(1.63819, 0, 0, 0, 0.296681, 0, 0, 0, 1.88096, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris12"]
 shape = SubResource("BoxShape3D_169")
@@ -6253,7 +6259,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris13"]
 transform = Transform3D(1.50453, 0, 0, 0, 0.584589, 0, 0, 0, 1.69674, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_26")
+material_override = ExtResource("ext_31")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris13"]
 shape = SubResource("BoxShape3D_170")
@@ -6266,7 +6272,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris14"]
 transform = Transform3D(1.12689, 0, 0, 0, 0.489915, 0, 0, 0, 1.33406, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_27")
+material_override = ExtResource("ext_32")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris14"]
 shape = SubResource("BoxShape3D_171")
@@ -6279,7 +6285,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/Debris15"]
 transform = Transform3D(0.869443, 0, 0, 0, 0.378379, 0, 0, 0, 1.34902, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_25")
+material_override = ExtResource("ext_29")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/Debris15"]
 shape = SubResource("BoxShape3D_172")
@@ -6292,7 +6298,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/SiltMoundA"]
 transform = Transform3D(6, 0, 0, 0, 0.8, 0, 0, 0, 5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/SiltMoundA"]
 shape = SubResource("BoxShape3D_173")
@@ -6305,7 +6311,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/SiltMoundB"]
 transform = Transform3D(5, 0, 0, 0, 0.5, 0, 0, 0, 4, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_24")
+material_override = ExtResource("ext_27")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/SiltMoundB"]
 shape = SubResource("BoxShape3D_174")
@@ -6318,7 +6324,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/DronePylonA"]
 transform = Transform3D(0.5, 0, 0, 0, 6, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/DronePylonA"]
 shape = SubResource("BoxShape3D_175")
@@ -6331,7 +6337,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/DronePylonB"]
 transform = Transform3D(0.5, 0, 0, 0, 6, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/DronePylonB"]
 shape = SubResource("BoxShape3D_175")
@@ -6344,7 +6350,7 @@ collision_mask = 0
 [node name="Mesh" type="MeshInstance3D" parent="Future/DronePylonC"]
 transform = Transform3D(0.5, 0, 0, 0, 6, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_28")
+material_override = ExtResource("ext_33")
 
 [node name="Shape" type="CollisionShape3D" parent="Future/DronePylonC"]
 shape = SubResource("BoxShape3D_175")
@@ -6352,7 +6358,7 @@ shape = SubResource("BoxShape3D_175")
 [node name="FloodPlane" type="MeshInstance3D" parent="Future"]
 transform = Transform3D(132, 0, 0, 0, 0.2, 0, 0, 0, 62, 5, 1.6, -20)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_30")
+material_override = ExtResource("ext_36")
 
 [node name="Markers" type="Node3D" parent="."]
 
@@ -6464,7 +6470,7 @@ shape = SubResource("SphereShape3D_reach")
 [node name="DigPatch" type="MeshInstance3D" parent="Present"]
 transform = Transform3D(0.9, 0, 0, 0, 0.1, 0, 0, 0, 1.4, -1.4, -10.75, -12.8)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_31")
+material_override = ExtResource("ext_37")
 
 [node name="DigSite" type="Area3D" parent="Present"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -9.8, -12.8)

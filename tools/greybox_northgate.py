@@ -31,7 +31,11 @@ KIT_INDEX = pathlib.Path(__file__).resolve().parent.parent / "game/art/kit/kit_s
 KIT = json.loads(KIT_INDEX.read_text()) if KIT_INDEX.exists() else {}
 
 
-def kit_for(name):
+WEAR_SUFFIX = {"past": "", "present": "_eroded", "future": "_collapsed"}
+WEARS = {"wall_straight", "wall_low", "tower_section", "platform_edge"}
+
+
+def kit_for(name, tag="past"):
     """Which kit piece stands in for a box, by name.
 
     Flat ground, floors, ceilings, rubble and landform stay plain cubes: they
@@ -60,6 +64,15 @@ def kit_for(name):
         return "wall_low"
     # Walls, buildings, towers, piers: everything vertical.
     return "wall_straight"
+
+
+def kit_for_era(name, tag):
+    """The same piece, weathered for its morning: crisp in 1900 BCE, capping
+    lost by 2026, corners gone after sixty years under water."""
+    piece = kit_for(name, tag)
+    if piece in WEARS:
+        return piece + WEAR_SUFFIX[tag]
+    return piece
 
 
 def tone(tag, i):
@@ -561,7 +574,7 @@ def main():
                                   "future": extras_future}[tag]()
         for entry in boxes:
             name, pos, size, matkey = entry[:4]
-            piece = entry[4] if len(entry) > 4 else kit_for(name)
+            piece = entry[4] if len(entry) > 4 else kit_for_era(name, tag)
             emit_box(name, era_name, pos, size, matkey, layer, piece)
 
         # Water. A plain MeshInstance3D, so Eva walks through it — swimming is
