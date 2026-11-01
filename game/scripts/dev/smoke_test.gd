@@ -479,6 +479,16 @@ func _run() -> void:
 
 	Story.reset()
 
+	print("\n-- the dev tools themselves --")
+	# These are never loaded by the rest of the suite, so a parse error in one
+	# used to reach Prabhjot before it reached a test.
+	for tool_path: String in [
+		"res://scripts/dev/prologue_run.gd",
+		"res://scripts/dev/shots.gd",
+		"res://scripts/dev/vo_manifest.gd",
+	]:
+		_ok("%s compiles" % tool_path.get_file(), load(tool_path) != null)
+
 	print("\n-- the safety net --")
 	player.global_position = Vector3(0, -200, -26)
 	await _settle(6)

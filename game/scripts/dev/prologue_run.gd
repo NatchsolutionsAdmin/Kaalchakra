@@ -12,7 +12,7 @@ const SCRIPT_PATH := "res://data/dialogue/prologue_overburden.dialogue"
 
 
 func _ready() -> void:
-	var main := load("res://scenes/Main.tscn").instantiate()
+	var main: Node = load("res://scenes/Main.tscn").instantiate()
 	add_child(main)
 	await get_tree().physics_frame
 	# The Prologue opens at the top of Trench 4, not out on the apron.
