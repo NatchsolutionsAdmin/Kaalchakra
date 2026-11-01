@@ -30,6 +30,14 @@ desktop.ini
 # Local screenshot output from ./dev shots
 /.shots/
 
+# Placeholder audio, generated locally by tools/scratch_vo.py and
+# tools/placeholder_sfx.py. Never committed, never shipped (decision #27).
+# When real music, effects and recordings exist they get tracked deliberately
+# through LFS, and these ignores come off.
+/game/audio/voice/
+/game/audio/music/
+/game/audio/sfx/
+
 # Secrets
 .env
 *.key

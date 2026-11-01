@@ -133,7 +133,10 @@ func _run() -> void:
 				if not _passes(step):
 					_index += 1
 					continue
-				Audio.play_voice(scene_id, step.get("id", ""))
+				# A direction-only beat like "(stops)" has no words, so it has
+				# no recording and must not be counted as missing audio.
+				if not String(step["text"]).is_empty():
+					Audio.play_voice(scene_id, step.get("id", ""))
 				line_shown.emit(step["speaker"], step["text"], step["direction"],
 					step.get("id", ""))
 				return

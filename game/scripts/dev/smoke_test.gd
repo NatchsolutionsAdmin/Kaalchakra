@@ -373,8 +373,15 @@ func _run() -> void:
 	_ok("and it is recorded as missing", Audio.missing().size() == 1, str(Audio.missing()))
 	_ok("\"silence\" stops the music rather than looking for a file",
 		Audio.play_music("silence"))
-	_ok("no voice file means no voice, quietly",
-		not Audio.play_voice("prologue_overburden", "start_01"))
+	_ok("a line with no recording is silent, not a crash",
+		not Audio.play_voice("prologue_overburden", "no_such_line_99"))
+	# True only while the local placeholder audio exists; it is git-ignored, so
+	# a fresh clone will not have it and this is reported, not failed.
+	if Audio.play_voice("prologue_overburden", "start_01"):
+		print("  ok    scratch voice is installed locally and plays")
+		Audio.stop_voice()
+	else:
+		print("  --    no local scratch voice (run tools/scratch_vo.py to hear the script)")
 
 	print("\n-- voice-line ids --")
 	var ids: Dictionary = {}

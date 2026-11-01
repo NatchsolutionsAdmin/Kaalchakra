@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://7bywp28uqb3o"
+
+[deps]
+
+files=["res://data/dialogue/prologue_overburden.recording.speaker.translation", "res://data/dialogue/prologue_overburden.recording.direction.translation", "res://data/dialogue/prologue_overburden.recording.line.translation", "res://data/dialogue/prologue_overburden.recording.chunk.translation"]
+
+source_file="res://data/dialogue/prologue_overburden.recording.csv"
+dest_files=["res://data/dialogue/prologue_overburden.recording.speaker.translation", "res://data/dialogue/prologue_overburden.recording.direction.translation", "res://data/dialogue/prologue_overburden.recording.line.translation", "res://data/dialogue/prologue_overburden.recording.chunk.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

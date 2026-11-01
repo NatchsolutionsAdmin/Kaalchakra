@@ -104,6 +104,24 @@ Two folders, on purpose: `/audio` at the top of the repo is for **sources** —
 full-quality WAVs, session files, anything an artist hands over. `game/audio`
 is only what ships.
 
+### Hearing it now, with placeholders
+
+```
+python3 tools/scratch_vo.py        # 60 spoken lines, macOS built-in voices
+python3 tools/placeholder_sfx.py   # 11 music and effect cues, synthesised
+./dev import                       # let Godot see the new files
+./dev prologue                     # listen
+```
+
+Both are **placeholder only** (decision #27): generated locally, git-ignored,
+never shipped and never in a trailer. The accents are wrong for every
+character and the music is sine tones. They exist so pacing can be judged
+before anyone is paid to record.
+
+Worth installing: System Settings > Accessibility > Spoken Content > System
+Voice > Manage Voices, and add **Veena** (Indian English, female). It suits
+both Eva and Sakshi far better than anything currently on this Mac.
+
 ### What still needs recording
 
 ```
