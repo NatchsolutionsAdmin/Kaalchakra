@@ -261,15 +261,27 @@ func _run() -> void:
 	var env := lighting.get("world_env") as WorldEnvironment
 	_ok("lighting found the sun", sun != null)
 	_ok("lighting found the environment", env != null)
+	# Era.TINT is the UI tint; the lighting has its own richer table.
+	var look: Dictionary = load("res://scripts/world/era_lighting.gd").LOOK
 	if sun != null:
-		_ok("the sun is tinted for 2087", sun.light_color.is_equal_approx(Era.TINT[Era.Id.FUTURE]),
+		_ok("the sun is lit for 2087",
+			sun.light_color.is_equal_approx(look[Era.Id.FUTURE]["sun_color"]),
 			"got %s" % sun.light_color)
+		_ok("2087 is overcast — the key light is weak",
+			sun.light_energy < 1.0, "energy %.2f" % sun.light_energy)
 		TimeShift.request_shift(Era.Id.PAST)
 		await _settle(4)
-		_ok("and retints for 1900 BCE", sun.light_color.is_equal_approx(Era.TINT[Era.Id.PAST]),
+		_ok("and relights for 1900 BCE",
+			sun.light_color.is_equal_approx(look[Era.Id.PAST]["sun_color"]),
 			"got %s" % sun.light_color)
+		_ok("1900 BCE has a low morning sun", sun.rotation_degrees.x > -25.0,
+			"pitch %.1f" % sun.rotation_degrees.x)
 		TimeShift.request_shift(Era.Id.FUTURE)
 		await _settle(4)
+	var fill := lighting.get("fill") as DirectionalLight3D
+	_ok("there is a fill light so shadows are not black", fill != null and fill.light_energy > 0.0)
+	_ok("the fill casts no shadow of its own", fill != null and not fill.shadow_enabled)
+	_ok("the colour grade is on", env != null and env.environment.adjustment_enabled)
 
 	print("\n-- the rules --")
 	_ok("shifting to the era you are already in is a no-op",

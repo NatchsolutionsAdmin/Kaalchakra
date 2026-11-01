@@ -45,6 +45,7 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 | Price / business model | **Open — re-decide for mobile** (see §4). The $19.99 PC plan in `docs/MARKET-POSITIONING.md` no longer applies. |
 | Vertical slice | Chapter 2, "The Index" (see `docs/REQUIREMENTS.md` §8). |
 | Evara 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Evara = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. Put them in `art/characters/evara/`. |
+| Future era | **2087 is fully walkable, no combat** (decided 2026-11-01). Decipherment's third step happens there. |
 | Learning approach | Learn game design by **teardown → rebuild**: study how great games solve a problem, then rebuild that system in greybox. **Never** decompile/rip commercial game files (EULA/copyright risk, contaminates the project). |
 
 ## 4. Open decisions (raise these when relevant, one at a time)
@@ -53,11 +54,10 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 2. Write and lock the art bible (palette: terracotta/ochre/dust + water-teal; era tints warm-gold past / neutral present / cold blue-grey future).
 3. Canon face for Evara: polished turnaround sheets vs the grounded `ComfyUI_00009` face.
 4. Meera (from the early 2D prototype) as a past-Keeper Easter egg in ledger collectibles — recommended yes.
-5. How playable the future era is (current: fully walkable, no combat).
-6. Engine re-evaluation (Unreal) only if the vertical slice raises real money for a visually ambitious production — Phase 3, not now.
-7. **Mobile business model:** premium paid up front, vs. **free download with Chapter 1 free and a one-time unlock for the full game** (common for mobile narrative games), vs. a subscription platform deal (Netflix Games, Apple Arcade, as Raji did on Netflix). Avoid aggressive free-to-play monetization; it doesn't fit a 5-hour story. Market doc must be redone for mobile.
-8. **Minimum devices:** pick target low-end Android and oldest supported iPhone after the first device test.
-9. **Evara 3D brief:** the commission brief's poly/texture targets were written for PC. Update them for mobile before hiring.
+5. Engine re-evaluation (Unreal) only if the vertical slice raises real money for a visually ambitious production — Phase 3, not now.
+6. **Mobile business model:** premium paid up front, vs. **free download with Chapter 1 free and a one-time unlock for the full game** (common for mobile narrative games), vs. a subscription platform deal (Netflix Games, Apple Arcade, as Raji did on Netflix). Avoid aggressive free-to-play monetization; it doesn't fit a 5-hour story. Market doc must be redone for mobile.
+7. **Minimum devices:** pick target low-end Android and oldest supported iPhone after the first device test.
+8. **Evara 3D brief:** the commission brief's poly/texture targets were written for PC. Update them for mobile before hiring.
 
 ## 5. The immediate next step (start here if nothing else is asked)
 

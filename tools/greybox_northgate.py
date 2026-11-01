@@ -25,23 +25,42 @@ ERAS = [("past", "Past", 0, 2), ("present", "Present", 1, 4), ("future", "Future
 MARKET_X = [12, 19, 26, 33, 40, 47]
 
 
+def tone(tag, i):
+    """Pick one of the era's four tones. Deterministic, so the look is stable
+    across regenerations — a street of identical boxes reads as unfinished."""
+    return [f"mat_{tag}", f"mat_{tag}_light", f"mat_{tag}_dark", f"mat_{tag}_accent"][i % 4]
+
+
+def rng(seed):
+    """Tiny deterministic generator. Scatter must be identical every run, or
+    the .tscn churns in git for no reason."""
+    state = seed
+
+    def nxt(lo, hi):
+        nonlocal state
+        state = (1103515245 * state + 12345) % 2147483648
+        return lo + (state / 2147483648.0) * (hi - lo)
+
+    return nxt
+
+
 def structure(tag):
     """Geometry that exists in every era: ground, the reservoir, the citadel edge."""
     base, acc = f"mat_{tag}", f"mat_{tag}_accent"
     out = [
         # Ground, built as four slabs around the reservoir footprint so the pit
         # is a real hole without needing CSG boolean subtraction.
-        ("GroundWest",  (-38, -0.5, -20), (44, 1, 60), base),
-        ("GroundEast",  (38, -0.5, -20),  (64, 1, 60), base),
-        ("GroundNorth", (-5, -0.5, -36),  (22, 1, 28), base),
-        ("GroundSouth", (-5, -0.5, -3),   (22, 1, 14), base),
+        # Pushed far past the play space: with fog and the distant mesas, the
+        # player never sees the edge of the world.
+        ("GroundWest",  (-108, -0.5, -20), (184, 1, 400), base),
+        ("GroundEast",  (123, -0.5, -20),  (234, 1, 400), base),
+        ("GroundNorth", (-5, -0.5, -121),  (22, 1, 198),  base),
+        ("GroundSouth", (-5, -0.5, 88),    (22, 1, 184),  base),
         # The great reservoir: floor at y = -7, sheer on three sides.
         ("BasinFloor",      (-5, -7.5, -13),     (22, 1, 18),   base),
         ("BasinWallWest",   (-15.25, -3.5, -13), (1.5, 7, 18),  acc),
         ("BasinWallEast",   (5.25, -3.5, -13),   (1.5, 7, 18),  acc),
         ("BasinWallSouth",  (-5, -3.5, -4.75),   (22, 7, 1.5),  acc),
-        # Walled citadel edge to the west.
-        ("CitadelWall", (-23, 4.5, -15), (2, 9, 30), base),
     ]
     # Stepped descent on the north side — Dholavira's reservoirs are stepped.
     # 12 risers of 0.58 m: human-scale, and low enough that auto-climb carries
@@ -65,13 +84,65 @@ def structure(tag):
     return out
 
 
-def market(tag, north_h, south_h):
-    base = f"mat_{tag}"
+def market(tag, north_h, south_h, parapets=False):
     out = []
-    for i, (x, h) in enumerate(zip(MARKET_X, north_h)):
-        out.append((f"StreetNorth{i}", (x, h / 2.0, -21), (5, h, 6), base))
-    for i, (x, h) in enumerate(zip(MARKET_X, south_h)):
-        out.append((f"StreetSouth{i}", (x, h / 2.0, -5), (5, h, 6), base))
+    for side, zc, heights, off in (("North", -21, north_h, 0), ("South", -5, south_h, 2)):
+        for i, (x, h) in enumerate(zip(MARKET_X, heights)):
+            out.append((f"Street{side}{i}", (x, h / 2.0, zc), (5, h, 6), tone(tag, i + off)))
+            if parapets:
+                # A lip on each roof. Costs one box and does more for the
+                # skyline than any amount of texture would.
+                out.append((f"Street{side}{i}Parapet", (x, h + 0.2, zc), (5.4, 0.4, 6.4),
+                            tone(tag, i + off + 2)))
+    return out
+
+
+def horizon(tag):
+    """A ring of low mesas framing the valley. Flat, desaturated, far away."""
+    import math
+    out = []
+    mat = f"mat_hills_{tag}"
+    for i in range(14):
+        a = (i / 14.0) * math.tau + 0.35
+        r = 190.0 + (i % 5) * 26.0
+        x = 5.0 + math.cos(a) * r
+        z = -20.0 + math.sin(a) * r
+        h = 14.0 + (i % 4) * 9.0
+        w = 46.0 + (i % 3) * 22.0
+        d = 38.0 + (i % 5) * 16.0
+        out.append((f"Mesa{i:02d}", (x, h / 2.0 - 1.0, z), (w, h, d), mat))
+    return out
+
+
+def citadel(tag):
+    """The upper town behind the west wall: a raised mass with a stepped edge,
+    so the skyline has something above the wall line."""
+    out = [
+        ("CitadelPlatform", (-40, 2.5, -15), (32, 5, 34), tone(tag, 2)),
+        ("CitadelBlockA", (-34, 7.5, -22), (9, 5, 9), tone(tag, 0)),
+        ("CitadelBlockB", (-44, 9.0, -12), (11, 8, 11), tone(tag, 1)),
+        ("CitadelBlockC", (-30, 6.5, -6), (8, 3, 8), tone(tag, 3)),
+    ]
+    for i in range(3):
+        out.append((f"CitadelStep{i}", (-23.5 + i * 0.9, 0.75 + i * 1.5, -15),
+                    (1.8, 1.5 + i * 3.0, 34), tone(tag, i + 1)))
+    return out
+
+
+def scatter(tag, seed, count, lo, hi):
+    """Rubble and drifts. Breaks up the flat ground without costing much."""
+    nxt = rng(seed)
+    out = []
+    for i in range(count):
+        # Keep the apron, the basin and the spawn point clear.
+        while True:
+            x = nxt(-20.0, 52.0)
+            z = nxt(-34.0, 2.0)
+            if not (-17.0 < x < 8.0 and -24.0 < z < -2.0) and abs(x) + abs(z + 26.0) > 7.0:
+                break
+        h = nxt(lo, hi)
+        out.append((f"Debris{i:02d}", (x, h / 2.0 - 0.1, z),
+                    (nxt(0.8, 2.6), h, nxt(0.8, 2.6)), tone(tag, i)))
     return out
 
 
@@ -117,7 +188,9 @@ def gate_future():
 
 
 def extras_past():
-    out = gate_past() + market("past", [5, 6.5, 4.5, 7, 5.5, 6], [6, 4.5, 5.5, 5, 6.5, 4])
+    out = (gate_past()
+           + market("past", [5, 8.5, 4.5, 9.5, 5.5, 7], [7, 4.5, 6.5, 5, 8.5, 4], parapets=True)
+           + horizon("past") + citadel("past") + scatter("past", 11, 14, 0.3, 0.9))
     for i, x in enumerate([15, 22, 29, 36, 43]):
         z = -15 if i % 2 == 0 else -11
         out.append((f"Stall{i}", (x, 0.9, z), (2, 1.8, 2), "mat_past_accent"))
@@ -125,9 +198,9 @@ def extras_past():
 
 
 def extras_present():
-    out = gate_present() + market(
-        "present", [1.2, 1.6, 0.9, 1.4, 1.1, 1.5], [1.3, 0.9, 1.2, 1.0, 1.5, 0.8]
-    )
+    out = (gate_present()
+           + market("present", [1.2, 1.9, 0.9, 1.6, 1.1, 1.7], [1.4, 0.9, 1.3, 1.0, 1.8, 0.8])
+           + horizon("present") + citadel("present") + scatter("present", 29, 18, 0.2, 0.8))
     out += [
         ("SpoilHeapA", (-9, 0.6, -25),     (4, 1.2, 3),     "mat_present"),
         ("SpoilHeapB", (-13, 0.5, -27.5),  (3.5, 1, 3),     "mat_present"),
@@ -141,9 +214,9 @@ def extras_present():
 
 
 def extras_future():
-    out = gate_future() + market(
-        "future", [2.2, 2.8, 1.6, 2.4, 1.9, 2.6], [2.4, 1.7, 2.1, 1.8, 2.7, 1.4]
-    )
+    out = (gate_future()
+           + market("future", [2.2, 3.4, 1.6, 2.9, 1.9, 3.1], [2.6, 1.7, 2.3, 1.8, 3.2, 1.4])
+           + horizon("future") + citadel("future") + scatter("future", 47, 16, 0.2, 0.7))
     out += [
         ("SiltMoundA", (-9, -6.6, -12), (6, 0.8, 5), "mat_future"),
         ("SiltMoundB", (0, -6.75, -9),  (5, 0.5, 4), "mat_future"),

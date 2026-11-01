@@ -17,6 +17,9 @@ extends Node3D
 @export var drag_sensitivity := 0.0042
 @export var follow_speed := 14.0
 @export var shoulder_height := 1.45
+## Push the orbit centre sideways so Evara sits off-centre rather than dead
+## in the middle. Reads better, and keeps the view ahead of her clear.
+@export var shoulder_offset := 0.5
 @export var pitch_min_deg := -62.0
 @export var pitch_max_deg := 32.0
 
@@ -50,4 +53,6 @@ func _physics_process(delta: float) -> void:
 
 
 func _desired_position() -> Vector3:
-	return target.global_position + Vector3.UP * shoulder_height
+	return (target.global_position
+		+ Vector3.UP * shoulder_height
+		+ global_transform.basis.x * shoulder_offset)

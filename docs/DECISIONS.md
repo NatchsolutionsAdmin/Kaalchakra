@@ -28,6 +28,8 @@
 | 21 | 2026-11-01 | **Godot version locked: 4.7.2.stable.official** (`ed1daf0bf`), at `/Applications/Godot.app`. Any second machine must use the same version — godotengine.org/download/archive. | Project files are version-sensitive; a mismatched editor can silently rewrite scenes. |
 | 22 | 2026-11-01 | Era geometry is separated by **physics collision layer** (1 shared, 2 past, 3 present, 4 future), not by enabling/disabling nodes. The player's collision mask is rebuilt on every shift. | One line per shift, no per-node bookkeeping, and the two inactive eras cost nothing to walk through. |
 | 23 | 2026-11-01 | Scene files written outside the Godot editor must use **`NodePath` exports resolved in `_ready()`**, never bare `Node` exports. | Only the editor writes the metadata that lets a bare `Node` export resolve on load; hand-written ones come back null, silently. |
+| 24 | 2026-11-01 | **2087 is fully walkable, no combat.** Closes open decision #5. | The decipherment chain's third step is confirming a sign in WARDEN's future scans, which means standing there. |
+| 25 | 2026-11-01 | Realistic/photoreal graphics ruled out again for mobile; the look comes from **lighting, silhouette and colour**, not polygon count. Greybox gets a directed look pass; hero art still waits for people and money. | Stylized is the only way to look high-end on a phone, and art on an unproven game is wasted money. |
 
 ## To record next
 - Mobile business model (premium / free Chapter 1 + unlock / platform deal)
