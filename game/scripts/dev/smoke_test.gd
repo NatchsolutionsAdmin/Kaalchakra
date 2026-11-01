@@ -498,6 +498,71 @@ func _run() -> void:
 		_ok("  %s carries all %d signs" % [era_name, Decipher.order.size()],
 			found == Decipher.order.size(), "%d found" % found)
 
+	print("\n-- calling Ma --")
+	Decipher.reset()
+	Phone.reset()
+	Story.reset()
+	_ok("she cannot call before Sakshi is reachable", not Phone.can_call("sakshi"))
+	Story.make_contact_available("sakshi")
+	_ok("and can once she is", Phone.can_call("sakshi"))
+
+	# Collect what is actually said.
+	var said: Array[String] = []
+	var heard := func(_who: String, text: String) -> void: said.append(text)
+	Phone.line_spoken.connect(heard)
+
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	_ok("the call connects", Phone.start("sakshi"))
+	_ok("she cannot ring twice at once", not Phone.start("sakshi"))
+	await _settle(80)
+	for _i in 6:
+		Phone.advance()
+		await get_tree().process_frame
+	_ok("Ma says something", said.size() >= 3, "%d lines" % said.size())
+	_ok("and the call ends on its own", not Phone.in_call)
+
+	# Nothing learned yet, so she should be sent to the only century that can
+	# read it rather than given a sign-specific nudge about 2026.
+	_ok("with nothing learned she is sent to 1900 BCE",
+		"".join(said).to_lower().contains("century"), "\n        " + "\n        ".join(said))
+
+	# Now learn one, and the advice should change to the era it needs next.
+	said.clear()
+	var learn_me: String = Decipher.order[0]
+	Decipher.advance(learn_me, Era.Id.PAST)
+	TimeShift.request_shift(Era.Id.FUTURE)
+	await _settle(4)
+	Phone.start("sakshi")
+	await _settle(80)
+	for _i in 6:
+		Phone.advance()
+		await get_tree().process_frame
+	_ok("once a sign is learned she names the morning it needs",
+		"".join(said).contains(Era.TITLE[Era.Id.PRESENT]),
+		"\n        " + "\n        ".join(said))
+
+	# Standing in the right era, she should say so instead.
+	said.clear()
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	Phone.start("sakshi")
+	await _settle(80)
+	for _i in 6:
+		Phone.advance()
+		await get_tree().process_frame
+	_ok("standing in the right morning, she says so",
+		"".join(said).to_lower().contains("right morning"),
+		"\n        " + "\n        ".join(said))
+	_ok("and she notices being asked twice",
+		"".join(said).to_lower().contains("the same one"),
+		"\n        " + "\n        ".join(said))
+
+	Phone.line_spoken.disconnect(heard)
+	Phone.reset()
+	Decipher.reset()
+	Story.reset()
+
 	print("\n-- the Prologue script --")
 	const PROLOGUE := "res://data/dialogue/prologue_overburden.dialogue"
 	var parsed := DialogueParser.parse_file(PROLOGUE)

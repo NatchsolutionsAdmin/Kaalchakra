@@ -17,6 +17,7 @@ const JOY_DEADZONE := 0.12
 const KNOB_RADIUS := 42.0
 const ACTION_SIZE := 128.0     # all well above the ~44pt minimum tap target
 const JUMP_SIZE := 108.0
+const PHONE_SIZE := 92.0
 const WHEEL_SIZE := 118.0
 const ERA_SIZE := 92.0
 const SWIPE_STEP := 70.0       # px of horizontal drag on the dial = one era
@@ -25,6 +26,7 @@ var _root: Control
 var _paint: Control
 var _action: Button
 var _jump: Button
+var _phone: Button
 var _dial: WheelDial
 var _era_buttons: Dictionary = {}
 
@@ -45,11 +47,15 @@ func _ready() -> void:
 	_build()
 	get_viewport().size_changed.connect(_layout)
 	Interactions.focus_changed.connect(_on_focus_changed)
+	Story.contact_available.connect(func(_who: String) -> void: _refresh_phone())
+	Phone.call_started.connect(func(_w: String) -> void: _hide_for_dialogue(true))
+	Phone.call_ended.connect(func(_w: String) -> void: _hide_for_dialogue(false))
 	Dialogue.started.connect(func(_id: String) -> void: _hide_for_dialogue(true))
 	Dialogue.finished.connect(func(_id: String) -> void: _hide_for_dialogue(false))
 	TimeShift.era_changed.connect(func(_f: Era.Id, _t: Era.Id) -> void: _refresh_wheel())
 	_on_focus_changed(null)
 	_refresh_wheel()
+	_refresh_phone()
 	_layout()
 
 
@@ -72,6 +78,11 @@ func _build() -> void:
 	_action.button_down.connect(func() -> void: Touch.set_interact(true))
 	_action.button_up.connect(func() -> void: Touch.set_interact(false))
 	_root.add_child(_action)
+
+	_phone = _round_button("MA", PHONE_SIZE, UIStyle.TEAL)
+	_phone.pressed.connect(func() -> void: Phone.start("sakshi"))
+	_phone.visible = false
+	_root.add_child(_phone)
 
 	_jump = _round_button("JUMP", JUMP_SIZE, UIStyle.DUST)
 	_jump.button_down.connect(func() -> void: Touch.queue_jump())
@@ -120,6 +131,7 @@ func _layout() -> void:
 	var vp := get_viewport().get_visible_rect().size
 	var inset := _safe_inset()
 	var pad := 26.0
+	var left_pad := inset.x + pad
 	var right := vp.x - inset.z - pad
 	var bottom := vp.y - inset.w - pad
 	var top := inset.y + pad
@@ -128,6 +140,7 @@ func _layout() -> void:
 	_jump.position = Vector2(right - ACTION_SIZE - JUMP_SIZE - 22.0,
 		bottom - JUMP_SIZE - (ACTION_SIZE - JUMP_SIZE) * 0.5)
 	_dial.position = Vector2(right - WHEEL_SIZE, top)
+	_phone.position = Vector2(left_pad, bottom - PHONE_SIZE)
 
 	# The three era buttons fan down-and-left of the dial, inside the screen,
 	# where a right thumb can sweep them without covering the view.
@@ -144,6 +157,12 @@ func _layout() -> void:
 
 ## Thumbs off the controls while someone is speaking — otherwise the tap that
 ## advances a line also spins the camera.
+## The call button is the only sign the player gets that Sakshi exists, so it
+## appears the moment she becomes reachable and not before.
+func _refresh_phone() -> void:
+	_phone.visible = Phone.available("sakshi")
+
+
 func _hide_for_dialogue(hidden: bool) -> void:
 	_root.visible = not hidden
 	if hidden:

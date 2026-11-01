@@ -140,6 +140,21 @@ func _run() -> void:
 	await _settle(6)
 	Decipher.reset()
 
+	# 4b3. On the phone to Ma.
+	Story.make_contact_available("sakshi")
+	Decipher.advance("water", Era.Id.PAST)
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _stand(Vector3(0.5, -10.5, -11.5), 20.0)
+	Phone.start("sakshi")
+	await _settle(70)
+	Phone.advance()
+	Phone.advance()
+	await _settle(30)
+	await _shot("phone_call")
+	Phone.hang_up()
+	Decipher.reset()
+	await _settle(30)
+
 	# 4c. Portrait — does she have a face worth framing?
 	TimeShift.request_shift(Era.Id.PRESENT)
 	await _stand(Vector3(0, 1.2, -24), 180.0)

@@ -54,6 +54,11 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_wheel.visible = Input.is_action_pressed("wheel_open")
 	_index_panel.visible = Input.is_action_pressed("journal")
+	if Input.is_action_just_pressed("phone"):
+		if Phone.in_call:
+			Phone.advance()
+		else:
+			Phone.start("sakshi")
 	if _banner_timer > 0.0:
 		_banner_timer -= delta
 		if _banner_timer <= 0.0:
