@@ -124,6 +124,22 @@ func _run() -> void:
 	touch_ui.get("_paint").queue_redraw()
 	await _settle(6)
 
+	# 4b2. The sign index, part-way through the chain.
+	Decipher.reset()
+	for id: String in ["what", "water"]:
+		Decipher.advance(id, Era.Id.PAST)
+		Decipher.advance(id, Era.Id.PRESENT)
+		Decipher.advance(id, Era.Id.FUTURE)
+	Decipher.advance("not", Era.Id.PAST)
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _stand(Vector3(-3.6, -10.5, -13.25), 90.0)
+	Input.action_press("journal")
+	await _settle(10)
+	await _shot("sign_index")
+	Input.action_release("journal")
+	await _settle(6)
+	Decipher.reset()
+
 	# 4c. Portrait — does she have a face worth framing?
 	TimeShift.request_shift(Era.Id.PRESENT)
 	await _stand(Vector3(0, 1.2, -24), 180.0)

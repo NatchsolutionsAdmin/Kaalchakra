@@ -22,6 +22,9 @@ var _hint: Label
 var _banner_timer: float = 0.0
 var _watched: Interactable = null
 var _top_block: VBoxContainer
+var _index_panel: PanelContainer
+var _index_rows: VBoxContainer
+var _index_header: Label
 var _prompt_box: VBoxContainer
 
 
@@ -37,8 +40,11 @@ func _ready() -> void:
 	Dialogue.finished.connect(func(_id: String) -> void: _set_chrome(true))
 	Interactions.focus_changed.connect(_on_focus_changed)
 	Interactions.message.connect(_on_message)
+	Decipher.sign_advanced.connect(func(_id: String, _step: int) -> void: _refresh_index())
+	Decipher.header_readable.connect(_on_header_readable)
 	get_viewport().size_changed.connect(_layout)
 	_apply_era(TimeShift.current_era)
+	_refresh_index()
 	_refresh_objective()
 	_refresh_hint()
 	_on_focus_changed(null)
@@ -47,6 +53,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_wheel.visible = Input.is_action_pressed("wheel_open")
+	_index_panel.visible = Input.is_action_pressed("journal")
 	if _banner_timer > 0.0:
 		_banner_timer -= delta
 		if _banner_timer <= 0.0:
@@ -151,6 +158,32 @@ func _build() -> void:
 		_wheel_rows[era] = row
 		wheel_box.add_child(row)
 
+	# The sign index — the journal, in its first form (R3.6). Hold I.
+	var index_slot := CenterContainer.new()
+	index_slot.set_anchors_preset(Control.PRESET_FULL_RECT)
+	index_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(index_slot)
+
+	_index_panel = PanelContainer.new()
+	_index_panel.visible = false
+	_index_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_index_panel.add_theme_stylebox_override("panel", UIStyle.panel())
+	index_slot.add_child(_index_panel)
+
+	var index_box := VBoxContainer.new()
+	index_box.add_theme_constant_override("separation", 7)
+	_index_panel.add_child(index_box)
+	var index_title := _label("THE INDEX", 15, DIM)
+	index_box.add_child(index_title)
+	_index_header = _label("", 19, UIStyle.HIGHLIGHT)
+	index_box.add_child(_index_header)
+	var rule := Control.new()
+	rule.custom_minimum_size = Vector2(0, 8)
+	index_box.add_child(rule)
+	_index_rows = VBoxContainer.new()
+	_index_rows.add_theme_constant_override("separation", 3)
+	index_box.add_child(_index_rows)
+
 	# Bottom-left: the controls, so Prabhjot never has to guess.
 	_hint = _label("", 13, DIM)
 	_hint.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -249,6 +282,29 @@ func _on_message(text: String, seconds: float) -> void:
 func _set_chrome(visible_now: bool) -> void:
 	_prompt_box.visible = visible_now
 	_hint.visible = visible_now
+
+
+## One row per sign: where it is in the chain, and where it has to go next.
+func _refresh_index() -> void:
+	for c: Node in _index_rows.get_children():
+		c.queue_free()
+	var marks := ["·", "○", "◐", "●"]
+	for id: String in Decipher.order:
+		var step: int = Decipher.step_of(id)
+		var entry: Dictionary = Decipher.signs[id]
+		var shown: String = entry["name"] if step >= Decipher.Step.LEARNED else "unread"
+		var tail := ""
+		if step < Decipher.Step.CONFIRMED:
+			tail = "  →  %s" % Era.SHORT[Decipher.era_for_next(id)]
+		var row := _label("  %s  %-22s%s" % [marks[step], shown, tail], 16,
+			UIStyle.INK if step > 0 else DIM)
+		_index_rows.add_child(row)
+	var p := Decipher.header_progress()
+	_index_header.text = "%s        %d / %d" % [Decipher.header_text(), p.x, p.y]
+
+
+func _on_header_readable() -> void:
+	_on_message("WHAT THE WATER MUST NOT TAKE.\n\nIt is not a prayer. It is a manifest.", 9.0)
 
 
 func _refresh_objective() -> void:

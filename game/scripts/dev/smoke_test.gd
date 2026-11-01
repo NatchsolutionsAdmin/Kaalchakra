@@ -442,6 +442,62 @@ func _run() -> void:
 		_main.get_node_or_null("NorthGate/Past/SealedDoor") == null
 		and _main.get_node_or_null("NorthGate/Future/SealedDoor") == null)
 
+	print("\n-- the sign index --")
+	_ok("the sign file parses with no errors", Decipher.errors.is_empty(),
+		"\n        " + "\n        ".join(Decipher.errors))
+	_ok("there are signs in it", Decipher.order.size() >= 4,
+		"%d signs" % Decipher.order.size())
+	var incomplete: Array[String] = []
+	for id: String in Decipher.order:
+		for need: String in ["learn", "match", "confirm"]:
+			if String(Decipher.signs[id].get(need, "")).is_empty():
+				incomplete.append("%s/%s" % [id, need])
+	_ok("every sign is written for all three eras", incomplete.is_empty(),
+		", ".join(incomplete))
+	_ok("the header has words in it", Decipher.header_signs().size() >= 2,
+		"%d" % Decipher.header_signs().size())
+
+	print("\n-- a sign can only be read in the right morning --")
+	Decipher.reset()
+	var sign_id: String = Decipher.header_signs()[0]
+	_ok("it starts unknown", Decipher.step_of(sign_id) == Decipher.Step.UNKNOWN)
+	_ok("it cannot be learned in 2026", Decipher.advance(sign_id, Era.Id.PRESENT).is_empty())
+	_ok("nor in 2087", Decipher.advance(sign_id, Era.Id.FUTURE).is_empty())
+	_ok("and the game says why, rather than nothing happening",
+		not Decipher.blocked_reason(sign_id, Era.Id.PRESENT).is_empty())
+	_ok("learning it works in 1900 BCE",
+		not Decipher.advance(sign_id, Era.Id.PAST).is_empty())
+	_ok("now it cannot be learned twice", Decipher.advance(sign_id, Era.Id.PAST).is_empty())
+	_ok("matching needs 2026", Decipher.advance(sign_id, Era.Id.FUTURE).is_empty()
+		and not Decipher.advance(sign_id, Era.Id.PRESENT).is_empty())
+	_ok("confirming needs 2087", Decipher.advance(sign_id, Era.Id.PAST).is_empty()
+		and not Decipher.advance(sign_id, Era.Id.FUTURE).is_empty())
+	_ok("and then it is done", Decipher.is_confirmed(sign_id))
+
+	print("\n-- the header --")
+	_ok("it is masked while words are missing", Decipher.header_text().contains("·"),
+		Decipher.header_text())
+	var announced := [false]
+	Decipher.header_readable.connect(func() -> void: announced[0] = true, CONNECT_ONE_SHOT)
+	for id: String in Decipher.header_signs():
+		for era_step: Array in [[Era.Id.PAST], [Era.Id.PRESENT], [Era.Id.FUTURE]]:
+			Decipher.advance(id, era_step[0])
+	_ok("every header sign confirmed", Decipher.header_progress().x == Decipher.header_progress().y,
+		"%d/%d" % [Decipher.header_progress().x, Decipher.header_progress().y])
+	_ok("it reads WHAT THE WATER MUST NOT TAKE",
+		Decipher.header_text() == "WHAT WATER MUST NOT TAKE", Decipher.header_text())
+	_ok("and the game announces it once", announced[0])
+	Decipher.reset()
+
+	print("\n-- the same wall in three eras --")
+	for era_name: String in ["Past", "Present", "Future"]:
+		var found := 0
+		for id: String in Decipher.order:
+			if _main.get_node_or_null("NorthGate/%s/Sign_%s" % [era_name, id]) != null:
+				found += 1
+		_ok("  %s carries all %d signs" % [era_name, Decipher.order.size()],
+			found == Decipher.order.size(), "%d found" % found)
+
 	print("\n-- the Prologue script --")
 	const PROLOGUE := "res://data/dialogue/prologue_overburden.dialogue"
 	var parsed := DialogueParser.parse_file(PROLOGUE)

@@ -1,0 +1,116 @@
+# ============================================================
+# THE SIGN INDEX — Kaalchakra
+# ============================================================
+#
+# Every sign Eva can decipher. Edit this in TextEdit; the game reads it.
+#
+# The chain is the chapter: LEARN a sign fresh in 1900 BCE, MATCH it eroded
+# in 2026, CONFIRM it in WARDEN's scan in 2087. One sign, three mornings.
+# That is the whole mechanic, so each sign needs all three lines written.
+#
+#   ::        starts a sign; the word after it is its id
+#   name:     what it means, shown once deciphered
+#   gloss:    what it looks like, for an artist to draw
+#   learn:    Eva's line the moment she understands it (1900 BCE)
+#   match:    her line finding it eroded (2026)
+#   confirm:  her line verifying it (2087)
+#   hint:     what Sakshi says if the player asks for help
+#   header:   position in the chamber's header phrase, if it is in it
+#
+# A bare indented line continues the one above, same as the dialogue files.
+# ------------------------------------------------------------
+
+:: what
+name: WHAT / THAT WHICH
+gloss: a single upright stroke with a hook at the head — the opener
+header: 1
+learn: It's not a word. It's a bracket — it says "everything after me is one
+    thing". Ma called it the opener and nobody believed her.
+match: Same hook. Half the stroke is gone to salt, but the hook survived.
+confirm: WARDEN has it in nine hundred inscriptions and always in first
+    position. Always. That's not a word, that's punctuation.
+hint: Sakshi: "Count how often it comes first. If a sign is always first, it
+    isn't telling you anything — it's telling you how to read."
+
+:: water
+name: WATER
+gloss: three stacked waves under a jar outline
+header: 2
+learn: Vasudha draws it in spilled water on the bench, which is either a joke
+    or the most efficient teaching I've ever had.
+match: On the basin wall, under the waterline. Of course it's under the
+    waterline.
+confirm: The scan resolves the stroke order — jar first, then the waves. The
+    container before the thing contained. They thought about water the way an
+    engineer does.
+hint: Sakshi: "Look for it where water was kept, not where water ran. These
+    people labelled storage, not rivers."
+
+:: not
+name: MUST NOT / FORBIDDEN
+gloss: two crossed strokes over a low bar
+header: 3
+learn: A prohibition. Vasudha says it on the reservoir wall every day of her
+    life and has never once had to explain it.
+match: Cut deeper than the signs around it. Someone wanted this one to outlast
+    the others.
+confirm: Sixty years underwater and it's still the sharpest sign on the wall.
+    They cut the warnings deepest.
+hint: Sakshi: "The deepest-cut sign in any inscription is almost always a
+    warning. People carve fear harder than they carve names."
+
+:: take
+name: TAKE / CARRY AWAY
+gloss: an open hand under a tilted vessel
+header: 4
+learn: Not "steal". Closer to "carry off" — what a river does, or a trader.
+    The same sign for both, which tells you how they felt about both.
+match: Barely there. A hand with no fingers left.
+confirm: WARDEN cross-references it against the dock tablets. Cargo
+    manifests. It's an inventory word.
+hint: Sakshi: "Try it against the dock inventories, not the ritual texts.
+    It's a logistics word — I always said this script was a warehouse, not a
+    temple."
+
+:: house
+name: KNOWLEDGE-HOUSE
+gloss: a roofed rectangle divided into four cells
+learn: Four rooms under one roof. Vasudha says it like a place you can walk
+    into, because it is.
+match: On the lintel. Of course it's on the lintel — you label the door.
+confirm: The Archive's own founding record uses this sign as its name. WARDEN
+    has been called this for sixty years and never knew why.
+hint: Sakshi: "If the script is an index, something has to be indexed. Find
+    the sign for the building that holds the thing."
+
+:: measure
+name: MEASURE / TALLY
+gloss: five short bars and a longer closing stroke
+learn: A count, and a unit. These people measured everything and wrote the
+    unit down every single time, which is more than most of my colleagues do.
+match: Repeated eleven times along the drain. Someone was counting capacity.
+confirm: It resolves to a volume — and the volume matches Vasudha's
+    flood-timing tables exactly.
+hint: Sakshi: "Where the same sign repeats in a run, you're looking at
+    numbers. Nobody writes a poem eleven times in a row."
+
+:: grain
+name: GRAIN STORE
+gloss: a seed-shape inside a square
+learn: Seed, in a box. There is no poetry in this script at all and I love it
+    for that.
+match: Three of them in the lower city, all on the same street.
+confirm: The Archive holds the seed strains themselves. Still viable. Sixty
+    years under water and someone kept them viable.
+hint: Sakshi: "Food storage is always labelled and always near the road. Walk
+    the street, not the ruins."
+
+:: keeper
+name: THE KEEPER
+gloss: an eight-spoked disc above an open palm
+learn: Vasudha doesn't teach me this one. She points at me and then at the
+    wall, and waits.
+match: The mark on the apron slab. The one that sent me down here.
+confirm: WARDEN's ledger of Keepers opens with it. It has a column for
+    centuries, and the column is not short.
+hint: Sakshi: "You already know this one, beta. You've been carrying it."

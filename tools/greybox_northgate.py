@@ -26,6 +26,9 @@ ERAS = [("past", "Past", 0, 2), ("present", "Present", 1, 4), ("future", "Future
 
 MARKET_X = [12, 19, 26, 33, 40, 47]
 
+# Must match the ids in game/data/signs/index.signs, in wall order.
+SIGN_IDS = ["what", "water", "not", "take", "house", "measure", "grain", "keeper"]
+
 
 KIT_INDEX = pathlib.Path(__file__).resolve().parent.parent / "game/art/kit/kit_sizes.json"
 KIT = json.loads(KIT_INDEX.read_text()) if KIT_INDEX.exists() else {}
@@ -711,6 +714,27 @@ def main():
     emit_light("TrenchLight", "Present", (0.5, -9.0, -11.5), (0.90, 0.94, 1.0), 2.4, 9.0)
     emit_light("DroneGlow", "Future", (-5.5, -9.1, -13.25), (0.30, 0.78, 0.92), 4.0, 9.0)
     emit_light("SiltGlow", "Future", (0.5, -9.2, -12.0), (0.26, 0.56, 0.72), 1.8, 8.0)
+
+    # --- the manifest wall: the same eight signs in all three eras -----
+    # This one room is the whole Chapter 2 chain. Learn a sign fresh in
+    # 1900 BCE, find it eroded on the same wall in 2026, confirm it against
+    # WARDEN's scan in 2087 — without ever leaving the chamber.
+    sign_script = ext_id("res://scripts/interact/sign_marker.gd", "Script")
+    for era_name in ("Past", "Present", "Future"):
+        for col, sign_id in enumerate(SIGN_IDS):
+            nodes.append(
+                '[node name="Sign_%s" type="Area3D" parent="%s"]\n'
+                'transform = %s\n'
+                'script = ExtResource("%s")\n'
+                'sign_id = "%s"\n'
+                'prompt = "Examine the marks"\n'
+                % (sign_id, era_name,
+                   xform((-8.15, -9.53, -14.9 + col * 0.47)), sign_script, sign_id)
+            )
+            nodes.append(
+                '[node name="Reach" type="CollisionShape3D" parent="%s/Sign_%s"]\n'
+                'shape = SubResource("%s")\n' % (era_name, sign_id, sphere_id(0.6))
+            )
 
     # --- places the Prologue waits for Eva to reach --------------------
     emit_trigger("at_trench_top", "Present", (0.5, -6.3, -6.6), 2.8, 4)

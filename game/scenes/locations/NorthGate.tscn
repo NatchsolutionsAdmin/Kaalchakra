@@ -1,6 +1,6 @@
 ; Greybox of Dholarath's north gate, reservoir and market street, in three eras.
 ; Generated once by tools/greybox_northgate.py — this file is now the source of truth.
-[gd_scene load_steps=227 format=3]
+[gd_scene load_steps=229 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/era_root.gd" id="ext_1"]
 [ext_resource type="Script" path="res://scripts/interact/lore_marker.gd" id="ext_2"]
@@ -49,7 +49,8 @@
 [ext_resource type="PackedScene" path="res://art/props/scan_pylon.glb" id="ext_45"]
 [ext_resource type="PackedScene" path="res://art/props/archive_drone.glb" id="ext_46"]
 [ext_resource type="Material" path="res://materials/mat_water_future.tres" id="ext_47"]
-[ext_resource type="Material" path="res://materials/mat_dig.tres" id="ext_48"]
+[ext_resource type="Script" path="res://scripts/interact/sign_marker.gd" id="ext_48"]
+[ext_resource type="Material" path="res://materials/mat_dig.tres" id="ext_49"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
 radius = 2.6
@@ -580,9 +581,12 @@ size = Vector3(5, 0.5, 4)
 size = Vector3(0.4945, 3.69, 0.52)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_t1"]
-radius = 2.8
+radius = 0.6
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_t2"]
+radius = 2.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t3"]
 radius = 1.9
 
 [node name="NorthGate" type="Node3D"]
@@ -6582,26 +6586,242 @@ light_energy = 1.8
 omni_range = 8
 shadow_enabled = false
 
+[node name="Sign_what" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.9)
+script = ExtResource("ext_48")
+sign_id = "what"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_what"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_water" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.43)
+script = ExtResource("ext_48")
+sign_id = "water"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_water"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_not" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.96)
+script = ExtResource("ext_48")
+sign_id = "not"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_not"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_take" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.49)
+script = ExtResource("ext_48")
+sign_id = "take"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_take"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_house" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.02)
+script = ExtResource("ext_48")
+sign_id = "house"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_house"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_measure" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.55)
+script = ExtResource("ext_48")
+sign_id = "measure"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_measure"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_grain" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.08)
+script = ExtResource("ext_48")
+sign_id = "grain"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_grain"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_keeper" type="Area3D" parent="Past"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -11.61)
+script = ExtResource("ext_48")
+sign_id = "keeper"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Past/Sign_keeper"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_what" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.9)
+script = ExtResource("ext_48")
+sign_id = "what"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_what"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_water" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.43)
+script = ExtResource("ext_48")
+sign_id = "water"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_water"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_not" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.96)
+script = ExtResource("ext_48")
+sign_id = "not"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_not"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_take" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.49)
+script = ExtResource("ext_48")
+sign_id = "take"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_take"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_house" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.02)
+script = ExtResource("ext_48")
+sign_id = "house"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_house"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_measure" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.55)
+script = ExtResource("ext_48")
+sign_id = "measure"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_measure"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_grain" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.08)
+script = ExtResource("ext_48")
+sign_id = "grain"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_grain"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_keeper" type="Area3D" parent="Present"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -11.61)
+script = ExtResource("ext_48")
+sign_id = "keeper"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Present/Sign_keeper"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_what" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.9)
+script = ExtResource("ext_48")
+sign_id = "what"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_what"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_water" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -14.43)
+script = ExtResource("ext_48")
+sign_id = "water"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_water"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_not" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.96)
+script = ExtResource("ext_48")
+sign_id = "not"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_not"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_take" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.49)
+script = ExtResource("ext_48")
+sign_id = "take"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_take"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_house" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -13.02)
+script = ExtResource("ext_48")
+sign_id = "house"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_house"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_measure" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.55)
+script = ExtResource("ext_48")
+sign_id = "measure"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_measure"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_grain" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -12.08)
+script = ExtResource("ext_48")
+sign_id = "grain"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_grain"]
+shape = SubResource("SphereShape3D_t1")
+
+[node name="Sign_keeper" type="Area3D" parent="Future"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, -9.53, -11.61)
+script = ExtResource("ext_48")
+sign_id = "keeper"
+prompt = "Examine the marks"
+
+[node name="Reach" type="CollisionShape3D" parent="Future/Sign_keeper"]
+shape = SubResource("SphereShape3D_t1")
+
 [node name="at_trench_top" type="Area3D" parent="Present"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -6.3, -6.6)
 script = ExtResource("ext_4")
 
 [node name="Reach" type="CollisionShape3D" parent="Present/at_trench_top"]
-shape = SubResource("SphereShape3D_t1")
+shape = SubResource("SphereShape3D_t2")
 
 [node name="at_trench_bottom" type="Area3D" parent="Present"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -10.2, -11.6)
 script = ExtResource("ext_4")
 
 [node name="Reach" type="CollisionShape3D" parent="Present/at_trench_bottom"]
-shape = SubResource("SphereShape3D_t1")
+shape = SubResource("SphereShape3D_t2")
 
 [node name="in_chamber" type="Area3D" parent="Present"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, -10, -13.25)
 script = ExtResource("ext_4")
 
 [node name="Reach" type="CollisionShape3D" parent="Present/in_chamber"]
-shape = SubResource("SphereShape3D_t2")
+shape = SubResource("SphereShape3D_t3")
 
 [node name="KeeperMarkSlab" type="MeshInstance3D" parent="Past"]
 transform = Transform3D(2, 0, 0, 0, 0.2, 0, 0, 0, 2, 3, 0.1, -25)
@@ -6621,7 +6841,7 @@ shape = SubResource("SphereShape3D_reach")
 [node name="DigPatch" type="MeshInstance3D" parent="Present"]
 transform = Transform3D(0.9, 0, 0, 0, 0.1, 0, 0, 0, 1.4, -1.4, -10.75, -12.8)
 mesh = SubResource("BoxMesh_unit")
-material_override = ExtResource("ext_48")
+material_override = ExtResource("ext_49")
 
 [node name="DigSite" type="Area3D" parent="Present"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -9.8, -12.8)
