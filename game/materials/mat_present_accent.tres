@@ -1,5 +1,18 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://shaders/stone.gdshader" id="1"]
 
 [resource]
-albedo_color = Color(0.74, 0.71, 0.66, 1)
-roughness = 0.9
+shader = ExtResource("1")
+shader_parameter/base_color = Color(0.8471, 0.7961, 0.6902, 1.0)
+shader_parameter/sun_bleach = Color(0.9294, 0.9059, 0.8549, 1.0)
+shader_parameter/ground_shade = Color(0.4157, 0.3922, 0.349, 1.0)
+shader_parameter/roughness_value = 0.96
+shader_parameter/course_height = 0.24
+shader_parameter/course_length = 0.4
+shader_parameter/mortar_depth = 0.11
+shader_parameter/patch_strength = 0.22
+shader_parameter/waterline_enabled = true
+shader_parameter/waterline_height = -4.6
+shader_parameter/waterline_width = 0.5
+shader_parameter/waterline_color = Color(0.4353, 0.4157, 0.3216, 1.0)
