@@ -81,6 +81,28 @@ func _collect_progress(node: Node, out: Array[String]) -> void:
 		_collect_progress(child, out)
 
 
+## Walks res://scripts and loads every .gd. A script that fails to parse
+## returns null here instead of silently doing nothing at runtime.
+func _compile_all(dir_path: String, broken: Array[String]) -> int:
+	var count := 0
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return 0
+	dir.list_dir_begin()
+	var entry := dir.get_next()
+	while entry != "":
+		var full := dir_path.path_join(entry)
+		if dir.current_is_dir():
+			count += _compile_all(full, broken)
+		elif entry.ends_with(".gd"):
+			count += 1
+			if load(full) == null:
+				broken.append(full)
+		entry = dir.get_next()
+	dir.list_dir_end()
+	return count
+
+
 func _count_lines(chunks: Dictionary) -> int:
 	var n := 0
 	for name: String in chunks:
@@ -587,21 +609,20 @@ func _run() -> void:
 		print("           ... and %d more" % (wanted_audio.size() - 6))
 
 	# A typo must produce a readable complaint, not a crash.
-	var broken := DialogueParser.parse("::a\nEVA: hi\n-> nowhere\n")
-	_ok("a jump to a missing chunk is reported", broken["errors"].size() == 1,
-		str(broken["errors"]))
+	var bad_jump := DialogueParser.parse("::a\nEVA: hi\n-> nowhere\n")
+	_ok("a jump to a missing chunk is reported", bad_jump["errors"].size() == 1,
+		str(bad_jump["errors"]))
 
 	Story.reset()
 
-	print("\n-- the dev tools themselves --")
-	# These are never loaded by the rest of the suite, so a parse error in one
-	# used to reach Prabhjot before it reached a test.
-	for tool_path: String in [
-		"res://scripts/dev/prologue_run.gd",
-		"res://scripts/dev/shots.gd",
-		"res://scripts/dev/vo_manifest.gd",
-	]:
-		_ok("%s compiles" % tool_path.get_file(), load(tool_path) != null)
+	print("\n-- every script in the project compiles --")
+	# Eva's rig script had a parse error and the whole suite still passed,
+	# because a script that fails to load just leaves its node un-scripted and
+	# nothing complained. Load every one of them and find out.
+	var broken: Array[String] = []
+	var checked := _compile_all("res://scripts", broken)
+	_ok("all %d scripts load" % checked, broken.is_empty(),
+		"\n        broken: " + "\n        broken: ".join(broken))
 
 	print("\n-- the safety net --")
 	player.global_position = Vector3(0, -200, -26)

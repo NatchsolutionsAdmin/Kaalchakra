@@ -124,6 +124,22 @@ func _run() -> void:
 	touch_ui.get("_paint").queue_redraw()
 	await _settle(6)
 
+	# 4c. Portrait — does she have a face worth framing?
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _stand(Vector3(0, 1.2, -24), 180.0)
+	_overview.global_position = _player.global_position + Vector3(0.55, 1.62, 1.25)
+	_overview.look_at(_player.global_position + Vector3(0, 1.52, 0), Vector3.UP)
+	_overview.fov = 42.0
+	_overview.make_current()
+	await _settle(14)
+	await _shot("eva_portrait")
+	_overview.global_position = _player.global_position + Vector3(2.1, 1.1, 2.6)
+	_overview.look_at(_player.global_position + Vector3(0, 0.95, 0), Vector3.UP)
+	_overview.fov = 52.0
+	await _settle(14)
+	await _shot("eva_full")
+	_overview.fov = 62.0
+
 	# 5. Overview from the south-east.
 	_overview.global_position = Vector3(52, 40, 26)
 	_overview.look_at(Vector3(0, -2, -18), Vector3.UP)
