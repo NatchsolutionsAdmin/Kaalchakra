@@ -27,7 +27,7 @@ A single-player, story-driven, 3rd-person **3D time-shift adventure** set in the
 - **Hard rule:** "anchored events" — mass-witnessed history can't be changed. You can't save the city. You can save a person, a text, an idea.
 - Key cast: **Sakshi** (Eva's mother, retired archaeologist, alive, on the phone — hint system), **Vasudha** (past-era chief water engineer, mentor), **Councillor Raktim** (past antagonist, reasonable), **Ishita Vaid** (present site partner, skeptic), **Marcus Dhillon / HELIX** (present antagonist), **WARDEN** (future archive intelligence), **Nira** (child, Ch. 4).
 
-Full detail: `docs/kaalchakra-story-bible.md`.
+Full detail: `docs/kaalchakra-story-bible.md`. Who builds what: `docs/WHO-DOES-WHAT.md`.
 
 ## 3. Decisions already made (don't re-litigate unless Prabhjot raises it)
 
