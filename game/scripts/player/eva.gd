@@ -74,6 +74,11 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
 		return
+	if Dialogue.is_active():
+		# Nobody walks off mid-sentence.
+		velocity = Vector3.ZERO
+		Touch.move = Vector2.ZERO
+		return
 	if _mantling or TimeShift.is_shifting():
 		return
 

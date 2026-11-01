@@ -39,6 +39,29 @@ func _settle(frames: int = 20) -> void:
 		await get_tree().physics_frame
 
 
+func _count_lines(chunks: Dictionary) -> int:
+	var n := 0
+	for name: String in chunks:
+		for step: Dictionary in chunks[name]:
+			if step["type"] == "line":
+				n += 1
+	return n
+
+
+## Plays a scene to the end with no human, taking `pick` at every branch.
+func _walk_dialogue(pick: int, limit: int = 500) -> Dictionary:
+	var lines := 0
+	var choices := 0
+	while Dialogue.is_active() and lines + choices < limit:
+		if not Dialogue.pending_choices.is_empty():
+			Dialogue.choose(mini(pick, Dialogue.pending_choices.size() - 1))
+			choices += 1
+		else:
+			Dialogue.advance()
+			lines += 1
+	return {"lines": lines, "choices": choices}
+
+
 func _era_node(name: String) -> EraRoot:
 	return _main.get_node("NorthGate/" + name) as EraRoot
 
@@ -298,6 +321,56 @@ func _run() -> void:
 	await _settle(50)
 	_ok("the shift finishes", not TimeShift.is_shifting())
 	_ok("and it landed in PAST", TimeShift.current_era == Era.Id.PAST)
+
+	print("\n-- the Prologue script --")
+	const PROLOGUE := "res://data/dialogue/prologue_overburden.dialogue"
+	var parsed := DialogueParser.parse_file(PROLOGUE)
+	var parse_errors: Array = parsed["errors"]
+	_ok("the Prologue parses with no errors", parse_errors.is_empty(),
+		"\n        " + "\n        ".join(parse_errors))
+	_ok("it has a start chunk", parsed["chunks"].has("start"))
+	print("        %d chunks, %d lines"
+		% [parsed["chunks"].size(), _count_lines(parsed["chunks"])])
+
+	# Walk it twice, down both sides of the first branch, and check the flags
+	# the script promises actually land.
+	var played: Dictionary = {}
+	for path: Array in [[0, "invited Ishita down"], [2, "sent her away"]]:
+		Story.reset()
+		TimeShift.request_shift(Era.Id.PRESENT)
+		await _settle(4)
+		Dialogue.play_file(PROLOGUE)
+		played = _walk_dialogue(path[0])
+		_ok("plays to the end — %s" % path[1], not Dialogue.is_active(),
+			"stalled after %d lines" % played["lines"])
+		_ok("  reached the chamber", Story.has_flag("saw_the_index"))
+		_ok("  excavation was unlocked", Story.has_skill("excavation"))
+		_ok("  Sakshi became callable", Story.has_contact("sakshi"))
+		_ok("  it ends in 1900 BCE", TimeShift.current_era == Era.Id.PAST,
+			"ended in %s" % Era.SHORT[TimeShift.current_era])
+		print("        %d lines, %d choices" % [played["lines"], played["choices"]])
+
+	# Ishita only speaks at the door if she was invited down.
+	Story.reset()
+	Story.set_flag("ishita_present_at_discovery")
+	Dialogue.play_file(PROLOGUE, "clear_the_door")
+	var with_her := _walk_dialogue(0)
+	Story.reset()
+	Dialogue.play_file(PROLOGUE, "clear_the_door")
+	var without_her := _walk_dialogue(0)
+	_ok("Ishita's lines appear only when she came down",
+		with_her["lines"] > without_her["lines"],
+		"%d vs %d lines" % [with_her["lines"], without_her["lines"]])
+
+	var todo := Dialogue.unhandled_directives()
+	print("        script asks for, not built yet: %s" % ", ".join(todo))
+
+	# A typo must produce a readable complaint, not a crash.
+	var broken := DialogueParser.parse("::a\nEVA: hi\n-> nowhere\n")
+	_ok("a jump to a missing chunk is reported", broken["errors"].size() == 1,
+		str(broken["errors"]))
+
+	Story.reset()
 
 	print("\n-- the safety net --")
 	player.global_position = Vector3(0, -200, -26)

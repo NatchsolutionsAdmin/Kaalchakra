@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 TimeShift="*res://scripts/autoload/time_shift_manager.gd"
 Interactions="*res://scripts/autoload/interactions.gd"
 Touch="*res://scripts/autoload/touch_input.gd"
+Story="*res://scripts/autoload/story.gd"
+Dialogue="*res://scripts/autoload/dialogue.gd"
 
 [display]
 

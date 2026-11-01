@@ -57,6 +57,19 @@ Click **Eva** in the Scene panel (left) and look at the **Inspector** (right).
 change one, press Play, feel the difference. Nothing you do there can break the
 project; `git checkout .` puts it back.
 
+## Reading the Prologue in the game
+
+```
+/Applications/Godot.app/Contents/MacOS/Godot --path game scenes/dev/Prologue.tscn
+```
+
+Tap to advance; tap while text is typing to finish the line; choices are
+buttons. The script is `data/dialogue/prologue_overburden.dialogue` — edit it in
+TextEdit, run this again, and your words are in the game. No Godot required.
+
+When the time comes to export a real build, `*.dialogue` has to be added to the
+export filters, or the scripts get left out of the package.
+
 ## Before committing
 
 ```

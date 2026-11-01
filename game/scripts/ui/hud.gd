@@ -32,6 +32,9 @@ func _ready() -> void:
 	TimeShift.shift_refused.connect(_on_shift_refused)
 	TimeShift.knowledge_gained.connect(func(_id: String) -> void: _refresh_objective())
 	TimeShift.reduced_motion_changed.connect(func(_enabled: bool) -> void: _refresh_hint())
+	Story.objective_changed.connect(func(_t: String) -> void: _refresh_objective())
+	Dialogue.started.connect(func(_id: String) -> void: _set_chrome(false))
+	Dialogue.finished.connect(func(_id: String) -> void: _set_chrome(true))
 	Interactions.focus_changed.connect(_on_focus_changed)
 	Interactions.message.connect(_on_message)
 	get_viewport().size_changed.connect(_layout)
@@ -255,7 +258,19 @@ func _on_message(text: String, seconds: float) -> void:
 	_banner_timer = seconds
 
 
+## While a scene is playing, the HUD gets out of the way of the dialogue box.
+func _set_chrome(visible_now: bool) -> void:
+	_prompt_box.visible = visible_now
+	_hint.visible = visible_now
+
+
 func _refresh_objective() -> void:
+	# Once the script starts setting objectives, they win over the prototype's
+	# hard-coded ones.
+	if not Story.objective.is_empty():
+		_objective.text = Story.objective
+		_on_focus_changed(_watched)
+		return
 	if not TimeShift.knows("keeper_mark"):
 		_objective.text = "2026 has nothing left to read. Turn the Wheel back to 1900 BCE and find what the city wrote down."
 	elif not TimeShift.knows("chamber_opened"):

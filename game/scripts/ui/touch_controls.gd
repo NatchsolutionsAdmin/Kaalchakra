@@ -41,6 +41,8 @@ func _ready() -> void:
 	_build()
 	get_viewport().size_changed.connect(_layout)
 	Interactions.focus_changed.connect(_on_focus_changed)
+	Dialogue.started.connect(func(_id: String) -> void: _hide_for_dialogue(true))
+	Dialogue.finished.connect(func(_id: String) -> void: _hide_for_dialogue(false))
 	TimeShift.era_changed.connect(func(_f: Era.Id, _t: Era.Id) -> void: _refresh_wheel())
 	_on_focus_changed(null)
 	_refresh_wheel()
@@ -153,6 +155,16 @@ func _layout() -> void:
 		var c := centre + Vector2(cos(a), sin(a)) * radius
 		(_era_buttons[era] as Button).position = c - Vector2(ERA_SIZE, ERA_SIZE) * 0.5
 	_paint.queue_redraw()
+
+
+## Thumbs off the controls while someone is speaking — otherwise the tap that
+## advances a line also spins the camera.
+func _hide_for_dialogue(hidden: bool) -> void:
+	_root.visible = not hidden
+	if hidden:
+		_clear_joy()
+		_look_touch = -1
+		Touch.reset()
 
 
 # --- the floating joystick ----------------------------------------------
