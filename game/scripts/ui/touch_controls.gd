@@ -34,6 +34,10 @@ var _joy_origin := Vector2.ZERO
 var _joy_point := Vector2.ZERO
 var _wheel_open := false
 var _wheel_swipe := 0.0
+## Opening the window emits a stray touch on the Mac (mouse-to-touch emulation
+## fires as the window takes focus), which flashed the joystick ring for a
+## frame. Ignore anything in the first moment.
+var _settle_in := 0.25
 
 
 func _ready() -> void:
@@ -195,7 +199,14 @@ func _clear_joy() -> void:
 
 
 # Runs only for touches no Control claimed, so buttons always win.
+func _process(delta: float) -> void:
+	if _settle_in > 0.0:
+		_settle_in -= delta
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if _settle_in > 0.0:
+		return
 	var half := get_viewport().get_visible_rect().size.x * 0.5
 
 	if event is InputEventScreenTouch:

@@ -36,6 +36,8 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 ; 4 = sensor landscape: locks to landscape, lets the player flip the phone.
 window/handheld/orientation=4
+; Render at the Mac's real pixel density instead of upscaling a small buffer.
+window/dpi/allow_hidpi=true
 
 [input_devices]
 
@@ -132,9 +134,18 @@ respawn={
 
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="mobile"
-; Mobile budget (CLAUDE.md §9): no MSAA, one cheap directional shadow, no
-; anisotropic filtering. Revisit once we have profiled on a real phone.
-anti_aliasing/quality/msaa_3d=0
-lights_and_shadows/directional_shadow/size=2048
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
-textures/default_filters/anisotropic_filtering_level=0
+; Turning MSAA off was a mistake. Phone GPUs are tile-based, so multisampling
+; resolves inside tile memory and is far cheaper there than on a desktop card
+; — it is the one quality setting mobile games almost always keep. Without it
+; every edge in a greybox is a hard staircase.
+;
+; The `.mobile` suffixed lines are what an actual phone uses; the plain ones
+; are for the Mac. Revisit all of it after profiling on a real device.
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/msaa_3d.mobile=1
+anti_aliasing/quality/use_debanding=true
+lights_and_shadows/directional_shadow/size=4096
+lights_and_shadows/directional_shadow/size.mobile=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile=1
+textures/default_filters/anisotropic_filtering_level=2
