@@ -109,9 +109,12 @@ func _do_shift(era: Era.Id) -> void:
 		current_era = era
 		era_changed.emit(from, era)
 		if not reduced_motion:
-			_overlay.color = Color(1, 1, 1, 0.85)
+			# Hold the white, then bleed it off. A 0.3 s fade was too polite
+			# for the moment the whole Prologue exists to deliver.
+			_overlay.color = Color(1, 1, 1, 1.0)
 			var flash := create_tween()
-			flash.tween_property(_overlay, "color", Color(1, 1, 1, 0.0), 0.3)
+			flash.tween_interval(0.14)
+			flash.tween_property(_overlay, "color", Color(1, 1, 1, 0.0), 0.55)
 			await flash.finished
 			_overlay.color = Color(0, 0, 0, 0)
 	elif reduced_motion:

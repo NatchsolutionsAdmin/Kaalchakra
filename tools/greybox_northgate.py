@@ -132,7 +132,12 @@ def trench_and_chamber(tag):
 
     # The manifest wall: the signs Eva cannot read. Eight columns, three rows,
     # on the chamber's back wall facing the door.
-    sign_mat = {"past": "mat_marker", "present": acc, "future": "mat_drone"}[tag]
+    # Must CONTRAST with the wall behind them. In 2026 the signs and the wall
+    # were both mat_present_accent, so the manifest wall looked blank — the
+    # signs were not missing, they were invisible.
+    sign_mat = {"past": "mat_marker",
+                "present": "mat_present_dark",
+                "future": "mat_drone"}[tag]
     for col in range(8):
         for row in range(3):
             out.append((f"ManifestSign{col}{row}",

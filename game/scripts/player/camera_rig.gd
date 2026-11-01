@@ -57,7 +57,10 @@ func _physics_process(delta: float) -> void:
 		Touch.take_look()
 		_frame(_cine, delta)
 		if _model:
-			_model.visible = true
+			# A staged shot often stands exactly where the player left her,
+			# and a camera inside her capsule shows the inside of a mesh —
+			# which reads as "there was nothing there".
+			_model.visible = global_position.distance_to(target.global_position) > 1.4
 		return
 	# One read per frame; reading clears the accumulated drag.
 	var look := Touch.take_look()
