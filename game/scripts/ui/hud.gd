@@ -99,7 +99,7 @@ func _build() -> void:
 	_hold_bar.visible = false
 	prompt_box.add_child(_hold_bar)
 
-	# Centre, pushed down: banner for lines Evara reads.
+	# Centre, pushed down: banner for lines Eva reads.
 	var banner_slot := CenterContainer.new()
 	banner_slot.set_anchors_preset(Control.PRESET_FULL_RECT)
 	banner_slot.offset_top = 150

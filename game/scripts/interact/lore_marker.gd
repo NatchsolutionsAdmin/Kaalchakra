@@ -1,4 +1,4 @@
-## LoreMarker — something Evara reads. Optionally teaches her a fact that other
+## LoreMarker — something Eva reads. Optionally teaches her a fact that other
 ## eras are allowed to react to.
 ##
 ## This is the "learn it in one era" half of the core loop (R2.2). It does not

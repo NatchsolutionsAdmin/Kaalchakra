@@ -26,8 +26,8 @@ hold Q the Wheel · M reduced motion · R respawn
 
 ```
 scenes/
-  Main.tscn              the scene that runs — sky, sun, HUD, location, Evara
-  player/Evara.tscn      the capsule + 3rd-person camera
+  Main.tscn              the scene that runs — sky, sun, HUD, location, Eva
+  player/Eva.tscn      the capsule + 3rd-person camera
   locations/NorthGate.tscn   the greybox, with Past / Present / Future children
   ui/ (built in code)    HUD and the touch controls
   dev/SmokeTest.tscn     dev-only test harness (not shipped)
@@ -44,14 +44,14 @@ materials/               flat greybox colours, one set per era
 
 `scenes/locations/NorthGate.tscn` has three children — `Past`, `Present`, `Future` —
 each a complete copy of the same place. Only one is visible at a time. The other
-two are still sitting there, but their geometry is on a **collision layer** Evara
+two are still sitting there, but their geometry is on a **collision layer** Eva
 isn't listening to, so she walks as if they don't exist. `TimeShiftManager`
-announces the change, every `EraRoot` shows or hides itself, and Evara rebuilds
+announces the change, every `EraRoot` shows or hides itself, and Eva rebuilds
 her collision mask. She never moves — the world changes around her.
 
 ## Things to try changing
 
-Click **Evara** in the Scene panel (left) and look at the **Inspector** (right).
+Click **Eva** in the Scene panel (left) and look at the **Inspector** (right).
 `Walk Speed`, `Run Speed`, `Jump Velocity`, `Auto Step Height` and
 `Mantle Max Height` are all live —
 change one, press Play, feel the difference. Nothing you do there can break the

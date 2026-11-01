@@ -1,4 +1,4 @@
-## Interactable — base class for anything Evara can press E on.
+## Interactable — base class for anything Eva can press E on.
 ##
 ## It is an Area3D: an invisible volume that reports when a body enters it.
 ## This one only listens for the player (collision layer 5), registers itself

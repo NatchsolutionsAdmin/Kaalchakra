@@ -1,4 +1,4 @@
-## Interactions — keeps track of what Evara could touch right now, and carries
+## Interactions — keeps track of what Eva could touch right now, and carries
 ## short bits of on-screen text.
 ##
 ## An autoload (global name `Interactions`). Each Interactable registers itself
@@ -21,7 +21,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	# Cheap: the candidate list is only ever a handful of nodes, and this keeps
-	# the focus correct as Evara moves between two things that overlap.
+	# the focus correct as Eva moves between two things that overlap.
 	if _candidates.size() > 1:
 		_refresh()
 

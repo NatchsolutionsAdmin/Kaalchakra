@@ -354,7 +354,7 @@ def main():
         for name, pos, size, matkey in boxes:
             emit_box(name, era_name, pos, size, matkey, layer)
 
-        # Water. A plain MeshInstance3D, so Evara walks through it — swimming is
+        # Water. A plain MeshInstance3D, so Eva walks through it — swimming is
         # not a verb in this game yet.
         if tag == "past":
             nodes.append(

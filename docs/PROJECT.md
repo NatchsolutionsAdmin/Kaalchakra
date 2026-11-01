@@ -7,7 +7,7 @@
 
 ## 1. What the game is
 
-A single-player, story-driven 3rd-person 3D adventure for **mobile: Android and iOS** (landscape, touch controls, short play sessions; PC port optional later). The player is **Evara**, a 24-year-old archaeologist who finds a copper wheel that lets her stand in the same place across three eras (1900 BCE, 2026, 2087) and carry knowledge between them to solve puzzles she cannot brute-force. ~5 hours, five chapters plus prologue and finale. Full story is in `kaalchakra-story-bible.md`.
+A single-player, story-driven 3rd-person 3D adventure for **mobile: Android and iOS** (landscape, touch controls, short play sessions; PC port optional later). The player is **Eva**, a 24-year-old archaeologist who finds a copper wheel that lets her stand in the same place across three eras (1900 BCE, 2026, 2087) and carry knowledge between them to solve puzzles she cannot brute-force. ~5 hours, five chapters plus prologue and finale. Full story is in `kaalchakra-story-bible.md`.
 
 Reference feel: the traversal and set-piece pacing of *Uncharted* / *Prince of Persia: The Sands of Time*, the melancholy of *Death Stranding*, grounded in real archaeology. The look you want — "attractive, high-end graphics" — is the single most demanding part of this project, and Section 4 is brutally honest about why.
 
@@ -102,12 +102,12 @@ What I do **not** need from you: any coding ability.
 1. ~~Art style~~ → **stylized realism** (art bible still to lock).
 2. ~~Engine~~ → **Godot 4**.
 3. ~~First prototype target~~ → **the three-era shift** (greybox north gate + reservoir).
-4. ~~Scope~~ → **build the vertical slice with AI first**, commission the Evara hero model from a freelancer, then decide on team.
+4. ~~Scope~~ → **build the vertical slice with AI first**, commission the Eva hero model from a freelancer, then decide on team.
 5. ~~Sakshi~~ → **alive, on the phone.**
 
 6. ~~Platform~~ → **mobile, Android + iOS** (2026-11-01; replaces PC/Steam first).
 
-**Still open:** mobile business model; minimum devices; final title; art bible lock; Evara's canon face; Meera Easter egg; future-era playability. See `DECISIONS.md`.
+**Still open:** mobile business model; minimum devices; final title; art bible lock; Eva's canon face; Meera Easter egg; future-era playability. See `DECISIONS.md`.
 
 ---
 

@@ -10,31 +10,31 @@
 #   @  an instruction to me (play a sound, move the camera, give her a skill)
 
 :: start
-# Prologue. 2026, the trench, first light. Evara is filming on her phone.
-EVARA: (to her phone, low) Day nineteen. Sun's not up, Ishita's not up, and I am
-EVARA: standing in a hole my mother was laughed out of a conference for pointing at.
+# Prologue. 2026, the trench, first light. Eva is filming on her phone.
+EVA: (to her phone, low) Day nineteen. Sun's not up, Ishita's not up, and I am
+EVA: standing in a hole my mother was laughed out of a conference for pointing at.
 @ objective "Clear the trench floor"
 @ skill_unlock excavation
 -> ishita_arrives
 
 :: ishita_arrives
 ISHITA: (off, above) You're talking to your phone again.
-EVARA: I'm talking to two million people. You're the one talking to nobody.
+EVA: I'm talking to two million people. You're the one talking to nobody.
 > "Come down and look at this."     -> show_her
 > (say nothing, keep digging)        -> keep_digging
 
 :: show_her
 ISHITA: (sliding down into the trench) ...That's not backfill.
-EVARA: No. That's a lintel.
+EVA: No. That's a lintel.
 @ camera look_at sealed_door
 -> the_door
 
 :: keep_digging
-EVARA: (to herself) Suit yourself.
+EVA: (to herself) Suit yourself.
 -> the_door
 
 :: the_door
 # The beat the whole prologue exists for.
 @ music swell_discovery
-EVARA: (quiet, not performing any more) Mum was right.
+EVA: (quiet, not performing any more) Mum was right.
 -> END

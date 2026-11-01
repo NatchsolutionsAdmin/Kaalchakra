@@ -18,14 +18,14 @@
 
 A single-player, story-driven, 3rd-person **3D time-shift adventure** set in the Indus Valley. **A mobile game for Android and iOS** (landscape, touch-first). ~5 hours: prologue + 5 chapters + finale, broken into short play sessions. A PC/Steam port stays possible later; Godot makes that cheap, but it is not the target.
 
-- **Protagonist: Evara** — female, 24, Gen Z archaeologist. **One name, no surname.** Narrates to her phone camera; carries her late father's trowel.
+- **Protagonist: Eva** — female, 24, Gen Z archaeologist. **One name, no surname.** Narrates to her phone camera; carries her late father's trowel.
 - **The Kaalchakra:** an eight-spoked copper wheel that snaps between **three fixed "mornings" of the same place:**
   - **Past — 1900 BCE:** the city of **Dholarath** (fictionalized Dholavira) at its peak and edge of collapse.
-  - **Present — 2026:** Evara's dig; HELIX corporation circling.
+  - **Present — 2026:** Eva's dig; HELIX corporation circling.
   - **Future — 2087:** the drowned, abandoned site, tended by WARDEN's Archive drones.
 - **Core loop:** solve puzzles by moving *information or small objects* across eras (learn in past → dig in present; walk a passage in the past that's collapsed in the present; read a future scan; hide in past → recover aged in present = "the banyan trick").
 - **Hard rule:** "anchored events" — mass-witnessed history can't be changed. You can't save the city. You can save a person, a text, an idea.
-- Key cast: **Sakshi** (Evara's mother, retired archaeologist, alive, on the phone — hint system), **Vasudha** (past-era chief water engineer, mentor), **Councillor Raktim** (past antagonist, reasonable), **Ishita Vaid** (present site partner, skeptic), **Marcus Dhillon / HELIX** (present antagonist), **WARDEN** (future archive intelligence), **Nira** (child, Ch. 4).
+- Key cast: **Sakshi** (Eva's mother, retired archaeologist, alive, on the phone — hint system), **Vasudha** (past-era chief water engineer, mentor), **Councillor Raktim** (past antagonist, reasonable), **Ishita Vaid** (present site partner, skeptic), **Marcus Dhillon / HELIX** (present antagonist), **WARDEN** (future archive intelligence), **Nira** (child, Ch. 4).
 
 Full detail: `docs/kaalchakra-story-bible.md`.
 
@@ -41,23 +41,24 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 | Machines | **Develop on the Mac.** It's required anyway: iOS builds need a Mac with Xcode. Android builds also work from the Mac. Windows is optional now. If it's used, keep the *same Godot version* on both. **Test on real phones** (one iPhone, one mid-range Android) from the first prototype. |
 | Stores | Google Play developer account (one-time fee) and Apple Developer Program (yearly fee). Needed only once we test on devices outside USB/TestFlight or publish. |
 | Version control | **Git + GitHub**: `https://github.com/NatchsolutionsAdmin/Kaalchakra.git`. Git LFS for large art/audio. |
-| Protagonist | Evara, female, 24, no surname. Sakshi alive (phone calls). |
+| Protagonist | **Eva** (renamed from Evara, 2026-11-01), female, 24, no surname. Sakshi alive (phone calls). |
 | Price / business model | **Open — re-decide for mobile** (see §4). The $19.99 PC plan in `docs/MARKET-POSITIONING.md` no longer applies. |
 | Vertical slice | Chapter 2, "The Index" (see `docs/REQUIREMENTS.md` §8). |
-| Evara 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Evara = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. Put them in `art/characters/evara/`. |
+| Eva 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Eva = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. Put them in `art/characters/eva/`. |
 | Future era | **2087 is fully walkable, no combat** (decided 2026-11-01). Decipherment's third step happens there. |
+| Voice | **AI voice for scratch/testing only** — never shipped, never in a trailer or demo. Real artists for release (R5.7). Scratch files in `audio/voice/scratch/`, git-ignored. |
 | Learning approach | Learn game design by **teardown → rebuild**: study how great games solve a problem, then rebuild that system in greybox. **Never** decompile/rip commercial game files (EULA/copyright risk, contaminates the project). |
 
 ## 4. Open decisions (raise these when relevant, one at a time)
 
 1. Final game title: *Kaalchakra: The Drowned City* vs *Sindhu* vs *The Third Morning*.
 2. Write and lock the art bible (palette: terracotta/ochre/dust + water-teal; era tints warm-gold past / neutral present / cold blue-grey future).
-3. Canon face for Evara: polished turnaround sheets vs the grounded `ComfyUI_00009` face.
+3. Canon face for Eva: polished turnaround sheets vs the grounded `ComfyUI_00009` face.
 4. Meera (from the early 2D prototype) as a past-Keeper Easter egg in ledger collectibles — recommended yes.
 5. Engine re-evaluation (Unreal) only if the vertical slice raises real money for a visually ambitious production — Phase 3, not now.
 6. **Mobile business model:** premium paid up front, vs. **free download with Chapter 1 free and a one-time unlock for the full game** (common for mobile narrative games), vs. a subscription platform deal (Netflix Games, Apple Arcade, as Raji did on Netflix). Avoid aggressive free-to-play monetization; it doesn't fit a 5-hour story. Market doc must be redone for mobile.
 7. **Minimum devices:** pick target low-end Android and oldest supported iPhone after the first device test.
-8. **Evara 3D brief:** the commission brief's poly/texture targets were written for PC. Update them for mobile before hiring.
+8. **Eva 3D brief:** the commission brief's poly/texture targets were written for PC. Update them for mobile before hiring.
 
 ## 5. The immediate next step (start here if nothing else is asked)
 
@@ -67,11 +68,11 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 2. Create the Godot project inside `game/` (project name "Kaalchakra"). Renderer: **Mobile**. Orientation: **landscape**. Turn on "Emulate Touch From Mouse" so touch can be tested on the Mac.
 3. Build in greybox (plain boxes, no art), **touch-first**:
    - The **north gate** and the **reservoir** below it, with a market street running east. Use real-feeling Harappan proportions: grid streets, stepped reservoir walls, a walled citadel edge.
-   - **Evara** as a capsule: 3rd-person controller with an **on-screen virtual joystick** (left), **drag-to-orbit camera** (right side of screen), a jump/climb button, and auto-climb on low ledges. Keyboard/gamepad also work for desk testing.
+   - **Eva** as a capsule: 3rd-person controller with an **on-screen virtual joystick** (left), **drag-to-orbit camera** (right side of screen), a jump/climb button, and auto-climb on low ledges. Keyboard/gamepad also work for desk testing.
    - **TimeShiftManager** (autoload): an **on-screen Wheel dial** (tap or swipe between the three eras) switches Past/Present/Future; keys 1/2/3 for desk testing. Each location has `Past`, `Present`, `Future` child nodes; only one visible/collidable at a time. Player position persists. Add a short shift transition (fade/flash) with a reduced-motion option.
    - Make each era *physically different*: e.g. a passage open in the past but collapsed in the present; water filling the reservoir in the past, dry in the present, flooded in the future.
    - One tiny cross-era puzzle to prove the loop: see something in the past (a sign marking a buried door) → find and dig it in the present.
-4. Walk Prabhjot through: opening the project, pressing Play, moving, switching eras, and changing one value himself (e.g. Evara's speed) so he learns the editor.
+4. Walk Prabhjot through: opening the project, pressing Play, moving, switching eras, and changing one value himself (e.g. Eva's speed) so he learns the editor.
 5. **Get it running on a real phone** (Android via USB one-click deploy is the quickest first test; iOS via Xcode export). Check frame rate and how the controls feel with thumbs.
 6. Commit and push to GitHub with a clear message.
 
@@ -94,7 +95,7 @@ Kaalchakra/
 ├── README.md
 ├── docs/                ← design & planning docs (story bible, requirements, architecture, market, decisions)
 ├── game/                ← the Godot 4 project (create project.godot here)
-├── art/                 ← source art: characters/evara, environments, reference
+├── art/                 ← source art: characters/eva, environments, reference
 ├── audio/               ← music, sfx, voice (source files)
 └── research/teardowns/  ← game teardown notes (Titanfall 2, Dishonored 2, etc.)
 ```

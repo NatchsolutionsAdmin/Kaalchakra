@@ -8,7 +8,7 @@
 ##   * which era is live right now
 ##   * the fade-to-black transition that hides the swap
 ##   * which eras are unlocked (story gating, R2.1)
-##   * `knowledge` — the seed of PersistenceManager: things Evara has learned in
+##   * `knowledge` — the seed of PersistenceManager: things Eva has learned in
 ##     one era that other eras are allowed to react to (R2.2, the banyan trick)
 ##   * the "anchored events" refusal (R2.3) — a shift that history won't allow
 ##
@@ -41,7 +41,7 @@ var reduced_motion := false:
 		reduced_motion = value
 		reduced_motion_changed.emit(value)
 
-## Facts Evara carries between eras. Keys are plain strings so content can live
+## Facts Eva carries between eras. Keys are plain strings so content can live
 ## in data files later, not code.
 var _knowledge: Dictionary = {}
 

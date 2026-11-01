@@ -1,10 +1,10 @@
-; Evara — greybox capsule with a 3rd-person orbit camera.
+; Eva — greybox capsule with a 3rd-person orbit camera.
 ; The capsule is a stand-in; the real model is a commission (REQUIREMENTS R5.1).
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://scripts/player/evara.gd" id="ext_1"]
+[ext_resource type="Script" path="res://scripts/player/eva.gd" id="ext_1"]
 [ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="ext_2"]
-[ext_resource type="Material" path="res://materials/mat_evara.tres" id="ext_3"]
+[ext_resource type="Material" path="res://materials/mat_eva.tres" id="ext_3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.35
@@ -17,7 +17,7 @@ height = 1.8
 [sub_resource type="BoxMesh" id="BoxMesh_nose"]
 size = Vector3(0.16, 0.16, 0.34)
 
-[node name="Evara" type="CharacterBody3D"]
+[node name="Eva" type="CharacterBody3D"]
 collision_layer = 16
 collision_mask = 5
 script = ExtResource("ext_1")

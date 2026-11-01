@@ -1,12 +1,12 @@
 ; Main — the scene that runs when you press Play.
-; It holds the shared stuff (sky, sun, HUD), the location, and Evara.
+; It holds the shared stuff (sky, sun, HUD), the location, and Eva.
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/era_lighting.gd" id="ext_1"]
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="ext_2"]
 [ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="ext_5"]
 [ext_resource type="PackedScene" path="res://scenes/locations/NorthGate.tscn" id="ext_3"]
-[ext_resource type="PackedScene" path="res://scenes/player/Evara.tscn" id="ext_4"]
+[ext_resource type="PackedScene" path="res://scenes/player/Eva.tscn" id="ext_4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.3, 0.46, 0.72, 1)
@@ -60,7 +60,7 @@ env_path = NodePath("../WorldEnvironment")
 
 [node name="NorthGate" parent="." instance=ExtResource("ext_3")]
 
-[node name="Evara" parent="." instance=ExtResource("ext_4")]
+[node name="Eva" parent="." instance=ExtResource("ext_4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -26)
 
 [node name="HUD" type="CanvasLayer" parent="."]

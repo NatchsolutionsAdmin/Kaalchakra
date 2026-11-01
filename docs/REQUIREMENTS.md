@@ -57,7 +57,7 @@
 
 > Friends cover the **[HUMAN]** craft. AI's role is to *accelerate* (blockouts, concept art, background props, music drafts), never to replace the hero work. AI 3D output still needs a human cleanup pass (retopology, UV, texture, rig) before it's engine-ready.
 
-- **R5.1 [HUMAN + AI-assist]** Hero characters (Evara, Vasudha, Sakshi, Ishita, Raktim, Dhillon): friends/freelancers lead. AI may generate a *first blockout* from sketches, then artists retopologize, texture, rig, and animate. Evara commission brief: `Evara_Character_Brief.docx`.
+- **R5.1 [HUMAN + AI-assist]** Hero characters (Eva, Vasudha, Sakshi, Ishita, Raktim, Dhillon): friends/freelancers lead. AI may generate a *first blockout* from sketches, then artists retopologize, texture, rig, and animate. Eva commission brief: `Evara_Character_Brief.docx`.
 - **R5.2 [HUMAN + AI-assist]** Three era-versions of the location: environment art human-led. AI 3D good for **background props** (generate individually). Hero architecture (the reservoir, signboard, north gate) stays human-led.
 - **R5.3 [HUMAN + AI-assist]** Animation: auto-rig fine for minor characters and testing; hero key-animation is hand/mocap.
 - **R5.4 [HUMAN]** Lighting, VFX (water, dust, the shift transition), optimization.
@@ -101,7 +101,7 @@
 - **VS.3 [AI]** At least two core mechanics live (decipherment + the trench-collapse rescue).
 - **VS.4 [AI]** Real dialogue, choices, and the Sakshi call system.
 - **VS.5 [AI]** Save/load and failure/retry working.
-- **VS.6 [BOTH]** At least **one** hero asset at near-final quality (Evara or the reservoir).
+- **VS.6 [BOTH]** At least **one** hero asset at near-final quality (Eva or the reservoir).
 - **VS.7 [AI]** Everything else greybox.
 - **VS.8 [AI]** Runs on a real Android phone and a real iPhone at target frame rate, with touch controls.
 

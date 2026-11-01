@@ -24,6 +24,9 @@ desktop.ini
 .vscode/
 .idea/
 
+# Placeholder voice — never shipped, never committed
+/audio/voice/scratch/
+
 # Secrets
 .env
 *.key

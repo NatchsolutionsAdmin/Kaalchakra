@@ -51,7 +51,7 @@ The key idea: **Layer 2 is built with greybox placeholders, so it works before L
 ### 3.1 The scene structure
 Godot organizes everything into "scenes" (reusable building blocks). Ours:
 - **A Location scene** holds one place. Crucially it contains *three versions* of that place as sub-scenes: `Past`, `Present`, `Future`. Only one is visible at a time.
-- **The Player scene** (Evara) persists across all three — same position, the world changes around her.
+- **The Player scene** (Eva) persists across all three — same position, the world changes around her.
 - **UI scenes** layer on top: HUD, the Wheel selector, dialogue box, journal.
 
 ### 3.2 The systems (the actual "game")
@@ -92,7 +92,7 @@ Story content lives in **data files, not code**, so writers and designers (and y
 | Music | a DAW (Reaper, GarageBand) to polish | Suno/Udio for drafts (paid tier for commercial rights) |
 | Voice | any recording setup | — (your friends; AI voice avoided) |
 
-**Mobile asset budgets:** all models, textures and effects must fit phone limits (lower polygon counts, smaller and fewer textures, few transparent effects). Give every artist mobile targets up front; the Evara commission brief's PC targets need updating before hiring.
+**Mobile asset budgets:** all models, textures and effects must fit phone limits (lower polygon counts, smaller and fewer textures, few transparent effects). Give every artist mobile targets up front; the Eva commission brief's PC targets need updating before hiring.
 
 **The one habit that keeps AI 3D usable:** always run a "quad remesh" cleanup pass on any AI-generated mesh before it enters Godot.
 
@@ -135,12 +135,12 @@ Story content lives in **data files, not code**, so writers and designers (and y
 ## 7. The build order
 
 1. **Art bible** (1 page) — lock the visual style. *(you + me + friends)*
-2. **Character sheets** — ✅ brief done; Evara turnaround done. *(me → friends)*
+2. **Character sheets** — ✅ brief done; Eva turnaround done. *(me → friends)*
 3. **Foundation** — Godot project, Git, folder structure. *(me)* ← next
 4. **Prototype** — three-era shift playable in greybox. *(me)* ← next
 5. **Environment concepts** — each era's location. *(friends, from my level layouts)*
 6. **Greybox vertical slice** — Chapter 2. *(me)*
-7. **First hero asset** — Evara via freelancer. *(freelancer + AI-assist)*
+7. **First hero asset** — Eva via freelancer. *(freelancer + AI-assist)*
 8. **Art replaces greybox**, chapter by chapter. *(friends → me integrates)*
 9. **Music, VFX, polish, QA, release.** *(everyone)*
 

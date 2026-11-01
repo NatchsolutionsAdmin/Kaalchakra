@@ -1,6 +1,6 @@
 ## DigSite — the "act on it in another era" half of the core loop.
 ##
-## Before Evara has learned where to dig, probing it tells her nothing. Once
+## Before Eva has learned where to dig, probing it tells her nothing. Once
 ## TimeShift.knows(requires_knowledge) is true, the same patch of ground becomes
 ## a hold-to-excavate prompt that reveals whatever `reveal` points at.
 ##

@@ -45,7 +45,7 @@ func _era_node(name: String) -> EraRoot:
 
 func _run() -> void:
 	var player := get_tree().get_first_node_in_group("player") as CharacterBody3D
-	_ok("Evara is in the \"player\" group", player != null)
+	_ok("Eva is in the \"player\" group", player != null)
 	if player == null:
 		return
 

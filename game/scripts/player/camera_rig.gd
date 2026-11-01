@@ -1,11 +1,11 @@
 ## CameraRig — the orbiting 3rd-person camera.
 ##
-## It is a child of Evara but runs as `top_level`, meaning it ignores her
+## It is a child of Eva but runs as `top_level`, meaning it ignores her
 ## transform and positions itself. That lets it lag a little behind her, which
 ## reads as weight instead of the camera being welded to her head.
 ##
 ## The SpringArm3D under it pulls the camera in when a wall gets between the
-## camera and Evara.
+## camera and Eva.
 ##
 ## Orbiting is drag-based: a thumb anywhere on the right of the screen, fed in
 ## through the `Touch` autoload. The mouse is never captured — "Emulate Touch
@@ -17,7 +17,7 @@ extends Node3D
 @export var drag_sensitivity := 0.0042
 @export var follow_speed := 14.0
 @export var shoulder_height := 1.45
-## Push the orbit centre sideways so Evara sits off-centre rather than dead
+## Push the orbit centre sideways so Eva sits off-centre rather than dead
 ## in the middle. Reads better, and keeps the view ahead of her clear.
 @export var shoulder_offset := 0.5
 @export var pitch_min_deg := -62.0

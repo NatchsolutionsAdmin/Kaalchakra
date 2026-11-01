@@ -24,7 +24,7 @@ I'm developing on a Mac (needed for iOS builds). The GitHub repo is
 https://github.com/NatchsolutionsAdmin/Kaalchakra.git
 
 Today's goal: the first greybox prototype from CLAUDE.md §5 — the north gate and
-reservoir of Dholarath, Evara as a capsule with touch controls (virtual joystick +
+reservoir of Dholarath, Eva as a capsule with touch controls (virtual joystick +
 camera drag), and a Past / Present / Future switch on an on-screen Wheel dial, with
 one tiny cross-era puzzle. Use Godot's Mobile renderer, and get it running on a
 real phone as soon as it works on the Mac.

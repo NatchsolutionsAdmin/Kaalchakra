@@ -17,7 +17,7 @@ func _ready() -> void:
 	_main = load("res://scenes/Main.tscn").instantiate()
 	add_child(_main)
 	TimeShift.reduced_motion = true
-	_player = _main.get_node("Evara")
+	_player = _main.get_node("Eva")
 	_pivot = _player.get_node("CameraPivot")
 	_overview = Camera3D.new()
 	_overview.fov = 62.0

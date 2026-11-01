@@ -1,10 +1,10 @@
-## Evara — the 3rd-person character controller.
+## Eva — the 3rd-person character controller.
 ##
 ## A CharacterBody3D: Godot's body type for characters you steer directly rather
 ## than pushing around with forces. You set `velocity`, call move_and_slide(),
 ## and it handles walls, slopes and stairs for you.
 ##
-## This capsule is a stand-in. The real Evara is a commissioned model (R5.1);
+## This capsule is a stand-in. The real Eva is a commissioned model (R5.1);
 ## nothing here cares what she looks like.
 extends CharacterBody3D
 
@@ -209,7 +209,7 @@ func _on_era_changed(_from: Era.Id, to: Era.Id) -> void:
 	_unstick()
 
 
-## Rebuild what Evara can bump into: the shared world (layer 1) plus whichever
+## Rebuild what Eva can bump into: the shared world (layer 1) plus whichever
 ## era is live. The other two eras' geometry is still sitting there in the scene
 ## — she simply stops listening to it.
 func _apply_era(era: Era.Id) -> void:
@@ -234,7 +234,7 @@ func _space_free(foot_pos: Vector3) -> bool:
 	return get_world_3d().direct_space_state.intersect_shape(params, 1).is_empty()
 
 
-## After a shift, the era that just arrived may have a wall where Evara is
+## After a shift, the era that just arrived may have a wall where Eva is
 ## standing. Lift her straight up until she is clear.
 func _unstick() -> void:
 	for _i in 30:

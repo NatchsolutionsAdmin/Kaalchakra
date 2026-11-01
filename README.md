@@ -1,6 +1,6 @@
 # Kaalchakra: The Drowned City
 
-A stylized, story-driven 3D time-shift adventure set in the Indus Valley. An archaeologist named Evara finds a copper wheel that lets her stand in the same city across three eras (1900 BCE, 2026, 2087) and carry knowledge between them.
+A stylized, story-driven 3D time-shift adventure set in the Indus Valley. An archaeologist named Eva finds a copper wheel that lets her stand in the same city across three eras (1900 BCE, 2026, 2087) and carry knowledge between them.
 
 - **Engine:** Godot 4 (GDScript)
 - **Platform:** Mobile — Android and iOS

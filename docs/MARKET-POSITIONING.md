@@ -89,7 +89,7 @@ A lean Indian production of **$150k–$500k** is cleared by the Modest scenario.
 - **S8UL** is India's biggest esports-and-content org (4× Esports Content Group of the Year, 25+ creators, 250+ brand partners). Real reach.
 - It's a *content and esports* org, not a publisher or funder. Its audience skews mobile/competitive. It drives **awareness and wishlist velocity**, especially in India — it does **not** replace reaching the global Steam narrative-adventure audience (Steam Next Fest, curators, cozy/atmospheric streamers) and does **not** fund development.
 
-**Wishlist targets:** 7–10k = modest launch; **20k+ = strong; 50k+ = top-seller position.** Launch-week conversion ~10–15%; lifetime 20–40%. Evara's in-fiction "channel" can be a real content strategy.
+**Wishlist targets:** 7–10k = modest launch; **20k+ = strong; 50k+ = top-seller position.** Launch-week conversion ~10–15%; lifetime 20–40%. Eva's in-fiction "channel" can be a real content strategy.
 
 ---
 
