@@ -573,7 +573,8 @@ func _run() -> void:
 	_ok("a hard cut changes era on the very same frame — no fade to sit through",
 		TimeShift.current_era == Era.Id.PAST,
 		"era=%s" % Era.SHORT[TimeShift.current_era])
-	await _settle(40)
+	# The flash holds then bleeds off over ~0.7 s, so give it longer than that.
+	await _settle(70)
 	_ok("and the white frame is gone a moment later", not TimeShift.is_shifting())
 	TimeShift.reduced_motion = true
 
