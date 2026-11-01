@@ -9,6 +9,7 @@
 #   ./dev shots      render reference screenshots of all three eras
 #   ./dev edit       open the project in the Godot editor
 #   ./dev import     re-import assets (after pulling, or if things look odd)
+#   ./dev kit        rebuild the Harappan kit in Blender, then photograph it
 #   ./dev doctor     check this machine: Godot, Git LFS, phone build tools
 #
 # Nothing here is needed to work on the game. It just saves typing the long
@@ -83,6 +84,20 @@ case "${1:-help}" in
     headless import --import
     echo "re-imported."
     ;;
+  kit)
+    BLENDER="${BLENDER:-$(command -v blender || echo /Applications/Blender.app/Contents/MacOS/Blender)}"
+    if [[ ! -x "$BLENDER" ]]; then
+      echo "Blender not found.  brew install --cask blender"
+      exit 1
+    fi
+    "$BLENDER" --background --python "$ROOT/tools/blender/harappan_kit.py" 2>&1 \
+      | grep -E "^  |pieces,|Harappan"
+    OUT="${2:-$ROOT/.shots}"
+    mkdir -p "$OUT"
+    need_godot kit
+    SHOT_DIR="$OUT" "$GODOT_BIN" --path "$GAME" scenes/dev/KitShowcase.tscn \
+      --quit-after 2000 2>&1 | grep -E "photographed|missing"
+    ;;
   doctor)
     echo "Kaalchakra — local setup"
     echo
@@ -135,6 +150,12 @@ case "${1:-help}" in
       echo "  ok    Java $(/usr/libexec/java_home -V 2>&1 | sed -n '2p' | awk '{print $1}')"
     else
       echo "  MISS  Java JDK 17 — Godot's Android export needs it."
+    fi
+
+    if command -v blender >/dev/null 2>&1 || [[ -x /Applications/Blender.app/Contents/MacOS/Blender ]]; then
+      echo "  ok    Blender $(blender --version 2>/dev/null | head -1 | awk '{print $2}')"
+    else
+      echo "  MISS  Blender — needed to build the environment kit.  brew install --cask blender"
     fi
 
     if [[ -d /Applications/Xcode.app ]]; then
