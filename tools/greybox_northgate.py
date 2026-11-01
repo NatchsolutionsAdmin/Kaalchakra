@@ -15,6 +15,7 @@ something walkable in about a minute:
   * market street east along z = -13, buildings either side
   * citadel edge wall to the west at x = -23
 """
+import json
 import math
 import pathlib
 
@@ -24,6 +25,41 @@ OUT = pathlib.Path(__file__).resolve().parent.parent / "game/scenes/locations/No
 ERAS = [("past", "Past", 0, 2), ("present", "Present", 1, 4), ("future", "Future", 2, 8)]
 
 MARKET_X = [12, 19, 26, 33, 40, 47]
+
+
+KIT_INDEX = pathlib.Path(__file__).resolve().parent.parent / "game/art/kit/kit_sizes.json"
+KIT = json.loads(KIT_INDEX.read_text()) if KIT_INDEX.exists() else {}
+
+
+def kit_for(name):
+    """Which kit piece stands in for a box, by name.
+
+    Flat ground, floors, ceilings, rubble and landform stay plain cubes: they
+    are horizontal, so coursed geometry would never be seen, and the shader
+    already gives them grain. Everything you look at edge-on becomes masonry.
+    """
+    if name.startswith(("Ground", "BasinFloor", "TrenchFloor", "ChamberFloor",
+                        "ChamberCeiling", "Mesa", "Debris", "SpoilHeap",
+                        "Silt", "ChamberSilt", "TrenchSilt", "Sign",
+                        "ManifestSign", "Stall", "Helix", "Scaffold",
+                        "SurveyPeg", "DronePylon", "ArchiveDrone", "Keeper",
+                        "TheWheel", "Deposit", "Tablet", "GateRubble",
+                        "SealedDoor", "Turnup", "Boot")):
+        return None
+    if name.startswith("Basin") and "Step" in name:
+        return "reservoir_step"
+    if name.startswith("TrenchStep"):
+        return "reservoir_step"
+    if name.startswith("GateTower"):
+        return "tower_section"
+    if name == "Signboard":
+        return "signboard_frame"
+    if name.startswith("CitadelStep") or name == "CitadelPlatform":
+        return "platform_edge"
+    if name.endswith("Parapet"):
+        return "wall_low"
+    # Walls, buildings, towers, piers: everything vertical.
+    return "wall_straight"
 
 
 def tone(tag, i):
@@ -417,21 +453,48 @@ def main():
             sub.append((sid, "BoxShape3D", "size = %s\n" % vec3(size)))
         return box_shapes[key]
 
-    def emit_box(name, parent, pos, size, matkey, layer):
-        """One solid greybox box: a static body with a mesh and a shape."""
+    def kit_id(piece):
+        return ext_id("res://art/kit/%s.glb" % piece, "PackedScene")
+
+    def emit_box(name, parent, pos, size, matkey, layer, piece=None):
+        """One solid box. Collision is always a plain box shape — the art bible
+        is explicit that you never collide against detail geometry on a phone.
+        Only the LOOK changes when a kit piece is named.
+
+        Kit pieces are scaled to fit, which is safe here for a reason worth
+        knowing: stone.gdshader draws brick courses from WORLD position, so
+        scaling a piece does not stretch its brickwork. All that scales is the
+        modelled setback rhythm, which just reads as coarser coursing on a
+        monumental wall."""
         nodes.append(
             '[node name="%s" type="StaticBody3D" parent="%s"]\n'
             'transform = %s\n'
             'collision_layer = %d\n'
             'collision_mask = 0\n' % (name, parent, xform(pos), layer)
         )
-        nodes.append(
-            '[node name="Mesh" type="MeshInstance3D" parent="%s/%s"]\n'
-            'transform = %s\n'
-            'mesh = SubResource("BoxMesh_unit")\n'
-            'material_override = ExtResource("%s")\n'
-            % (parent, name, scale_xform(size), mat(matkey))
-        )
+        if piece and piece in KIT:
+            natural = KIT[piece]["size"]
+            scale = [size[i] / natural[i] for i in range(3)]
+            # Kit pieces sit on their base; our boxes are centred.
+            nodes.append(
+                '[node name="Kit" parent="%s/%s" instance=ExtResource("%s")]\n'
+                'transform = Transform3D(%s, 0, 0, 0, %s, 0, 0, 0, %s, 0, %s, 0)\n'
+                % (parent, name, kit_id(piece),
+                   fmt(scale[0]), fmt(scale[1]), fmt(scale[2]), fmt(-size[1] / 2.0))
+            )
+            nodes.append(
+                '[node name="%s" parent="%s/%s/Kit" index="0"]\n'
+                'material_override = ExtResource("%s")\n'
+                % (piece, parent, name, mat(matkey))
+            )
+        else:
+            nodes.append(
+                '[node name="Mesh" type="MeshInstance3D" parent="%s/%s"]\n'
+                'transform = %s\n'
+                'mesh = SubResource("BoxMesh_unit")\n'
+                'material_override = ExtResource("%s")\n'
+                % (parent, name, scale_xform(size), mat(matkey))
+            )
         nodes.append(
             '[node name="Shape" type="CollisionShape3D" parent="%s/%s"]\n'
             'shape = SubResource("%s")\n' % (parent, name, shape_id(size))
@@ -496,8 +559,10 @@ def main():
 
         boxes = structure(tag) + {"past": extras_past, "present": extras_present,
                                   "future": extras_future}[tag]()
-        for name, pos, size, matkey in boxes:
-            emit_box(name, era_name, pos, size, matkey, layer)
+        for entry in boxes:
+            name, pos, size, matkey = entry[:4]
+            piece = entry[4] if len(entry) > 4 else kit_for(name)
+            emit_box(name, era_name, pos, size, matkey, layer, piece)
 
         # Water. A plain MeshInstance3D, so Eva walks through it — swimming is
         # not a verb in this game yet.

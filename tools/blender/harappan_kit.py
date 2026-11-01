@@ -22,6 +22,7 @@ budget.
 
 No UV unwrap for the same reason: the shader is world-space.
 """
+import json
 import math
 import os
 import sys
@@ -37,6 +38,7 @@ COURSE = 0.2               # one visible course = two bricks
 SETBACK_EVERY = 3          # courses between silhouette steps
 SETBACK = 0.015
 
+SIZES = {}
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
                        "game", "art", "kit")
 
@@ -89,6 +91,16 @@ def finish(bm, name):
     bpy.ops.export_scene.gltf(filepath=path, export_format="GLB",
                               export_apply=True, export_yup=True)
     tris = sum(len(p.vertices) - 2 for p in mesh.polygons)
+    # Record the piece's real size so the level generator can scale it to fit
+    # without anyone hardcoding a number that later drifts.
+    lo = [min(v.co[i] for v in mesh.vertices) for i in range(3)]
+    hi = [max(v.co[i] for v in mesh.vertices) for i in range(3)]
+    # Blender is Z-up, Godot is Y-up: x -> x, z -> y, y -> z.
+    SIZES[name] = {
+        "size": [round(hi[0] - lo[0], 4), round(hi[2] - lo[2], 4), round(hi[1] - lo[1], 4)],
+        "base_offset": round(lo[2], 4),
+        "tris": tris,
+    }
     print("  %-22s %5d tris  %s" % (name, tris, path))
     return tris
 
@@ -212,7 +224,11 @@ def main():
     total = 0
     for piece in PIECES:
         total += piece()
-    print("\n  %d pieces, %d triangles total\n" % (len(PIECES), total))
+    index = os.path.normpath(os.path.join(OUT_DIR, "kit_sizes.json"))
+    with open(index, "w") as f:
+        json.dump(SIZES, f, indent=2, sort_keys=True)
+    print("\n  %d pieces, %d triangles total" % (len(PIECES), total))
+    print("  sizes written to %s\n" % index)
 
 
 if __name__ == "__main__":
