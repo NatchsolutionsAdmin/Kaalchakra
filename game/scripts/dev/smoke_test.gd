@@ -129,6 +129,46 @@ func _run() -> void:
 	var warden := _main.get_node("NorthGate/Future/WardenNode") as Interactable
 	_ok("WARDEN belongs to 2087", warden.era == Era.Id.FUTURE)
 
+	print("\n-- she actually moves --")
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	player.global_position = Vector3(-10, 1.0, -26)
+	player.velocity = Vector3.ZERO
+	await _settle(20)
+	var before := player.global_position
+	Input.action_press("move_forward")
+	await _settle(45)
+	Input.action_release("move_forward")
+	var walked := before.distance_to(player.global_position)
+	_ok("holding W walks her", walked > 1.5, "moved %.2f m" % walked)
+
+	player.velocity = Vector3.ZERO
+	await _settle(20)
+	var standing := player.global_position.y
+	Input.action_press("jump")
+	await _settle(2)
+	Input.action_release("jump")
+	await _settle(8)
+	_ok("Space gets her off the ground", player.global_position.y > standing + 0.4,
+		"y %.2f -> %.2f" % [standing, player.global_position.y])
+	await _settle(40)
+
+	print("\n-- the ledge climb --")
+	var model := player.get("model") as Node3D
+	player.global_position = Vector3(8.5, 0.1, -22.0)
+	player.velocity = Vector3.ZERO
+	player.set("_facing", PI)
+	model.rotation.y = PI
+	await _settle(25)
+	var foot := player.global_position.y
+	Input.action_press("jump")
+	await _settle(2)
+	Input.action_release("jump")
+	await _settle(45)
+	_ok("she pulls herself onto the 1.1 m ledge",
+		player.global_position.y > foot + 0.8,
+		"y %.2f -> %.2f" % [foot, player.global_position.y])
+
 	print("\n-- era lighting --")
 	var lighting := _main.get_node("EraLighting")
 	var sun := lighting.get("sun") as DirectionalLight3D
