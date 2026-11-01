@@ -31,6 +31,7 @@ extends Node3D
 
 var _model: Node3D
 var _cine: Node3D = null
+var _cine_speed := 2.4
 var _rest_length := 0.0
 
 
@@ -50,9 +51,14 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if _cine != null and is_instance_valid(_cine):
-		# While a scene is staging a shot, the thumbs do not steer the camera.
+		# While a scene is staging a shot the thumbs do not steer, and the rig
+		# LEAVES Eva and goes to the marker. Turning to face something from
+		# where she happens to be standing shows a wall, not the subject.
 		Touch.take_look()
-		_aim_at(_cine, delta)
+		_frame(_cine, delta)
+		if _model:
+			_model.visible = true
+		return
 	# One read per frame; reading clears the accumulated drag.
 	var look := Touch.take_look()
 	if _cine == null and look != Vector2.ZERO:
@@ -103,13 +109,11 @@ func _on_directive(name: String, args: Array) -> void:
 		push_warning("camera %s: no marker named '%s'." % [move, target_name])
 		return
 	_cine = target
-	var length := _rest_length
-	match move:
-		"push_in":
-			length = 1.9
-		"slow_reveal":
-			length = 3.4
-	create_tween().tween_property(arm, "spring_length", length, 1.1)
+	# Markers ARE camera set-ups: position and facing both come from the
+	# marker, so the writer names a shot and never touches a transform.
+	_cine_speed = {"cut_to": 50.0, "push_in": 1.6, "look_at": 3.0,
+		"slow_reveal": 0.9, "move_to": 2.2}.get(move, 2.2)
+	create_tween().tween_property(arm, "spring_length", 0.0, 0.35)
 
 
 func _find_target(target_name: String) -> Node3D:
@@ -119,19 +123,15 @@ func _find_target(target_name: String) -> Node3D:
 	return null
 
 
-## Turn the rig until the camera is looking at `node`. The camera hangs off the
-## arm along the rig's +Z and looks back through it, so pointing the rig at the
-## target is the same as pointing the camera at it.
-func _aim_at(node: Node3D, delta: float) -> void:
-	var to := node.global_position - global_position
-	if to.length_squared() < 0.01:
-		return
-	to = to.normalized()
-	var want_yaw := atan2(-to.x, -to.z)
-	var want_pitch := clampf(asin(to.y), deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
-	var weight := 1.0 - exp(-4.0 * delta)
-	rotation.y = lerp_angle(rotation.y, want_yaw, weight)
-	arm.rotation.x = lerp_angle(arm.rotation.x, want_pitch, weight)
+## Move the rig onto the marker and adopt its facing. With the spring arm
+## collapsed the camera sits exactly where the rig is, so the marker's
+## transform is literally the shot.
+func _frame(node: Node3D, delta: float) -> void:
+	var weight := clampf(1.0 - exp(-_cine_speed * delta), 0.0, 1.0)
+	global_position = global_position.lerp(node.global_position, weight)
+	var want := node.global_rotation
+	rotation.y = lerp_angle(rotation.y, want.y, weight)
+	arm.rotation.x = lerp_angle(arm.rotation.x, want.x, weight)
 
 
 func _release() -> void:

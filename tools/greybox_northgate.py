@@ -15,6 +15,7 @@ something walkable in about a minute:
   * market street east along z = -13, buildings either side
   * citadel edge wall to the west at x = -23
 """
+import math
 import pathlib
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "game/scenes/locations/NorthGate.tscn"
@@ -183,7 +184,6 @@ def market(tag, north_h, south_h, parapets=False):
 
 def horizon(tag):
     """A ring of low mesas framing the valley. Flat, desaturated, far away."""
-    import math
     out = []
     mat = f"mat_hills_{tag}"
     for i in range(14):
@@ -387,8 +387,18 @@ def main():
     era_root_script = ext_id("res://scripts/world/era_root.gd", "Script")
     lore_script = ext_id("res://scripts/interact/lore_marker.gd", "Script")
     dig_script = ext_id("res://scripts/interact/dig_site.gd", "Script")
+    trigger_script = ext_id("res://scripts/interact/story_trigger.gd", "Script")
 
     sub.append(("SphereShape3D_reach", "SphereShape3D", "radius = 2.6\n"))
+    sphere_shapes = {}
+
+    def sphere_id(radius):
+        key = round(radius, 3)
+        if key not in sphere_shapes:
+            sid = "SphereShape3D_t%d" % (len(sphere_shapes) + 1)
+            sphere_shapes[key] = sid
+            sub.append((sid, "SphereShape3D", "radius = %s\n" % fmt(radius)))
+        return sphere_shapes[key]
     # Every greybox box renders from this one mesh, scaled. One resource for the
     # whole level lets the renderer batch them, which CSG could never do.
     sub.append(("BoxMesh_unit", "BoxMesh", "size = %s\n" % vec3((1, 1, 1))))
@@ -420,6 +430,32 @@ def main():
         nodes.append(
             '[node name="Shape" type="CollisionShape3D" parent="%s/%s"]\n'
             'shape = SubResource("%s")\n' % (parent, name, shape_id(size))
+        )
+
+    def emit_marker(name, pos, yaw_deg, pitch_deg):
+        """A camera set-up. The marker IS the shot: the camera moves onto its
+        position and adopts its facing, so a writer names a marker and never
+        touches a transform."""
+        y, pch = math.radians(yaw_deg), math.radians(pitch_deg)
+        cy, sy, cp, sp = math.cos(y), math.sin(y), math.cos(pch), math.sin(pch)
+        # Godot euler order is YXZ; these are the basis columns.
+        basis = [cy, 0.0, -sy,  sy * sp, cp, cy * sp,  sy * cp, -sp, cy * cp]
+        nodes.append(
+            '[node name="%s" type="Marker3D" parent="Markers" groups=["camera_target"]]\n'
+            'transform = Transform3D(%s, %s)\n'
+            % (name, ", ".join(fmt(v) for v in basis),
+               ", ".join(fmt(v) for v in pos))
+        )
+
+    def emit_trigger(name, parent, pos, radius, layer_era):
+        nodes.append(
+            '[node name="%s" type="Area3D" parent="%s"]\n'
+            'transform = %s\n'
+            'script = ExtResource("%s")\n' % (name, parent, xform(pos), trigger_script)
+        )
+        nodes.append(
+            '[node name="Reach" type="CollisionShape3D" parent="%s/%s"]\n'
+            'shape = SubResource("%s")\n' % (parent, name, sphere_id(radius))
         )
 
     def emit_light(name, parent, pos, colour, energy, rng):
@@ -482,20 +518,19 @@ def main():
     # never touch a transform. Shared across eras: the places are the same,
     # only their dressing changes.
     nodes.append('[node name="Markers" type="Node3D" parent="."]\n')
-    for mark_name, mark_pos in [
-        ("sealed_door", (-1.9, -9.6, -12.8)),
-        ("chamber", (-5.5, -9.6, -13.25)),
-        ("wheel", (-4.35, -10.0, -13.25)),
-        ("manifest_wall", (-8.6, -9.5, -13.25)),
-        ("trench", (0.5, -9.4, -11.0)),
-        ("signboard", (0, 8.4, -31.05)),
-        ("reservoir", (-5, -3.0, -13)),
-        ("north_gate", (0, 3.5, -30)),
+    # name, position, yaw, pitch. Yaw 0 looks north (-Z); 90 looks west (-X).
+    for mk in [
+        ("trench",        (0.5, -5.4, -4.6),    0.0,  -26.0),
+        ("sealed_door",   (1.45, -9.45, -12.8), 90.0,  -9.0),
+        ("chamber",       (-2.75, -9.25, -13.25), 90.0, -6.0),
+        ("manifest_wall", (-5.6, -9.35, -13.25), 90.0,  -2.0),
+        ("wheel",         (-3.35, -9.95, -13.25), 90.0, -16.0),
+        ("keeper",        (-3.1, -9.5, -13.25),  90.0, -11.0),
+        ("north_gate",    (0.0, 3.2, -21.0),      0.0,   4.0),
+        ("signboard",     (0.0, 8.6, -36.5),    180.0,  -2.0),
+        ("reservoir",     (-5.0, 1.4, 3.0),       0.0, -16.0),
     ]:
-        nodes.append(
-            '[node name="%s" type="Marker3D" parent="Markers" groups=["camera_target"]]\n'
-            'transform = %s\n' % (mark_name, xform(mark_pos))
-        )
+        emit_marker(mk[0], mk[1], mk[2], mk[3])
 
     # --- the chamber is underground: it needs its own light in every era ---
     emit_light("LampChamber", "Past", (-5.5, -8.7, -13.25), (1.0, 0.72, 0.42), 4.0, 10.0)
@@ -504,6 +539,11 @@ def main():
     emit_light("TrenchLight", "Present", (0.5, -9.0, -11.5), (0.90, 0.94, 1.0), 2.4, 9.0)
     emit_light("DroneGlow", "Future", (-5.5, -9.1, -13.25), (0.30, 0.78, 0.92), 4.0, 9.0)
     emit_light("SiltGlow", "Future", (0.5, -9.2, -12.0), (0.26, 0.56, 0.72), 1.8, 8.0)
+
+    # --- places the Prologue waits for Eva to reach --------------------
+    emit_trigger("at_trench_top", "Present", (0.5, -6.3, -6.6), 2.8, 4)
+    emit_trigger("at_trench_bottom", "Present", (0.5, -10.2, -11.6), 2.8, 4)
+    emit_trigger("in_chamber", "Present", (-5.0, -10.0, -13.25), 3.2, 4)
 
     # --- PAST: the Keeper's mark (teaches the location) ---
     emit_decal("KeeperMarkSlab", "Past", MARK_POS, (2, 0.2, 2), "mat_marker")

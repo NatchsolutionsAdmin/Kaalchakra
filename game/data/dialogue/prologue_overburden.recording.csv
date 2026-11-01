@@ -2,27 +2,25 @@ audio_file,speaker,direction,line,chunk
 prologue_overburden/start_01.ogg,EVA,"to the phone, quiet, the whole site still asleep",Day nineteen.,start
 prologue_overburden/start_02.ogg,EVA,,Sun's not up. Ishita's not up. The monsoon is three weeks early and nobody at the Institute wants to talk about what that does to a trench.,start
 prologue_overburden/start_03.ogg,EVA,beat,But you lot didn't come here for drainage.,start
-prologue_overburden/start_04.ogg,EVA,turning the camera to the pit,You came for this.,start
-prologue_overburden/the_pitch_01.ogg,EVA,,"Dholarath. Four and a half thousand years old. Grid streets, covered drains, a reservoir that could hold a season of rain —",the_pitch
-prologue_overburden/the_pitch_02.ogg,EVA,,— and a writing system that nobody on Earth can read.,the_pitch
-prologue_overburden/the_pitch_03.ogg,EVA,,Four hundred signs. Thousands of inscriptions. Not one of them understood.,the_pitch
-prologue_overburden/the_pitch_04.ogg,EVA,,"Thirty years ago somebody worked out why. She said: stop reading it like a language. It isn't sentences. It's an index — labels, pointing",the_pitch
-prologue_overburden/the_pitch_05.ogg,EVA,,at something that isn't the writing.,the_pitch
+prologue_overburden/the_pitch_01.ogg,EVA,turning the camera to the pit,You came for this.,the_pitch
+prologue_overburden/the_pitch_02.ogg,EVA,,"Dholarath. Four and a half thousand years old. Grid streets, covered drains, a reservoir that could hold a season of rain —",the_pitch
+prologue_overburden/the_pitch_03.ogg,EVA,,— and a writing system that nobody on Earth can read.,the_pitch
+prologue_overburden/the_pitch_04.ogg,EVA,,Four hundred signs. Thousands of inscriptions. Not one of them understood.,the_pitch
+prologue_overburden/the_pitch_05.ogg,EVA,,"Thirty years ago somebody worked out why. She said: stop reading it like a language. It isn't sentences. It's an index — labels, pointing at something that isn't the writing.",the_pitch
 prologue_overburden/the_pitch_06.ogg,EVA,,The field laughed her out of the room.,the_pitch
 prologue_overburden/the_pitch_07.ogg,EVA,flat,"She's my mother. So, you know. Personal stake.",the_pitch
+prologue_overburden/teach_dig_01.ogg,EVA,settling in,"Right. Slowly. We don't take, we record.",teach_dig
+prologue_overburden/teach_dig_02.ogg,EVA,almost ritual,"Brush, don't scrape. Dad's rule.",teach_dig
+prologue_overburden/teach_dig_03.ogg,EVA,genuine delight,"Oh, hello.",teach_dig
+prologue_overburden/teach_dig_04.ogg,EVA,holding it up to the lens,"Potsherd. Red slip. Probably a storage jar, probably nothing, probably the single most beautiful nothing you'll see today.",teach_dig
 prologue_overburden/ishita_arrives_01.ogg,ISHITA,"above, dry",Two million people and you still can't operate a kettle.,ishita_arrives
 prologue_overburden/ishita_arrives_02.ogg,EVA,,"Two million people fund your remote sensing, Dr Vaid.",ishita_arrives
-prologue_overburden/ishita_arrives_03.ogg,ISHITA,,"Two million people think you found a ""lost city."" You found a well-documented site with a new trench in it.",ishita_arrives
+prologue_overburden/ishita_arrives_03.ogg,ISHITA,,Two million people think you found a lost city. You found a well-documented site with a new trench in it.,ishita_arrives
 prologue_overburden/ishita_arrives_04.ogg,EVA,,Two million people have hope. You should try it.,ishita_arrives
 prologue_overburden/ishita_down_01.ogg,ISHITA,"sliding down, landing badly",...What am I looking at?,ishita_down
 prologue_overburden/ishita_down_02.ogg,EVA,,That's what I'm asking you. You're the one with the ground scans.,ishita_down
 prologue_overburden/ishita_stays_01.ogg,ISHITA,"fading, above","When you find Atlantis, wake me.",ishita_stays
 prologue_overburden/ishita_stays_02.ogg,EVA,to herself,Rude.,ishita_stays
-prologue_overburden/teach_dig_01.ogg,EVA,"to the phone, settling in","Right. Slowly. We don't take, we record.",teach_dig
-prologue_overburden/teach_dig_02.ogg,EVA,"a beat, to herself, almost ritual","Brush, don't scrape. Dad's rule.",teach_dig
-prologue_overburden/first_find_01.ogg,EVA,genuine delight,"Oh, hello.",first_find
-prologue_overburden/first_find_02.ogg,EVA,holding it up to the lens,"Potsherd. Red slip. Probably a storage jar, probably nothing, probably the single most beautiful nothing you'll",first_find
-prologue_overburden/first_find_03.ogg,EVA,,see today.,first_find
 prologue_overburden/call_sakshi_01.ogg,SAKSHI,"crackly line, instantly awake",You're in the trench.,call_sakshi
 prologue_overburden/call_sakshi_02.ogg,EVA,,How do you always —,call_sakshi
 prologue_overburden/call_sakshi_03.ogg,SAKSHI,,Because it's five in the morning and you're whispering.,call_sakshi
@@ -33,25 +31,27 @@ prologue_overburden/call_sakshi_07.ogg,SAKSHI,a long pause,"Check the drainage, 
 prologue_overburden/call_sakshi_08.ogg,SAKSHI,,I told the reviewers that in '98 and they laughed at me for an hour.,call_sakshi
 prologue_overburden/call_sakshi_09.ogg,EVA,quiet,"I know, Ma.",call_sakshi
 prologue_overburden/call_sakshi_10.ogg,SAKSHI,,"Don't ""I know"" me. Go and look at the drain.",call_sakshi
-prologue_overburden/the_lintel_01.ogg,EVA,"to the phone, still presenting","Okay, so this is — this is probably a kerb stone, these run along the —",the_lintel
-prologue_overburden/the_lintel_04.ogg,EVA,,That's a lintel.,the_lintel
-prologue_overburden/clear_the_door_01.ogg,ISHITA,very quietly,Eva. That's a door.,clear_the_door
-prologue_overburden/clear_the_door_02.ogg,EVA,,I know it's a door.,clear_the_door
-prologue_overburden/clear_the_door_03.ogg,ISHITA,,That's a *sealed* door.,clear_the_door
-prologue_overburden/clear_the_door_04.ogg,EVA,not to the phone any more,Ma was right.,clear_the_door
-prologue_overburden/the_chamber_01.ogg,EVA,barely audible,...Oh.,the_chamber
-prologue_overburden/the_chamber_02.ogg,EVA,to nobody,There's someone in here.,the_chamber
-prologue_overburden/the_chamber_03.ogg,EVA,,Sitting up. Not buried — *placed*. Facing the door.,the_chamber
-prologue_overburden/the_chamber_04.ogg,EVA,,And the whole back wall is covered in signs.,the_chamber
-prologue_overburden/the_wall_01.ogg,EVA,,I can't read any of it. Nobody can read any of it.,the_wall
-prologue_overburden/the_wall_02.ogg,EVA,moving closer,"Except — (stopping) Except that pairing. There, and there, and — six times.",the_wall
-prologue_overburden/the_wall_03.ogg,EVA,,That's the pairing off the north gate signboard.,the_wall
-prologue_overburden/the_wall_04.ogg,EVA,,The one every tourist photograph in Gujarat has in the background.,the_wall
-prologue_overburden/the_wall_05.ogg,EVA,the thought arriving,It's a label. It's labelling something.,the_wall
-prologue_overburden/the_wall_06.ogg,EVA,,It's an *index*.,the_wall
-prologue_overburden/the_wheel_01.ogg,EVA,down to the skeleton's hands,And you're holding something.,the_wheel
+prologue_overburden/the_lintel_01.ogg,EVA,still presenting,"Okay, so this is — this is probably a kerb stone, these run along the —",the_lintel
+prologue_overburden/the_lintel_03.ogg,EVA,,That's a lintel.,the_lintel
+prologue_overburden/the_lintel_04.ogg,ISHITA,very quietly,Eva. That's a door.,the_lintel
+prologue_overburden/the_lintel_05.ogg,EVA,,I know it's a door.,the_lintel
+prologue_overburden/the_lintel_06.ogg,ISHITA,,That's a *sealed* door.,the_lintel
+prologue_overburden/the_lintel_07.ogg,EVA,not to the phone any more,Ma was right.,the_lintel
+prologue_overburden/the_threshold_01.ogg,EVA,barely audible,...Oh.,the_threshold
+prologue_overburden/the_threshold_02.ogg,EVA,to nobody,There's someone in here.,the_threshold
+prologue_overburden/the_threshold_03.ogg,EVA,,Sitting up. Not buried — placed. Facing the door.,the_threshold
+prologue_overburden/the_wall_01.ogg,EVA,,And the whole back wall is covered in signs.,the_wall
+prologue_overburden/the_wall_02.ogg,EVA,,I can't read any of it. Nobody can read any of it.,the_wall
+prologue_overburden/the_wall_03.ogg,EVA,moving closer,Except —,the_wall
+prologue_overburden/the_wall_04.ogg,EVA,,"Except that pairing. There, and there, and — six times.",the_wall
+prologue_overburden/the_wall_05.ogg,EVA,,That's the pairing off the north gate signboard. The one every tourist photograph in Gujarat has in the background.,the_wall
+prologue_overburden/the_wall_06.ogg,EVA,the thought arriving,It's a label. It's labelling something.,the_wall
+prologue_overburden/the_wall_07.ogg,EVA,,It's an index.,the_wall
+prologue_overburden/the_keeper_01.ogg,EVA,quiet,"Four thousand years sitting up in the dark, facing the way out.",the_keeper
+prologue_overburden/the_keeper_02.ogg,EVA,,"Whoever you were, you weren't hiding. You were waiting.",the_keeper
+prologue_overburden/the_wheel_01.ogg,EVA,down to the hands,And you're holding something.,the_wheel
 prologue_overburden/the_wheel_02.ogg,EVA,,Copper. Disc. Eight spokes.,the_wheel
-prologue_overburden/the_wheel_04.ogg,EVA,,"I should not touch this. I should photograph this, and log this, and call it in, and not touch this.",the_wheel
+prologue_overburden/the_wheel_03.ogg,EVA,the archaeologist and the daughter arguing in one sentence,"I should not touch this. I should photograph this, and log this, and call it in, and not touch this.",the_wheel
 prologue_overburden/photograph_01.ogg,EVA,steadier,Recorded. Logged. Witnessed.,photograph
 prologue_overburden/photograph_02.ogg,EVA,,Okay.,photograph
 prologue_overburden/lift_01.ogg,EVA,lifting it,It's warm.,lift

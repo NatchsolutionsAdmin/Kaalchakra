@@ -3,112 +3,114 @@
 # 2026. The dig at Dholarath, first light. ~20 minutes.
 # ============================================================
 #
-# DRAFT BY CLAUDE — written from docs/kaalchakra-story-bible.md §5 so you have
-# something to argue with instead of a blank page. Every line is yours to cut.
-# Places I made a call you might not agree with are marked  # ?? DECISION
+# DRAFT BY CLAUDE — from docs/kaalchakra-story-bible.md §5. Yours to cut.
+# Places where the draft made a creative call are marked  # ?? DECISION
 #
-# It teaches movement, climbing and excavation without ever saying the word
-# "tutorial", and ends on the hard cut to 1900 BCE.
+# STRUCTURE: the scene alternates talking and playing. `@ handover` stops the
+# dialogue, hands control back, and waits until Eva reaches somewhere or
+# finishes something — then the scene picks up again. Without that it is one
+# unbroken wall of text with a frozen camera.
 #
 # ---- how to write in this file -----------------------------------------
-#   #     a note to yourself or me. Ignored by the game.
-#   ::    starts a chunk the game can jump to
-#   NAME: who is speaking
+#   #     a note. Ignored.
+#   ::    starts a chunk
+#   NAME: who is speaking. A bare indented line continues the one above,
+#         so a long speech is still ONE beat and ONE voice file.
 #   (..)  stage direction — for the actor, and for me
 #   >     a choice the player taps
 #   ->    jump to another chunk
 #   @     an instruction to me
 #
-# If you want something that isn't in that list — a camera move, a sound, her
-# hands shaking — just write it. The format bends to the story, not the other
-# way round. I'll make whatever you write work.
+# @ handover <flag> <chunk>   stop talking; resume at <chunk> when <flag> is set
+# @ camera move_to <marker>   send the camera to a named shot
+# @ camera push_in <marker>   same, slower and closer
+# @ camera release            give the camera back to the player
+#
+# Camera markers that exist: trench, sealed_door, chamber, manifest_wall,
+# keeper, wheel, north_gate, signboard, reservoir.
+# Flags the world can set: at_trench_top, at_trench_bottom, in_chamber,
+# chamber_opened.
+#
+# If you want something that isn't listed, write it anyway. The format bends
+# to the story, not the other way round.
 # ------------------------------------------------------------------------
 
 
 :: start
 @ era present
-@ time_of_day first_light
+@ camera release
 @ music bansuri_sparse
-# She is filming on her phone, walking the top of the trench. Player has
-# control from the first word — no opening cutscene.
-@ objective "Walk the trench line"
+# She is filming on her phone, down on the basin floor. The player has control
+# from the first word — no opening cutscene.
 EVA: (to the phone, quiet, the whole site still asleep) Day nineteen.
-EVA: Sun's not up. Ishita's not up. The monsoon is three weeks early and
-    nobody at the Institute wants to talk about what that does to a trench.
+EVA: Sun's not up. Ishita's not up. The monsoon is three weeks early and nobody
+    at the Institute wants to talk about what that does to a trench.
 EVA: (beat) But you lot didn't come here for drainage.
-EVA: (turning the camera to the pit) You came for this.
--> the_pitch
+@ objective "Walk up to Trench 4"
+@ handover at_trench_top the_pitch
 
 
 :: the_pitch
+# Standing over the trench, looking down into it.
+@ camera move_to trench
+EVA: (turning the camera to the pit) You came for this.
 EVA: Dholarath. Four and a half thousand years old. Grid streets, covered
     drains, a reservoir that could hold a season of rain —
 EVA: — and a writing system that nobody on Earth can read.
 EVA: Four hundred signs. Thousands of inscriptions. Not one of them understood.
-# ?? DECISION — this is where she names her mother's theory. I put it in the
-# cold open because it is the engine of the whole game and the player should
-# hear it before anything supernatural happens. You may want it later.
-EVA: Thirty years ago somebody worked out why. She said: stop reading it
-    like a language. It isn't sentences. It's an index — labels, pointing
-EVA: at something that isn't the writing.
+# ?? DECISION — her mother's theory, this early. It is the engine of the whole
+# game and I wanted it heard before anything impossible happens.
+EVA: Thirty years ago somebody worked out why. She said: stop reading it like a
+    language. It isn't sentences. It's an index — labels, pointing at something
+    that isn't the writing.
 EVA: The field laughed her out of the room.
 EVA: (flat) She's my mother. So, you know. Personal stake.
-@ objective "Get down into Trench 4"
+@ objective "Climb down into the trench"
+@ camera release
+@ handover at_trench_bottom teach_dig
+
+
+:: teach_dig
+# EXCAVATION TAUGHT HERE, on something worthless, so failing costs nothing.
+@ skill_unlock excavation
+EVA: (settling in) Right. Slowly. We don't take, we record.
+# ?? DECISION — her father's trowel, before the chamber rather than after, so
+# the discovery is not the first time the player hears about him.
+EVA: (almost ritual) Brush, don't scrape. Dad's rule.
+@ sfx trowel_on_pottery
+EVA: (genuine delight) Oh, hello.
+EVA: (holding it up to the lens) Potsherd. Red slip. Probably a storage jar,
+    probably nothing, probably the single most beautiful nothing you'll see today.
 -> ishita_arrives
 
 
 :: ishita_arrives
-# Teaching the climb down. Ishita arrives at the lip above her.
 ISHITA: (above, dry) Two million people and you still can't operate a kettle.
 EVA: Two million people fund your remote sensing, Dr Vaid.
-ISHITA: Two million people think you found a "lost city." You found a
+ISHITA: Two million people think you found a lost city. You found a
     well-documented site with a new trench in it.
 EVA: Two million people have hope. You should try it.
-> "Come and look at the floor."        -> ishita_down      @ flag ishita_invited
+> "Come down and look at the floor."   -> ishita_down   @ flag ishita_invited
 > "Go back to bed."                    -> ishita_stays
-> (say nothing — climb down)           -> ishita_stays
+> (say nothing, keep working)          -> ishita_stays
 
 
 :: ishita_down
 @ flag ishita_present_at_discovery
 ISHITA: (sliding down, landing badly) ...What am I looking at?
 EVA: That's what I'm asking you. You're the one with the ground scans.
--> teach_dig
+-> call_or_work
 
 
 :: ishita_stays
 ISHITA: (fading, above) When you find Atlantis, wake me.
 EVA: (to herself) Rude.
--> teach_dig
+-> call_or_work
 
 
-:: teach_dig
-# EXCAVATION TAUGHT HERE — first on something worthless, so failing costs
-# nothing and the player learns the verb before it matters.
-@ skill_unlock excavation
-@ objective "Clear the trench floor"
-EVA: (to the phone, settling in) Right. Slowly. We don't take, we record.
-EVA: (a beat, to herself, almost ritual) Brush, don't scrape. Dad's rule.
-# ?? DECISION — her father's trowel. The bible says she carries it; I wanted
-# it established before the chamber, not after, so the discovery isn't the
-# first time the player hears about him. It's one line. Cut it if it's too early.
--> first_find
-
-
-:: first_find
-@ sfx trowel_on_pottery
-EVA: (genuine delight) Oh, hello.
-EVA: (holding it up to the lens) Potsherd. Red slip. Probably a storage jar,
-    probably nothing, probably the single most beautiful nothing you'll
-EVA: see today.
+:: call_or_work
 @ phone_available sakshi
-@ objective "Keep clearing — something is under the silt"
--> trench_work
-
-
-:: trench_work
-# The optional Sakshi call. Strongly cued, never forced — this is the first
-# time the player meets the hint system, so it has to feel like a choice.
+# First meeting with the hint system. Strongly cued, never forced.
 > Call Ma                              -> call_sakshi
 > Keep working                         -> the_lintel
 
@@ -121,81 +123,81 @@ EVA: How do you always —
 SAKSHI: Because it's five in the morning and you're whispering.
 EVA: (caught) Ma.
 SAKSHI: What did you find?
-EVA: Red slip sherd. And the floor's wrong. It's too flat, and it's too
-    flat in a straight line.
-SAKSHI: (a long pause) Check the drainage, beta. Not the walls. Everyone
-    always checks the walls.
+EVA: Red slip sherd. And the floor's wrong. It's too flat, and it's too flat in
+    a straight line.
+SAKSHI: (a long pause) Check the drainage, beta. Not the walls. Everyone always
+    checks the walls.
 SAKSHI: I told the reviewers that in '98 and they laughed at me for an hour.
-# ?? DECISION — "beta" and "Ma". Your call on the register: Ma / Mumma / Amma,
-# and how much Gujarati or Hindi threads through. I defaulted to the lightest
-# touch. This is exactly the sort of thing I should not be deciding.
+# ?? DECISION — "beta" and "Ma". Your call on the register, and how much
+# Gujarati or Hindi threads through. I defaulted to the lightest touch.
 EVA: (quiet) I know, Ma.
 SAKSHI: Don't "I know" me. Go and look at the drain.
 @ flag called_sakshi_prologue
-@ objective "Follow the drain line"
 -> the_lintel
 
 
 :: the_lintel
-# The find. Camera pushes in; she stops performing for the camera here, which
-# is the tell that this one is real.
-@ camera push_in sealed_door
+# The find. She stops performing for the camera, which is the tell.
 @ music drop_out
 @ sfx brush_on_stone
-EVA: (to the phone, still presenting) Okay, so this is — this is probably
-    a kerb stone, these run along the —
+@ camera push_in sealed_door
+EVA: (still presenting) Okay, so this is — this is probably a kerb stone, these
+    run along the —
 EVA: (stops)
-EVA: (long pause)
 EVA: That's a lintel.
--> clear_the_door
-
-
-:: clear_the_door
-# Second excavation, now it matters. Bigger, slower, timed? -- see note.
-# ?? DECISION — I did NOT put a fail state here. First real discovery of the
-# game should not be something you can botch. Failure comes in Chapter 2.
-@ objective "Clear the doorway"
-@ music low_drone_build
 ISHITA: [if ishita_present_at_discovery] (very quietly) Eva. That's a door.
 EVA: [if ishita_present_at_discovery] I know it's a door.
 ISHITA: [if ishita_present_at_discovery] That's a *sealed* door.
 EVA: (not to the phone any more) Ma was right.
--> the_chamber
+@ music low_drone_build
+@ knowledge keeper_mark
+@ objective "Clear the doorway"
+@ camera release
+# ?? DECISION — no fail state here. The first real discovery of the game should
+# not be something you can botch. Failure starts in Chapter 2.
+@ handover chamber_opened the_threshold
 
 
-:: the_chamber
+:: the_threshold
 @ sfx stone_grinding
-@ camera slow_reveal chamber
+@ camera move_to chamber
 @ music silence
-# Hold on silence. No score. Let the room land.
 EVA: (barely audible) ...Oh.
-# The skeleton, seated upright, hands cupped. The wall of signs behind it.
 EVA: (to nobody) There's someone in here.
-EVA: Sitting up. Not buried — *placed*. Facing the door.
-EVA: And the whole back wall is covered in signs.
-@ objective "Read the wall"
--> the_wall
+EVA: Sitting up. Not buried — placed. Facing the door.
+@ objective "Go inside"
+@ camera release
+@ handover in_chamber the_wall
 
 
 :: the_wall
+@ camera move_to manifest_wall
+EVA: And the whole back wall is covered in signs.
 EVA: I can't read any of it. Nobody can read any of it.
 EVA: (moving closer) Except —
-    (stopping) Except that pairing. There, and there, and — six times.
-EVA: That's the pairing off the north gate signboard.
-EVA: The one every tourist photograph in Gujarat has in the background.
+EVA: Except that pairing. There, and there, and — six times.
+EVA: That's the pairing off the north gate signboard. The one every tourist
+    photograph in Gujarat has in the background.
 EVA: (the thought arriving) It's a label. It's labelling something.
-EVA: It's an *index*.
+EVA: It's an index.
 @ flag saw_the_index
+-> the_keeper
+
+
+:: the_keeper
+@ camera push_in keeper
+EVA: (quiet) Four thousand years sitting up in the dark, facing the way out.
+EVA: Whoever you were, you weren't hiding. You were waiting.
 -> the_wheel
 
 
 :: the_wheel
 @ camera push_in wheel
-EVA: (down to the skeleton's hands) And you're holding something.
+EVA: (down to the hands) And you're holding something.
 EVA: Copper. Disc. Eight spokes.
-EVA: (the archaeologist and the daughter arguing in one sentence)
-EVA: I should not touch this. I should photograph this, and log this, and
-    call it in, and not touch this.
+EVA: (the archaeologist and the daughter arguing in one sentence) I should not
+    touch this. I should photograph this, and log this, and call it in, and not
+    touch this.
 > Lift it                              -> lift
 > Photograph it first                  -> photograph
 
@@ -203,9 +205,8 @@ EVA: I should not touch this. I should photograph this, and log this, and
 :: photograph
 @ sfx phone_shutter
 @ flag recorded_before_taking
-# ?? DECISION — rewarding her creed with a real flag. "We don't take, we
-# record" should mean something mechanically, even here. I'd like this to pay
-# off in Chapter 5 when HELIX argues she's no different from them.
+# ?? DECISION — her creed, "we don't take, we record", set as a real flag. I
+# want it to pay off in Chapter 5 when Dhillon argues she is no different.
 EVA: (steadier) Recorded. Logged. Witnessed.
 EVA: Okay.
 -> lift
@@ -215,20 +216,20 @@ EVA: Okay.
 @ sfx low_hum_begin
 EVA: (lifting it) It's warm.
 EVA: (confused, quieter) Why is it warm —
+@ camera whip_around
 @ hard_cut
+@ era past
 -> arrival
 
 
 :: arrival
-# THE HARD CUT. No transition, no fade. One frame 2026, next frame 1900 BCE.
-# Trench walls brick-new. Water thundering somewhere above. Dust and noise and
-# a city that is extremely alive.
-@ era past
+# One frame 2026, the next 1900 BCE. Brick-new walls, water thundering
+# somewhere above, and a city that is extremely alive.
 @ sfx water_roar
 @ music dholarath_alive
-@ camera whip_around
 EVA: (no breath in her) What.
 VASUDHA: (unimpressed, holding a plumb line) Late.
 VASUDHA: You Keepers are always late.
 @ title_card "KAALCHAKRA"
+@ camera release
 -> END

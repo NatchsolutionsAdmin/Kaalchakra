@@ -37,6 +37,12 @@ var _chunk := ""
 var _index := 0
 var _active := false
 var _unhandled: Array[String] = []
+var _resume_flag := ""
+var _resume_chunk := ""
+
+
+func _ready() -> void:
+	Story.flag_set.connect(_on_flag_set)
 
 
 func is_active() -> bool:
@@ -96,15 +102,34 @@ func stop() -> void:
 	Audio.stop_voice()
 	_active = false
 	pending_choices = []
-	var id := scene_id
-	scene_id = ""
-	finished.emit(id)
+	# scene_id is kept, so a handover can resume this same script later.
+	finished.emit(scene_id)
 
 
 ## Directive names the writer used that nothing listens to yet. Useful in dev:
 ## it is the to-do list the script itself is asking for.
 func unhandled_directives() -> Array[String]:
 	return _unhandled.duplicate()
+
+
+func _on_flag_set(flag: String) -> void:
+	if _active or flag != _resume_flag or _resume_chunk.is_empty():
+		return
+	var chunk := _resume_chunk
+	_resume_flag = ""
+	_resume_chunk = ""
+	# Deferred: the flag often arrives from inside a physics callback.
+	call_deferred("play", _chunks, scene_id, chunk)
+
+
+## True when the scene is paused waiting for the player to do something.
+func is_waiting() -> bool:
+	return not _resume_flag.is_empty()
+
+
+## Which flag the paused scene is waiting on. Empty when not waiting.
+func waiting_for() -> String:
+	return _resume_flag
 
 
 # --- the walk ------------------------------------------------------------
@@ -196,6 +221,20 @@ func _apply(name: String, args: Array) -> void:
 				Audio.play_sfx(args[0])
 		"hard_cut":
 			TimeShift.arm_hard_cut()
+		"knowledge":
+			if args.size() >= 1:
+				TimeShift.learn(args[0])
+		"handover":
+			# Stop talking and give the player control back. When `flag`
+			# arrives — she reaches somewhere, or finishes a dig — the scene
+			# picks up again at `chunk`. This is what stops a 60-line
+			# Prologue being one unbroken static shot.
+			if args.size() >= 2:
+				_resume_flag = args[0]
+				_resume_chunk = args[1]
+				# Immediate, not deferred: _run()'s loop sees _active go false
+				# and unwinds cleanly on the same frame.
+				stop()
 		"era":
 			var map := {"past": Era.Id.PAST, "present": Era.Id.PRESENT, "future": Era.Id.FUTURE}
 			if args.size() >= 1 and map.has(args[0]):

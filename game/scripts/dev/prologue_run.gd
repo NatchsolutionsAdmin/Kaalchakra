@@ -18,7 +18,8 @@ func _ready() -> void:
 	# The Prologue opens at the top of Trench 4, not out on the apron.
 	var eva := main.get_node_or_null("Eva") as Node3D
 	if eva:
-		eva.global_position = Vector3(0.5, -6.6, -6.4)
+		# Out on the basin floor, so walking up to Trench 4 is a real walk.
+		eva.global_position = Vector3(-7.5, -6.6, -9.5)
 		var pivot := eva.get_node_or_null("CameraPivot") as Node3D
 		if pivot:
 			pivot.rotation.y = PI

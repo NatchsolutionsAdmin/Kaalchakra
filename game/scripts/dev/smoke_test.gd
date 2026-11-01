@@ -67,18 +67,29 @@ func _count_lines(chunks: Dictionary) -> int:
 	return n
 
 
-## Plays a scene to the end with no human, taking `pick` at every branch.
-func _walk_dialogue(pick: int, limit: int = 500) -> Dictionary:
+## Plays a scene to the end with no human: takes `pick` at every branch, and
+## at every handover stands in for the player doing whatever it waits on.
+func _walk_dialogue(pick: int, limit: int = 600) -> Dictionary:
 	var lines := 0
 	var choices := 0
-	while Dialogue.is_active() and lines + choices < limit:
-		if not Dialogue.pending_choices.is_empty():
-			Dialogue.choose(mini(pick, Dialogue.pending_choices.size() - 1))
-			choices += 1
-		else:
-			Dialogue.advance()
-			lines += 1
-	return {"lines": lines, "choices": choices}
+	var handovers := 0
+	for _guard in limit:
+		if Dialogue.is_active():
+			if not Dialogue.pending_choices.is_empty():
+				Dialogue.choose(mini(pick, Dialogue.pending_choices.size() - 1))
+				choices += 1
+			else:
+				Dialogue.advance()
+				lines += 1
+			continue
+		var flag := Dialogue.waiting_for()
+		if flag.is_empty():
+			break
+		Story.set_flag(flag)
+		handovers += 1
+		await get_tree().process_frame
+		await get_tree().process_frame
+	return {"lines": lines, "choices": choices, "handovers": handovers}
 
 
 func _era_node(name: String) -> EraRoot:
@@ -378,24 +389,26 @@ func _run() -> void:
 		TimeShift.request_shift(Era.Id.PRESENT)
 		await _settle(4)
 		Dialogue.play_file(PROLOGUE)
-		played = _walk_dialogue(path[0])
-		_ok("plays to the end — %s" % path[1], not Dialogue.is_active(),
+		played = await _walk_dialogue(path[0])
+		_ok("plays to the end — %s" % path[1],
+			not Dialogue.is_active() and not Dialogue.is_waiting(),
 			"stalled after %d lines" % played["lines"])
 		_ok("  reached the chamber", Story.has_flag("saw_the_index"))
 		_ok("  excavation was unlocked", Story.has_skill("excavation"))
 		_ok("  Sakshi became callable", Story.has_contact("sakshi"))
 		_ok("  it ends in 1900 BCE", TimeShift.current_era == Era.Id.PAST,
 			"ended in %s" % Era.SHORT[TimeShift.current_era])
-		print("        %d lines, %d choices" % [played["lines"], played["choices"]])
+		print("        %d lines, %d choices, %d handovers"
+			% [played["lines"], played["choices"], played["handovers"]])
 
 	# Ishita only speaks at the door if she was invited down.
 	Story.reset()
 	Story.set_flag("ishita_present_at_discovery")
-	Dialogue.play_file(PROLOGUE, "clear_the_door")
-	var with_her := _walk_dialogue(0)
+	Dialogue.play_file(PROLOGUE, "the_lintel")
+	var with_her := await _walk_dialogue(0)
 	Story.reset()
-	Dialogue.play_file(PROLOGUE, "clear_the_door")
-	var without_her := _walk_dialogue(0)
+	Dialogue.play_file(PROLOGUE, "the_lintel")
+	var without_her := await _walk_dialogue(0)
 	_ok("Ishita's lines appear only when she came down",
 		with_her["lines"] > without_her["lines"],
 		"%d vs %d lines" % [with_her["lines"], without_her["lines"]])
@@ -444,6 +457,27 @@ func _run() -> void:
 	_ok("a wrapped line is one beat, not two",
 		wrapped_steps.size() == 2 and wrapped_steps[0]["text"] == "one line that is wrapped in the editor",
 		str(wrapped_steps[0].get("text", "")))
+
+	print("\n-- the scene breathes --")
+	Story.reset()
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	Dialogue.play_file(PROLOGUE)
+	var talked := 0
+	for _i in 40:
+		if not Dialogue.is_active():
+			break
+		Dialogue.advance()
+		talked += 1
+	_ok("the opening stops and hands control back instead of talking at you",
+		not Dialogue.is_active() and Dialogue.is_waiting(),
+		"still talking after %d lines" % talked)
+	_ok("  and it is waiting on the player reaching the trench",
+		Dialogue.waiting_for() == "at_trench_top", Dialogue.waiting_for())
+	var resumed := await _walk_dialogue(0)
+	_ok("  walking there starts it again, four more times before the end",
+		resumed["handovers"] >= 3, "%d handovers" % resumed["handovers"])
+	Story.reset()
 
 	print("\n-- staging --")
 	_ok("every camera target the Prologue names exists",
