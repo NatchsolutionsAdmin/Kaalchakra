@@ -1,0 +1,40 @@
+# This is a proposal for how you write dialogue. Nothing reads it yet.
+# You write these in TextEdit. No programming, no Godot. One file per scene.
+#
+#   #  a line starting with hash is a note to yourself, ignored by the game
+#   ::  starts a new chunk the game can jump to
+#   NAME:  who is speaking
+#   (something in brackets) is a stage direction for the actor and for me
+#   >  a choice the player can tap
+#   ->  jump to another chunk
+#   @  an instruction to me (play a sound, move the camera, give her a skill)
+
+:: start
+# Prologue. 2026, the trench, first light. Evara is filming on her phone.
+EVARA: (to her phone, low) Day nineteen. Sun's not up, Ishita's not up, and I am
+EVARA: standing in a hole my mother was laughed out of a conference for pointing at.
+@ objective "Clear the trench floor"
+@ skill_unlock excavation
+-> ishita_arrives
+
+:: ishita_arrives
+ISHITA: (off, above) You're talking to your phone again.
+EVARA: I'm talking to two million people. You're the one talking to nobody.
+> "Come down and look at this."     -> show_her
+> (say nothing, keep digging)        -> keep_digging
+
+:: show_her
+ISHITA: (sliding down into the trench) ...That's not backfill.
+EVARA: No. That's a lintel.
+@ camera look_at sealed_door
+-> the_door
+
+:: keep_digging
+EVARA: (to herself) Suit yourself.
+-> the_door
+
+:: the_door
+# The beat the whole prologue exists for.
+@ music swell_discovery
+EVARA: (quiet, not performing any more) Mum was right.
+-> END

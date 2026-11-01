@@ -1,0 +1,234 @@
+# ============================================================
+# PROLOGUE — "OVERBURDEN"
+# 2026. The dig at Dholarath, first light. ~20 minutes.
+# ============================================================
+#
+# DRAFT BY CLAUDE — written from docs/kaalchakra-story-bible.md §5 so you have
+# something to argue with instead of a blank page. Every line is yours to cut.
+# Places I made a call you might not agree with are marked  # ?? DECISION
+#
+# It teaches movement, climbing and excavation without ever saying the word
+# "tutorial", and ends on the hard cut to 1900 BCE.
+#
+# ---- how to write in this file -----------------------------------------
+#   #     a note to yourself or me. Ignored by the game.
+#   ::    starts a chunk the game can jump to
+#   NAME: who is speaking
+#   (..)  stage direction — for the actor, and for me
+#   >     a choice the player taps
+#   ->    jump to another chunk
+#   @     an instruction to me
+#
+# If you want something that isn't in that list — a camera move, a sound, her
+# hands shaking — just write it. The format bends to the story, not the other
+# way round. I'll make whatever you write work.
+# ------------------------------------------------------------------------
+
+
+:: start
+@ era present
+@ time_of_day first_light
+@ music bansuri_sparse
+# She is filming on her phone, walking the top of the trench. Player has
+# control from the first word — no opening cutscene.
+@ objective "Walk the trench line"
+EVARA: (to the phone, quiet, the whole site still asleep) Day nineteen.
+EVARA: Sun's not up. Ishita's not up. The monsoon is three weeks early and
+EVARA: nobody at the Institute wants to talk about what that does to a trench.
+EVARA: (beat) But you lot didn't come here for drainage.
+EVARA: (turning the camera to the pit) You came for this.
+-> the_pitch
+
+
+:: the_pitch
+EVARA: Dholarath. Four and a half thousand years old. Grid streets, covered
+EVARA: drains, a reservoir that could hold a season of rain —
+EVARA: — and a writing system that nobody on Earth can read.
+EVARA: Four hundred signs. Thousands of inscriptions. Not one of them understood.
+# ?? DECISION — this is where she names her mother's theory. I put it in the
+# cold open because it is the engine of the whole game and the player should
+# hear it before anything supernatural happens. You may want it later.
+EVARA: Thirty years ago somebody worked out why. She said: stop reading it
+EVARA: like a language. It isn't sentences. It's an index — labels, pointing
+EVARA: at something that isn't the writing.
+EVARA: The field laughed her out of the room.
+EVARA: (flat) She's my mother. So, you know. Personal stake.
+@ objective "Get down into Trench 4"
+-> ishita_arrives
+
+
+:: ishita_arrives
+# Teaching the climb down. Ishita arrives at the lip above her.
+ISHITA: (above, dry) Two million people and you still can't operate a kettle.
+EVARA: Two million people fund your remote sensing, Dr Vaid.
+ISHITA: Two million people think you found a "lost city." You found a
+ISHITA: well-documented site with a new trench in it.
+EVARA: Two million people have hope. You should try it.
+> "Come and look at the floor."        -> ishita_down      @ flag ishita_invited
+> "Go back to bed."                    -> ishita_stays
+> (say nothing — climb down)           -> ishita_stays
+
+
+:: ishita_down
+@ flag ishita_present_at_discovery
+ISHITA: (sliding down, landing badly) ...What am I looking at?
+EVARA: That's what I'm asking you. You're the one with the ground scans.
+-> teach_dig
+
+
+:: ishita_stays
+ISHITA: (fading, above) When you find Atlantis, wake me.
+EVARA: (to herself) Rude.
+-> teach_dig
+
+
+:: teach_dig
+# EXCAVATION TAUGHT HERE — first on something worthless, so failing costs
+# nothing and the player learns the verb before it matters.
+@ skill_unlock excavation
+@ objective "Clear the trench floor"
+EVARA: (to the phone, settling in) Right. Slowly. We don't take, we record.
+EVARA: (a beat, to herself, almost ritual) Brush, don't scrape. Dad's rule.
+# ?? DECISION — her father's trowel. The bible says she carries it; I wanted
+# it established before the chamber, not after, so the discovery isn't the
+# first time the player hears about him. It's one line. Cut it if it's too early.
+-> first_find
+
+
+:: first_find
+@ sfx trowel_on_pottery
+EVARA: (genuine delight) Oh, hello.
+EVARA: (holding it up to the lens) Potsherd. Red slip. Probably a storage jar,
+EVARA: probably nothing, probably the single most beautiful nothing you'll
+EVARA: see today.
+@ phone_available sakshi
+@ objective "Keep clearing — something is under the silt"
+-> trench_work
+
+
+:: trench_work
+# The optional Sakshi call. Strongly cued, never forced — this is the first
+# time the player meets the hint system, so it has to feel like a choice.
+> Call Ma                              -> call_sakshi
+> Keep working                         -> the_lintel
+
+
+:: call_sakshi
+@ sfx phone_dial
+@ music sakshi_theme
+SAKSHI: (crackly line, instantly awake) You're in the trench.
+EVARA: How do you always —
+SAKSHI: Because it's five in the morning and you're whispering.
+EVARA: (caught) Ma.
+SAKSHI: What did you find?
+EVARA: Red slip sherd. And the floor's wrong. It's too flat, and it's too
+EVARA: flat in a straight line.
+SAKSHI: (a long pause) Check the drainage, beta. Not the walls. Everyone
+SAKSHI: always checks the walls.
+SAKSHI: I told the reviewers that in '98 and they laughed at me for an hour.
+# ?? DECISION — "beta" and "Ma". Your call on the register: Ma / Mumma / Amma,
+# and how much Gujarati or Hindi threads through. I defaulted to the lightest
+# touch. This is exactly the sort of thing I should not be deciding.
+EVARA: (quiet) I know, Ma.
+SAKSHI: Don't "I know" me. Go and look at the drain.
+@ flag called_sakshi_prologue
+@ objective "Follow the drain line"
+-> the_lintel
+
+
+:: the_lintel
+# The find. Camera pushes in; she stops performing for the camera here, which
+# is the tell that this one is real.
+@ camera push_in sealed_door
+@ music drop_out
+@ sfx brush_on_stone
+EVARA: (to the phone, still presenting) Okay, so this is — this is probably
+EVARA: a kerb stone, these run along the —
+EVARA: (stops)
+EVARA: (long pause)
+EVARA: That's a lintel.
+-> clear_the_door
+
+
+:: clear_the_door
+# Second excavation, now it matters. Bigger, slower, timed? -- see note.
+# ?? DECISION — I did NOT put a fail state here. First real discovery of the
+# game should not be something you can botch. Failure comes in Chapter 2.
+@ objective "Clear the doorway"
+@ music low_drone_build
+ISHITA: [if ishita_present_at_discovery] (very quietly) Evara. That's a door.
+EVARA: [if ishita_present_at_discovery] I know it's a door.
+ISHITA: [if ishita_present_at_discovery] That's a *sealed* door.
+EVARA: (not to the phone any more) Ma was right.
+-> the_chamber
+
+
+:: the_chamber
+@ sfx stone_grinding
+@ camera slow_reveal chamber
+@ music silence
+# Hold on silence. No score. Let the room land.
+EVARA: (barely audible) ...Oh.
+# The skeleton, seated upright, hands cupped. The wall of signs behind it.
+EVARA: (to nobody) There's someone in here.
+EVARA: Sitting up. Not buried — *placed*. Facing the door.
+EVARA: And the whole back wall is covered in signs.
+@ objective "Read the wall"
+-> the_wall
+
+
+:: the_wall
+EVARA: I can't read any of it. Nobody can read any of it.
+EVARA: (moving closer) Except —
+EVARA: (stopping) Except that pairing. There, and there, and — six times.
+EVARA: That's the pairing off the north gate signboard.
+EVARA: The one every tourist photograph in Gujarat has in the background.
+EVARA: (the thought arriving) It's a label. It's labelling something.
+EVARA: It's an *index*.
+@ flag saw_the_index
+-> the_wheel
+
+
+:: the_wheel
+@ camera push_in wheel
+EVARA: (down to the skeleton's hands) And you're holding something.
+EVARA: Copper. Disc. Eight spokes.
+EVARA: (the archaeologist and the daughter arguing in one sentence)
+EVARA: I should not touch this. I should photograph this, and log this, and
+EVARA: call it in, and not touch this.
+> Lift it                              -> lift
+> Photograph it first                  -> photograph
+
+
+:: photograph
+@ sfx phone_shutter
+@ flag recorded_before_taking
+# ?? DECISION — rewarding her creed with a real flag. "We don't take, we
+# record" should mean something mechanically, even here. I'd like this to pay
+# off in Chapter 5 when HELIX argues she's no different from them.
+EVARA: (steadier) Recorded. Logged. Witnessed.
+EVARA: Okay.
+-> lift
+
+
+:: lift
+@ sfx low_hum_begin
+EVARA: (lifting it) It's warm.
+EVARA: (confused, quieter) Why is it warm —
+@ hard_cut
+-> arrival
+
+
+:: arrival
+# THE HARD CUT. No transition, no fade. One frame 2026, next frame 1900 BCE.
+# Trench walls brick-new. Water thundering somewhere above. Dust and noise and
+# a city that is extremely alive.
+@ era past
+@ sfx water_roar
+@ music dholarath_alive
+@ camera whip_around
+EVARA: (no breath in her) What.
+VASUDHA: (unimpressed, holding a plumb line) Late.
+VASUDHA: You Keepers are always late.
+@ title_card "KAALCHAKRA"
+-> END
