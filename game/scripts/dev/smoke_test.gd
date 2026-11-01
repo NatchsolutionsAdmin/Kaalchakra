@@ -170,6 +170,9 @@ func _run() -> void:
 		"y %.2f -> %.2f" % [foot, player.global_position.y])
 
 	print("\n-- era lighting --")
+	# This section leaves the world in FUTURE; the sections after it rely on that.
+	TimeShift.request_shift(Era.Id.FUTURE)
+	await _settle(4)
 	var lighting := _main.get_node("EraLighting")
 	var sun := lighting.get("sun") as DirectionalLight3D
 	var env := lighting.get("world_env") as WorldEnvironment
