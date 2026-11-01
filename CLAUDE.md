@@ -52,7 +52,7 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 ## 4. Open decisions (raise these when relevant, one at a time)
 
 1. Final game title: *Kaalchakra: The Drowned City* vs *Sindhu* vs *The Third Morning*.
-2. Write and lock the art bible (palette: terracotta/ochre/dust + water-teal; era tints warm-gold past / neutral present / cold blue-grey future).
+2. **Lock the art bible** — a draft now exists at `docs/ART-BIBLE.md` with five open choices marked ◆. It gates all environment art.
 3. Canon face for Eva: polished turnaround sheets vs the grounded `ComfyUI_00009` face.
 4. Meera (from the early 2D prototype) as a past-Keeper Easter egg in ledger collectibles — recommended yes.
 5. Engine re-evaluation (Unreal) only if the vertical slice raises real money for a visually ambitious production — Phase 3, not now.
