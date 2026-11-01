@@ -34,6 +34,9 @@
 | 27 | 2026-11-01 | **AI voice is allowed for scratch/placeholder only**, never in anything released or shown publicly (no trailer, no demo, no store build). Real voice artists for the shipped game, per R5.7. Scratch audio lives in `audio/voice/scratch/` and is git-ignored. | Lets Prabhjot judge pacing and performance early without paying for sessions on lines that will change. Keeps the ownership rule intact. |
 
 ## To record next
+- **Trowel or shovel?** The story bible and sketch brief say Eva carries her father's *hand trowel*. The approved commission sheets show a **long-handled shovel** reaching her shoulder. Different object, different silhouette, different dig animation. Pick one.
+- **The commission brief still says "Evara"** throughout and must be renamed before it goes to a freelancer
+- **No scarf** in the approved sheets, though `character-sketch-brief.md` §1 calls for one. Removed from the blockout; confirm it is gone for good
 - **Language plan:** English VO + Hindi subtitles, vs. full Hindi VO, vs. both (see the voice discussion, 2026-11-01)
 - **What language the 1900 BCE characters speak**, and whether early incomprehension is a mechanic
 - Mobile business model (premium / free Chapter 1 + unlock / platform deal)

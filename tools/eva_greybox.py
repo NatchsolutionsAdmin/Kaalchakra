@@ -14,20 +14,26 @@ capsule, the camera and every script stay exactly as they are.
 Proportions for a 1.75 m woman, feet at y = 0:
     ankle 0.06   knee 0.46   hip 0.92   shoulder 1.42   head centre 1.60
 """
+import math
 import pathlib
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "game/scenes/player/Eva.tscn"
 
 SKIN, CLOTH, DARK, HAIR, EYE = "ext_skin", "ext_cloth", "ext_dark", "ext_hair", "ext_eye"
-METAL, SCARF = "ext_metal", "ext_scarf"
+TROUSER, TEAL, BOOT = "ext_trouser", "ext_teal", "ext_boot"
+COPPER, PATINA, PEARL = "ext_copper", "ext_patina", "ext_pearl"
 MATS = {
     SKIN: "res://materials/mat_eva.tres",
     CLOTH: "res://materials/mat_eva_cloth.tres",
     DARK: "res://materials/mat_eva_dark.tres",
     HAIR: "res://materials/mat_eva_hair.tres",
     EYE: "res://materials/mat_eva_eye.tres",
-    METAL: "res://materials/mat_eva_metal.tres",
-    SCARF: "res://materials/mat_eva_scarf.tres",
+    TROUSER: "res://materials/mat_eva_trouser.tres",
+    TEAL: "res://materials/mat_eva_teal.tres",
+    BOOT: "res://materials/mat_eva_boot.tres",
+    COPPER: "res://materials/mat_eva_copper.tres",
+    PATINA: "res://materials/mat_eva_patina.tres",
+    PEARL: "res://materials/mat_eva_pearl.tres",
 }
 
 lines = []
@@ -45,15 +51,20 @@ def node(name, ntype, parent, pos=(0, 0, 0), extra=""):
     )
 
 
-def part(name, parent, pos, size, mat):
-    """One box of the body: the shared unit cube, scaled."""
-    sx, sy, sz = (fmt(c) for c in size)
+def part(name, parent, pos, size, mat, roll=0.0):
+    """One box of the body: the shared unit cube, scaled, optionally rolled
+    about Z so a strap can lie diagonally across the chest."""
+    r = math.radians(roll)
+    c, sn = math.cos(r), math.sin(r)
+    sx, sy, sz = size
+    basis = [sx * c, sx * sn, 0.0, -sy * sn, sy * c, 0.0, 0.0, 0.0, sz]
     lines.append(
         '[node name="%s" type="MeshInstance3D" parent="%s"]\n'
-        'transform = Transform3D(%s, 0, 0, 0, %s, 0, 0, 0, %s, %s)\n'
+        'transform = Transform3D(%s, %s)\n'
         'mesh = SubResource("BoxMesh_unit")\n'
         'material_override = ExtResource("%s")\n'
-        % (name, parent, sx, sy, sz, ", ".join(fmt(c) for c in pos), mat)
+        % (name, parent, ", ".join(fmt(v) for v in basis),
+           ", ".join(fmt(v) for v in pos), mat)
     )
 
 
@@ -63,20 +74,30 @@ def limb(side, sign):
     # arm: shoulder -> elbow -> wrist
     node("Shoulder" + side, "Node3D", "Model/Hips/Spine", (sign * 0.21, 0.34, 0))
     part("UpperArm" + side, "Model/Hips/Spine/Shoulder" + side,
-         (0, -0.14, 0), (0.095, 0.30, 0.105), CLOTH)
+         (0, -0.13, 0), (0.095, 0.28, 0.105), CLOTH)
+    # Sleeves rolled to the elbow over a teal undershirt — the cuff is the
+    # only teal on the arm and it is on every reference sheet.
+    part("Cuff" + side, "Model/Hips/Spine/Shoulder" + side,
+         (0, -0.265, 0), (0.10, 0.045, 0.11), TEAL)
     node("Elbow" + side, "Node3D", "Model/Hips/Spine/Shoulder" + side, (0, -0.28, 0))
     part("Forearm" + side, "Model/Hips/Spine/Shoulder%s/Elbow%s" % (side, side),
          (0, -0.13, 0), (0.085, 0.26, 0.095), SKIN)
     part("Hand" + side, "Model/Hips/Spine/Shoulder%s/Elbow%s" % (side, side),
          (0, -0.30, 0), (0.08, 0.10, 0.06), SKIN)
+    # Black watch on one wrist, leather cuff on the other.
+    part("Wrist" + side, "Model/Hips/Spine/Shoulder%s/Elbow%s" % (side, side),
+         (0, -0.235, 0), (0.095, 0.05, 0.075), EYE if side == "R" else DARK)
     # leg: hip -> knee -> ankle
     node("Hip" + side, "Node3D", "Model/Hips", (sign * 0.095, 0, 0))
-    part("Thigh" + side, "Model/Hips/Hip" + side, (0, -0.23, 0), (0.145, 0.46, 0.155), CLOTH)
+    part("Thigh" + side, "Model/Hips/Hip" + side, (0, -0.23, 0), (0.145, 0.46, 0.155), TROUSER)
     node("Knee" + side, "Node3D", "Model/Hips/Hip" + side, (0, -0.46, 0))
     part("Shin" + side, "Model/Hips/Hip%s/Knee%s" % (side, side),
-         (0, -0.23, 0), (0.12, 0.46, 0.13), CLOTH)
+         (0, -0.21, 0), (0.12, 0.42, 0.13), TROUSER)
+    # Trousers rolled at the ankle, then boots.
+    part("Turnup" + side, "Model/Hips/Hip%s/Knee%s" % (side, side),
+         (0, -0.40, 0), (0.135, 0.07, 0.145), CLOTH)
     part("Boot" + side, "Model/Hips/Hip%s/Knee%s" % (side, side),
-         (0, -0.43, -0.03), (0.135, 0.12, 0.25), DARK)
+         (0, -0.44, -0.03), (0.135, 0.14, 0.25), BOOT)
 
 
 def main():
@@ -114,20 +135,29 @@ def main():
     )
 
     node("Hips", "Node3D", "Model", (0, 0.92, 0))
-    part("Pelvis", "Model/Hips", (0, -0.04, 0), (0.30, 0.20, 0.20), CLOTH)
+    part("Pelvis", "Model/Hips", (0, -0.04, 0), (0.30, 0.20, 0.20), TROUSER)
+    part("Belt", "Model/Hips", (0, 0.055, 0), (0.315, 0.065, 0.215), DARK)
+    part("BeltPouch", "Model/Hips", (-0.145, -0.03, -0.045), (0.075, 0.12, 0.09), DARK)
+    part("ThighRig", "Model/Hips", (0.125, -0.13, -0.035), (0.07, 0.11, 0.085), DARK)
     node("Spine", "Node3D", "Model/Hips", (0, 0.06, 0))
     part("Chest", "Model/Hips/Spine", (0, 0.20, 0), (0.355, 0.42, 0.21), CLOTH)
-    part("Satchel", "Model/Hips/Spine", (0.17, 0.02, 0.10), (0.10, 0.20, 0.16), DARK)
-    # The scarf against the sun — and the one block of colour that makes her
-    # read in silhouette (character-sketch-brief.md §1).
-    part("Scarf", "Model/Hips/Spine", (0, 0.40, 0.01), (0.30, 0.075, 0.235), SCARF)
-    part("ScarfTail", "Model/Hips/Spine", (0.11, 0.30, 0.12), (0.07, 0.22, 0.04), SCARF)
+    # Teal collared undershirt, showing at the open neck.
+    part("Undershirt", "Model/Hips/Spine", (0, 0.335, -0.09), (0.16, 0.14, 0.05), TEAL)
+    part("Hood", "Model/Hips/Spine", (0, 0.37, 0.085), (0.26, 0.15, 0.10), CLOTH)
+    part("Pearls", "Model/Hips/Spine", (0, 0.375, -0.10), (0.135, 0.028, 0.045), PEARL)
+    # Cross-body harness: right shoulder down to left hip.
+    part("Harness", "Model/Hips/Spine", (0, 0.19, -0.11), (0.075, 0.52, 0.03), DARK, roll=22.0)
+    part("HarnessBack", "Model/Hips/Spine", (0, 0.19, 0.11), (0.075, 0.52, 0.03), DARK, roll=-22.0)
+    part("SleeveBadge", "Model/Hips/Spine", (0.195, 0.27, -0.06), (0.03, 0.055, 0.055), COPPER)
 
-    # "One old, one new — these two objects are her whole character in a
-    # glance." Her father's trowel on the left hip, her phone on the right.
-    part("TrowelHandle", "Model/Hips", (-0.165, -0.03, 0.055), (0.032, 0.10, 0.032), DARK)
-    part("TrowelBlade", "Model/Hips", (-0.165, -0.13, 0.055), (0.052, 0.13, 0.016), METAL)
-    part("PhonePouch", "Model/Hips", (0.155, -0.08, -0.055), (0.055, 0.115, 0.035), DARK)
+    part("Backpack", "Model/Hips/Spine", (0, 0.19, 0.175), (0.255, 0.33, 0.135), DARK)
+    part("PackFlap", "Model/Hips/Spine", (0, 0.31, 0.19), (0.255, 0.11, 0.115), BOOT)
+
+    # The shovel — her father's, and in almost every scene. Stowed on her back
+    # here; the commissioned model attaches it to a hand or back socket.
+    part("ShovelShaft", "Model/Hips/Spine", (-0.21, 0.30, 0.16), (0.034, 0.80, 0.034), PATINA)
+    part("ShovelGrip", "Model/Hips/Spine", (-0.21, 0.72, 0.16), (0.085, 0.065, 0.034), COPPER)
+    part("ShovelBlade", "Model/Hips/Spine", (-0.21, -0.19, 0.16), (0.10, 0.22, 0.028), COPPER)
 
     node("Head", "Node3D", "Model/Hips/Spine", (0, 0.46, 0))
     part("Skull", "Model/Hips/Spine/Head", (0, 0.11, 0), (0.185, 0.235, 0.21), SKIN)

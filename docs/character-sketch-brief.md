@@ -3,7 +3,7 @@
 > For the artists doing character concept sketches. Each entry gives the read-at-a-glance silhouette, physical notes, wardrobe across eras, personality to convey, and reference direction.
 > **Read the Art Bible first** (see note in Section 0) so all sketches share one style.
 > Story context for any character is in `kaalchakra-story-bible.md`.
-> Status: Eva has a locked 2D design (`ComfyUI_00009`), turnaround/expression/gear sheets, and a freelancer commission brief (`Evara_Character_Brief.docx`). Store them in `art/characters/eva/`.
+> Status: Eva's approved sheets and the commission brief are in `art/characters/eva/` (Git LFS) — turnaround, head + expressions, gear breakdown, locked render. **Those sheets are the source of truth**; where this document and they disagree, they win.
 
 ---
 

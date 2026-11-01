@@ -44,7 +44,7 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 | Protagonist | **Eva** (renamed from Evara, 2026-11-01), female, 24, no surname. Sakshi alive (phone calls). |
 | Price / business model | **Open — re-decide for mobile** (see §4). The $19.99 PC plan in `docs/MARKET-POSITIONING.md` no longer applies. |
 | Vertical slice | Chapter 2, "The Index" (see `docs/REQUIREMENTS.md` §8). |
-| Eva 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Eva = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. Put them in `art/characters/eva/`. |
+| Eva 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Eva = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. **Now in `art/characters/eva/`** (LFS): turnaround, head + expressions, gear breakdown, locked render, and the brief. |
 | Future era | **2087 is fully walkable, no combat** (decided 2026-11-01). Decipherment's third step happens there. |
 | Voice | **AI voice for scratch/testing only** — never shipped, never in a trailer or demo. Real artists for release (R5.7). Scratch files in `audio/voice/scratch/`, git-ignored. |
 | Learning approach | Learn game design by **teardown → rebuild**: study how great games solve a problem, then rebuild that system in greybox. **Never** decompile/rip commercial game files (EULA/copyright risk, contaminates the project). |
