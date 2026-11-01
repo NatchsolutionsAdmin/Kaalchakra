@@ -1,0 +1,7 @@
+; Dev-only harness. Not shipped.
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/smoke_test.gd" id="ext_1"]
+
+[node name="SmokeTest" type="Node"]
+script = ExtResource("ext_1")

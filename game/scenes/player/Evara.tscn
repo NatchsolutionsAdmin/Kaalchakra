@@ -1,0 +1,64 @@
+; Evara — greybox capsule with a 3rd-person orbit camera.
+; The capsule is a stand-in; the real model is a commission (REQUIREMENTS R5.1).
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/evara.gd" id="ext_1"]
+[ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="ext_2"]
+[ext_resource type="Material" path="res://materials/mat_evara.tres" id="ext_3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_nose"]
+size = Vector3(0.16, 0.16, 0.34)
+
+[node name="Evara" type="CharacterBody3D"]
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("ext_1")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_body")
+material_override = ExtResource("ext_3")
+
+[node name="Nose" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, -0.3)
+mesh = SubResource("BoxMesh_nose")
+material_override = ExtResource("ext_3")
+
+[node name="WallCast" type="RayCast3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+target_position = Vector3(0, 0, -0.72)
+collision_mask = 5
+
+[node name="LedgeCast" type="RayCast3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, -0.62)
+target_position = Vector3(0, -2, 0)
+collision_mask = 5
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+script = ExtResource("ext_2")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0)
+spring_length = 4.6
+margin = 0.25
+collision_mask = 5
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+fov = 72.0
+far = 600.0

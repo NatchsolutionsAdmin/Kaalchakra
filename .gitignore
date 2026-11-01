@@ -1,0 +1,29 @@
+# Godot 4
+.godot/
+*.import.tmp
+export_presets.cfg
+/game/build/
+/game/export/
+
+# Godot .NET (not used, but harmless)
+.mono/
+data_*/
+mono_crash.*.json
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Blender backups
+*.blend1
+*.blend2
+
+# Editors
+.vscode/
+.idea/
+
+# Secrets
+.env
+*.key
