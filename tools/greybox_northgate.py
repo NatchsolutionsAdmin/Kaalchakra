@@ -48,11 +48,13 @@ def structure(tag):
         top = -1.4 * (i + 1)
         h = top + 7.0
         out.append((f"BasinStep{i}", (-5, -7.0 + h / 2.0, -22 + 1.4 * i + 0.7), (20.5, h, 1.4), acc))
-    # A stack of ledges east of the basin, to have somewhere to test the climb.
+    # A stack of ledges east of the basin that teaches the two traversal verbs:
+    # 1.1 m up onto A is a plain jump; A->B is 1.8 m and B->C is 2.0 m, both
+    # above what she can jump, so they can only be taken by pulling up.
     out += [
         ("LedgeA", (8.5, 0.55, -20), (3, 1.1, 3), acc),
-        ("LedgeB", (8.5, 1.3, -17),  (3, 2.6, 3), acc),
-        ("LedgeC", (8.5, 2.0, -14),  (3, 4.0, 3), acc),
+        ("LedgeB", (8.5, 1.45, -17), (3, 2.9, 3), acc),
+        ("LedgeC", (8.5, 2.45, -14), (3, 4.9, 3), acc),
     ]
     return out
 

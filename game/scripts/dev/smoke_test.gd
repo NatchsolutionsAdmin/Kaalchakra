@@ -153,21 +153,84 @@ func _run() -> void:
 		"y %.2f -> %.2f" % [standing, player.global_position.y])
 	await _settle(40)
 
-	print("\n-- the ledge climb --")
+	print("\n-- jumping next to a step stays a jump --")
+	# The bug: the pull-up used to fire on any ground jump near a 1.4 m step
+	# and slide her somewhere she never aimed for.
 	var model := player.get("model") as Node3D
+	var pivot := player.get("cam_pivot") as Node3D
+	pivot.rotation.y = PI
 	player.global_position = Vector3(8.5, 0.1, -22.0)
 	player.velocity = Vector3.ZERO
 	player.set("_facing", PI)
 	model.rotation.y = PI
 	await _settle(25)
-	var foot := player.global_position.y
+	var start_at := player.global_position
 	Input.action_press("jump")
 	await _settle(2)
 	Input.action_release("jump")
-	await _settle(45)
-	_ok("she pulls herself onto the 1.1 m ledge",
-		player.global_position.y > foot + 0.8,
-		"y %.2f -> %.2f" % [foot, player.global_position.y])
+	await _settle(60)
+	var drift := Vector2(player.global_position.x - start_at.x, player.global_position.z - start_at.z).length()
+	_ok("a standing jump beside a ledge lands her back where she started",
+		drift < 0.4 and absf(player.global_position.y - start_at.y) < 0.4,
+		"drifted %.2f m, y %.2f -> %.2f" % [drift, start_at.y, player.global_position.y])
+
+	print("\n-- the ledge climb --")
+	# 1.1 m: a plain jump should carry her up, no pull-up needed.
+	player.global_position = Vector3(8.5, 0.1, -23.0)
+	player.velocity = Vector3.ZERO
+	await _settle(20)
+	Input.action_press("move_forward")
+	await _settle(10)
+	Input.action_press("jump")
+	await _settle(3)
+	Input.action_release("jump")
+	await _settle(55)
+	Input.action_release("move_forward")
+	await _settle(20)
+	_ok("she jumps the 1.1 m step unaided", player.global_position.y > 0.9,
+		"y = %.2f" % player.global_position.y)
+
+	# 1.8 m: above her jump, so this can only happen by pulling up.
+	player.global_position = Vector3(8.5, 1.15, -19.6)
+	player.velocity = Vector3.ZERO
+	player.set("_facing", PI)
+	model.rotation.y = PI
+	await _settle(25)
+	var below := player.global_position.y
+	Input.action_press("move_forward")
+	await _settle(8)
+	Input.action_press("jump")
+	await _settle(3)
+	Input.action_release("jump")
+	await _settle(70)
+	Input.action_release("move_forward")
+	await _settle(20)
+	_ok("she pulls up onto the 1.8 m ledge she cannot jump",
+		player.global_position.y > below + 1.5,
+		"y %.2f -> %.2f" % [below, player.global_position.y])
+
+	print("\n-- the reservoir steps (the reported bug) --")
+	# Steps are 1.4 m. Jumping up a flight must climb exactly one, never fling
+	# her up the whole run.
+	pivot.rotation.y = 0.0
+	player.set("_facing", 0.0)
+	model.rotation.y = 0.0
+	player.global_position = Vector3(0, -2.7, -19.9)
+	player.velocity = Vector3.ZERO
+	await _settle(30)
+	var step_y := player.global_position.y
+	Input.action_press("move_forward")
+	await _settle(8)
+	Input.action_press("jump")
+	await _settle(3)
+	Input.action_release("jump")
+	await _settle(70)
+	Input.action_release("move_forward")
+	await _settle(25)
+	var climbed := player.global_position.y - step_y
+	_ok("jumping up the steps climbs one step, not the flight",
+		climbed > 0.5 and climbed < 2.2,
+		"climbed %.2f m (y %.2f -> %.2f)" % [climbed, step_y, player.global_position.y])
 
 	print("\n-- era lighting --")
 	# This section leaves the world in FUTURE; the sections after it rely on that.

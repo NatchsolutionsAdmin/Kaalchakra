@@ -17,10 +17,15 @@ extends CharacterBody3D
 @export var jump_velocity := 8.5
 
 @export_group("Ledge climb")
-## Tallest ledge Evara can pull herself onto.
-@export var mantle_max_height := 1.7
-@export var mantle_min_height := 0.35
-@export var mantle_time := 0.3
+## Her jump clears about 1.5 m unaided, so the pull-up deliberately starts
+## ABOVE that. Otherwise it hijacks every ordinary jump taken next to a step —
+## and the reservoir steps are 1.4 m.
+@export var mantle_max_height := 2.4
+@export var mantle_min_height := 0.85
+## Two phases: straight up the face, then over the lip. Moving diagonally
+## through the corner in one go is what made it read as a teleport.
+@export var mantle_rise_time := 0.22
+@export var mantle_over_time := 0.15
 
 @export_group("Safety net")
 ## Below this height she is considered fallen out of the world.
@@ -35,6 +40,7 @@ extends CharacterBody3D
 var _spawn: Transform3D
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 24.0)
 var _mantling := false
+var _mantle_cooldown := 0.0
 var _facing := 0.0
 
 
@@ -77,10 +83,18 @@ func _physics_process(delta: float) -> void:
 	elif velocity.y < 0.0:
 		velocity.y = 0.0
 
-	if Input.is_action_just_pressed("jump"):
-		if not _try_mantle():
-			if is_on_floor():
-				velocity.y = jump_velocity
+	# Jump is always just a jump. It never turns into something else.
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = jump_velocity
+
+	# The pull-up is a mid-air recovery, not a ground action: you jump at a
+	# ledge and, if you come up short, you catch it. Requiring her to be
+	# airborne, no longer rising, and moving into the wall is what keeps it
+	# from stealing jumps she never meant to turn into a climb.
+	if _mantle_cooldown > 0.0:
+		_mantle_cooldown -= delta
+	elif not is_on_floor() and velocity.y <= 1.0 and dir.length_squared() > 0.1:
+		_try_mantle(dir)
 
 	if dir.length_squared() > 0.001:
 		# -Z is "forward" in Godot, hence the negation.
@@ -114,25 +128,38 @@ func _handle_interaction(delta: float) -> void:
 
 # --- Ledge climb ---------------------------------------------------------
 
-func _try_mantle() -> bool:
+func _try_mantle(dir: Vector3) -> bool:
 	if not wall_cast.is_colliding() or not ledge_cast.is_colliding():
 		return false
+
+	var forward := -model.global_transform.basis.z
+	# Only climb onto something she is actually heading into.
+	if dir.dot(forward) < 0.5:
+		return false
+
 	var top := ledge_cast.get_collision_point()
 	var rise := top.y - global_position.y
 	if rise < mantle_min_height or rise > mantle_max_height:
 		return false
 
+	var landing := Vector3(top.x, top.y + 0.05, top.z) + forward * 0.5
+	var apex := Vector3(global_position.x, landing.y, global_position.z)
+	# Never pull her into solid geometry. Without this she can be yanked onto a
+	# step further up the flight, or into a wall, which is where "it takes me
+	# somewhere else" came from.
+	if not _space_free(apex) or not _space_free(landing):
+		return false
+
 	_mantling = true
 	velocity = Vector3.ZERO
-	var forward := -model.global_transform.basis.z
-	var landing := Vector3(top.x, top.y + 0.03, top.z) + forward * 0.45
 
-	# No `await` here on purpose: this function has to return a plain bool in the
-	# same frame, so the caller knows not to also fire a normal jump.
 	var tween := create_tween()
-	tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "global_position", landing, mantle_time)
-	tween.finished.connect(func() -> void: _mantling = false)
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "global_position", apex, mantle_rise_time).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "global_position", landing, mantle_over_time).set_ease(Tween.EASE_IN_OUT)
+	tween.finished.connect(func() -> void:
+		_mantling = false
+		_mantle_cooldown = 0.25)
 	return true
 
 
@@ -153,21 +180,24 @@ func _apply_era(era: Era.Id) -> void:
 		arm.collision_mask = collision_mask
 
 
-## After a shift, the era that just arrived may have a wall where Evara is
-## standing. Lift her straight up until she is clear.
-func _unstick() -> void:
+## Is there room for her capsule standing with her feet at `foot_pos`?
+func _space_free(foot_pos: Vector3) -> bool:
 	var capsule := shape.shape as CapsuleShape3D
 	if capsule == null:
-		return
+		return true
 	var params := PhysicsShapeQueryParameters3D.new()
 	params.shape = capsule
 	params.collision_mask = collision_mask
 	params.exclude = [get_rid()]
-	var space := get_world_3d().direct_space_state
+	params.transform = Transform3D(Basis(), foot_pos + Vector3.UP * (capsule.height * 0.5))
+	return get_world_3d().direct_space_state.intersect_shape(params, 1).is_empty()
 
+
+## After a shift, the era that just arrived may have a wall where Evara is
+## standing. Lift her straight up until she is clear.
+func _unstick() -> void:
 	for _i in 30:
-		params.transform = Transform3D(Basis(), global_position + Vector3.UP * (capsule.height * 0.5))
-		if space.intersect_shape(params, 1).is_empty():
+		if _space_free(global_position):
 			return
 		global_position.y += 0.3
 	# Still buried after 9 metres of lifting — bail out to the spawn point.
@@ -178,3 +208,4 @@ func respawn() -> void:
 	global_transform = _spawn
 	velocity = Vector3.ZERO
 	_mantling = false
+	_mantle_cooldown = 0.0
