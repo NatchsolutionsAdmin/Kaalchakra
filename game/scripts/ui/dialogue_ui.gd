@@ -75,11 +75,11 @@ func _build() -> void:
 	box.add_theme_constant_override("separation", 4)
 	_panel.add_child(box)
 
-	_speaker = _label(19, Color(0.95, 0.80, 0.45))
+	_speaker = _label(19, UIStyle.HIGHLIGHT)
 	box.add_child(_speaker)
-	_direction = _label(15, Color(1, 1, 1, 0.45))
+	_direction = _label(15, UIStyle.INK_DIM)
 	box.add_child(_direction)
-	_text = _label(21, Color(1, 1, 1))
+	_text = _label(21, UIStyle.INK)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(_text)
 
@@ -96,7 +96,7 @@ func _build() -> void:
 	_card_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_card_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_card_label.add_theme_font_size_override("font_size", 64)
-	_card_label.add_theme_color_override("font_color", Color(0.96, 0.84, 0.52, 0))
+	_card_label.add_theme_color_override("font_color", Color(UIStyle.HIGHLIGHT, 0.0))
 	_card_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_card.add_child(_card_label)
 
@@ -109,36 +109,22 @@ func _build() -> void:
 
 
 func _label(size: int, colour: Color) -> Label:
-	var l := Label.new()
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", colour)
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return l
+	return UIStyle.label("", size, colour)
 
 
 func _panel_style() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.03, 0.03, 0.04, 0.9)
-	sb.border_color = Color(1, 1, 1, 0.12)
-	sb.border_width_top = 1
-	sb.content_margin_left = 34
-	sb.content_margin_right = 34
-	sb.content_margin_top = 20
-	sb.content_margin_bottom = 24
+	var sb := UIStyle.panel(Color(0.06, 0.05, 0.05, 0.93),
+		Color(0.66, 0.44, 0.25, 0.65), 0, 34)
+	# A copper rule along the top edge only — a frame, not a floating box.
+	sb.border_width_left = 0
+	sb.border_width_right = 0
+	sb.border_width_bottom = 0
+	sb.border_width_top = 2
 	return sb
 
 
 func _choice_style(fill: Color, edge: Color) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = fill
-	sb.border_color = edge
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(6)
-	sb.content_margin_left = 24
-	sb.content_margin_right = 24
-	sb.content_margin_top = 16
-	sb.content_margin_bottom = 16
-	return sb
+	return UIStyle.panel(fill, edge, 6, 24)
 
 
 func _layout() -> void:
@@ -209,18 +195,21 @@ func _on_choices(options: Array) -> void:
 		var b := Button.new()
 		b.text = option["label"]
 		b.focus_mode = Control.FOCUS_NONE
-		b.custom_minimum_size = Vector2(0, 62)
-		b.add_theme_font_size_override("font_size", 19)
-		b.add_theme_color_override("font_color", Color(1, 1, 1))
-		b.add_theme_color_override("font_hover_color", Color(0.98, 0.84, 0.50))
-		b.add_theme_color_override("font_pressed_color", Color(0.1, 0.08, 0.05))
+		# Capped and centred: full-width buttons look like a web form, and on a
+		# wide screen the thumb cannot reach the far end anyway.
+		b.custom_minimum_size = Vector2(620, 56)
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		b.add_theme_font_size_override("font_size", 18)
+		b.add_theme_color_override("font_color", UIStyle.INK)
+		b.add_theme_color_override("font_hover_color", UIStyle.HIGHLIGHT)
+		b.add_theme_color_override("font_pressed_color", UIStyle.PRESSED_INK)
 		for state: String in ["normal", "focus"]:
 			b.add_theme_stylebox_override(state,
-				_choice_style(Color(0.05, 0.05, 0.06, 0.92), Color(1, 1, 1, 0.18)))
+				_choice_style(Color(0.07, 0.06, 0.06, 0.93), Color(0.66, 0.44, 0.25, 0.45)))
 		b.add_theme_stylebox_override("hover",
-			_choice_style(Color(0.10, 0.10, 0.11, 0.95), Color(0.98, 0.84, 0.50, 0.6)))
+			_choice_style(Color(0.12, 0.10, 0.09, 0.96), UIStyle.OCHRE))
 		b.add_theme_stylebox_override("pressed",
-			_choice_style(Color(0.95, 0.80, 0.42, 0.95), Color(1, 1, 1, 0.3)))
+			_choice_style(UIStyle.OCHRE, UIStyle.SALT))
 		b.pressed.connect(func() -> void: Dialogue.choose(i))
 		_choices.add_child(b)
 
@@ -241,10 +230,10 @@ func _on_directive(name: String, args: Array) -> void:
 	var tween := create_tween()
 	tween.tween_property(_card, "color", Color(0, 0, 0, 1), 0.5)
 	tween.parallel().tween_property(_card_label, "theme_override_colors/font_color",
-		Color(0.96, 0.84, 0.52, 1), 0.9)
+		Color(UIStyle.HIGHLIGHT, 1.0), 0.9)
 	tween.tween_interval(2.2)
 	tween.tween_property(_card_label, "theme_override_colors/font_color",
-		Color(0.96, 0.84, 0.52, 0), 0.8)
+		Color(UIStyle.HIGHLIGHT, 0.0), 0.8)
 	tween.parallel().tween_property(_card, "color", Color(0, 0, 0, 0), 0.9)
 	tween.tween_callback(func() -> void: _card.visible = false)
 

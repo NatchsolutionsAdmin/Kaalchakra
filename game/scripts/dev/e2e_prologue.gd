@@ -147,14 +147,18 @@ func _run() -> void:
 	var errors := Dialogue.play_file(PROLOGUE)
 	_ok("the Prologue script loads with no errors", errors.is_empty(), str(errors))
 
+	# Evidence of the dialogue box itself, not just the world behind it.
+	await _settle(20)
+	await _shot("dialogue")
+
 	var beats := 0
 	var guard := 0
 	while guard < 400:
 		guard += 1
 		if Dialogue.is_active():
 			if not Dialogue.pending_choices.is_empty():
-				if beats == 1:
-					await _shot("choice_ishita")
+				await _settle(10)
+				await _shot("choice")
 				Dialogue.choose(0)
 			else:
 				Dialogue.advance()

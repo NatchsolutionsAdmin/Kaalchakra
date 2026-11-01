@@ -25,12 +25,13 @@ var world_env: WorldEnvironment
 
 const LOOK: Dictionary = {
 	Era.Id.PAST: {
+		"ambient": Color(0.42, 0.28, 0.20),
 		"sun_angle": Vector3(-17.0, 34.0, 0.0),
 		"sun_color": Color(1.0, 0.83, 0.60),
 		"sun_energy": 1.55,
 		"fill_angle": Vector3(-35.0, -145.0, 0.0),
-		"fill_color": Color(0.42, 0.55, 0.82),
-		"fill_energy": 0.40,
+		"fill_color": Color(0.55, 0.62, 0.80),
+		"fill_energy": 0.38,
 		"sky_top": Color(0.24, 0.40, 0.67),
 		"sky_horizon": Color(0.90, 0.72, 0.48),
 		"ground_horizon": Color(0.64, 0.45, 0.31),
@@ -43,12 +44,15 @@ const LOOK: Dictionary = {
 		"brightness": 1.0,
 	},
 	Era.Id.PRESENT: {
+		"ambient": Color(0.52, 0.48, 0.42),
 		"sun_angle": Vector3(-54.0, -22.0, 0.0),
 		"sun_color": Color(1.0, 0.97, 0.92),
 		"sun_energy": 1.9,
 		"fill_angle": Vector3(-30.0, 150.0, 0.0),
-		"fill_color": Color(0.58, 0.64, 0.76),
-		"fill_energy": 0.30,
+		# Warm, not blue: this is light bounced off a salt flat, and a cool
+		# fill made the dry basin look like it was full of water.
+		"fill_color": Color(0.84, 0.78, 0.68),
+		"fill_energy": 0.42,
 		"sky_top": Color(0.33, 0.50, 0.76),
 		"sky_horizon": Color(0.82, 0.84, 0.83),
 		"ground_horizon": Color(0.60, 0.58, 0.54),
@@ -61,6 +65,7 @@ const LOOK: Dictionary = {
 		"brightness": 1.02,
 	},
 	Era.Id.FUTURE: {
+		"ambient": Color(0.16, 0.22, 0.28),
 		"sun_angle": Vector3(-21.0, 158.0, 0.0),
 		"sun_color": Color(0.74, 0.84, 0.95),
 		"sun_energy": 0.72,
@@ -119,6 +124,13 @@ func _apply(era: Era.Id) -> void:
 	env.fog_density = look["fog_density"]
 	env.fog_sun_scatter = look["sun_scatter"]
 	env.fog_aerial_perspective = look["aerial"]
+	# Down in the basin the only light is ambient, and pure sky ambient is
+	# blue — which made a DRY reservoir read as a full one. Blend the sky with
+	# a ground-bounce colour per era instead of taking it neat.
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_sky_contribution = 0.45
+	env.ambient_light_color = look["ambient"]
+	env.ambient_light_energy = 1.0
 	env.adjustment_enabled = true
 	env.adjustment_contrast = look["contrast"]
 	env.adjustment_saturation = look["saturation"]

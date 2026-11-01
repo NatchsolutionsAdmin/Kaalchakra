@@ -65,7 +65,19 @@ case "${1:-help}" in
     run prologue scenes/dev/Prologue.tscn --resolution "${2:-1230x568}"
     ;;
   test)
-    headless test scenes/dev/SmokeTest.tscn --quit-after 12000
+    # Capture the log as well as the assertions: a script can fail to PARSE
+    # and still let every assertion pass, because load() hands back a
+    # non-null object for a broken script. The log is the only place that
+    # shows up, so it is part of the pass condition.
+    LOG="$(mktemp -t kaal-test)"
+    headless test scenes/dev/SmokeTest.tscn --quit-after 12000 2>&1 | tee "$LOG"
+    if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load script" "$LOG"; then
+      echo
+      echo "FAILED — script errors in the log above, even though the assertions passed."
+      rm -f "$LOG"
+      exit 1
+    fi
+    rm -f "$LOG"
     ;;
   e2e)
     OUT="${2:-$ROOT/.shots/e2e}"
@@ -89,6 +101,10 @@ case "${1:-help}" in
     echo "opening the editor..."
     ;;
   import)
+    # Clearing the class cache first: adding a new `class_name` does not
+    # always refresh it, and the symptom is a mystifying "Identifier not
+    # declared in the current scope" for a class that plainly exists.
+    rm -f "$GAME/.godot/global_script_class_cache.cfg"
     headless import --import
     echo "re-imported."
     ;;

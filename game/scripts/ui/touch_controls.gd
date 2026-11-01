@@ -17,7 +17,7 @@ const JOY_DEADZONE := 0.12
 const KNOB_RADIUS := 42.0
 const ACTION_SIZE := 128.0     # all well above the ~44pt minimum tap target
 const JUMP_SIZE := 108.0
-const WHEEL_SIZE := 96.0
+const WHEEL_SIZE := 118.0
 const ERA_SIZE := 92.0
 const SWIPE_STEP := 70.0       # px of horizontal drag on the dial = one era
 
@@ -25,7 +25,7 @@ var _root: Control
 var _paint: Control
 var _action: Button
 var _jump: Button
-var _wheel: Button
+var _dial: WheelDial
 var _era_buttons: Dictionary = {}
 
 var _joy_touch := -1
@@ -68,19 +68,20 @@ func _build() -> void:
 	_paint.draw.connect(_draw_joystick)
 	_root.add_child(_paint)
 
-	_action = _round_button("", ACTION_SIZE, Color(0.95, 0.78, 0.32))
+	_action = _round_button("", ACTION_SIZE, UIStyle.HIGHLIGHT)
 	_action.button_down.connect(func() -> void: Touch.set_interact(true))
 	_action.button_up.connect(func() -> void: Touch.set_interact(false))
 	_root.add_child(_action)
 
-	_jump = _round_button("JUMP", JUMP_SIZE, Color(1, 1, 1))
+	_jump = _round_button("JUMP", JUMP_SIZE, UIStyle.DUST)
 	_jump.button_down.connect(func() -> void: Touch.queue_jump())
 	_root.add_child(_jump)
 
-	_wheel = _round_button("", WHEEL_SIZE, Color(1, 1, 1))
-	_wheel.pressed.connect(_toggle_wheel)
-	_wheel.gui_input.connect(_on_wheel_gui_input)
-	_root.add_child(_wheel)
+	# The Wheel is drawn, not a button with a label on it.
+	_dial = WheelDial.new()
+	_dial.tapped.connect(_toggle_wheel)
+	_dial.gui_input.connect(_on_wheel_gui_input)
+	_root.add_child(_dial)
 
 	for era: Era.Id in Era.ALL:
 		var b := _round_button(Era.SHORT[era], ERA_SIZE, Era.TINT[era])
@@ -93,28 +94,8 @@ func _build() -> void:
 func _round_button(text: String, diameter: float, tint: Color) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(diameter, diameter)
-	b.size = Vector2(diameter, diameter)
-	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", 15)
-	b.add_theme_color_override("font_color", tint)
-	b.add_theme_color_override("font_hover_color", tint)
-	b.add_theme_color_override("font_pressed_color", Color.BLACK)
-	for state: String in ["normal", "hover", "focus"]:
-		b.add_theme_stylebox_override(state, _circle(diameter, Color(0, 0, 0, 0.42), tint))
-	b.add_theme_stylebox_override("pressed", _circle(diameter, tint, tint))
-	b.add_theme_stylebox_override("disabled", _circle(diameter, Color(0, 0, 0, 0.2), Color(1, 1, 1, 0.2)))
+	UIStyle.style_round_button(b, diameter, tint)
 	return b
-
-
-func _circle(diameter: float, fill: Color, edge: Color) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = fill
-	sb.border_color = Color(edge.r, edge.g, edge.b, 0.85)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(int(diameter * 0.5))
-	sb.corner_detail = 12
-	return sb
 
 
 # --- layout (safe areas: notches, rounded corners, home indicator) --------
@@ -146,12 +127,12 @@ func _layout() -> void:
 	_action.position = Vector2(right - ACTION_SIZE, bottom - ACTION_SIZE)
 	_jump.position = Vector2(right - ACTION_SIZE - JUMP_SIZE - 22.0,
 		bottom - JUMP_SIZE - (ACTION_SIZE - JUMP_SIZE) * 0.5)
-	_wheel.position = Vector2(right - WHEEL_SIZE, top)
+	_dial.position = Vector2(right - WHEEL_SIZE, top)
 
 	# The three era buttons fan down-and-left of the dial, inside the screen,
 	# where a right thumb can sweep them without covering the view.
 	# Screen angles: y grows downward, so 90..180 degrees is "below and left".
-	var centre := _wheel.position + Vector2(WHEEL_SIZE, WHEEL_SIZE) * 0.5
+	var centre := _dial.position + Vector2(WHEEL_SIZE, WHEEL_SIZE) * 0.5
 	var radius := WHEEL_SIZE + 62.0
 	var angles := [176.0, 143.0, 110.0]
 	for era: Era.Id in Era.ALL:
@@ -176,10 +157,11 @@ func _hide_for_dialogue(hidden: bool) -> void:
 func _draw_joystick() -> void:
 	if _joy_touch == -1:
 		return
-	_paint.draw_circle(_joy_origin, JOY_RADIUS, Color(1, 1, 1, 0.08))
-	_paint.draw_arc(_joy_origin, JOY_RADIUS, 0.0, TAU, 48, Color(1, 1, 1, 0.28), 2.0, true)
-	_paint.draw_circle(_joy_point, KNOB_RADIUS, Color(1, 1, 1, 0.30))
-	_paint.draw_arc(_joy_point, KNOB_RADIUS, 0.0, TAU, 32, Color(1, 1, 1, 0.55), 2.0, true)
+	var c := UIStyle.COPPER
+	_paint.draw_circle(_joy_origin, JOY_RADIUS, Color(0.07, 0.06, 0.06, 0.26))
+	_paint.draw_arc(_joy_origin, JOY_RADIUS, 0.0, TAU, 48, Color(c.r, c.g, c.b, 0.45), 2.0, true)
+	_paint.draw_circle(_joy_point, KNOB_RADIUS, Color(c.r, c.g, c.b, 0.34))
+	_paint.draw_arc(_joy_point, KNOB_RADIUS, 0.0, TAU, 32, UIStyle.OCHRE, 2.0, true)
 
 
 func _set_joy(point: Vector2) -> void:
@@ -260,9 +242,6 @@ func _on_wheel_gui_input(event: InputEvent) -> void:
 
 func _refresh_wheel() -> void:
 	var era := TimeShift.current_era
-	_wheel.text = Era.SHORT[era]
-	_wheel.add_theme_color_override("font_color", Era.TINT[era])
-	_wheel.add_theme_color_override("font_hover_color", Era.TINT[era])
 	for id: Era.Id in Era.ALL:
 		var b := _era_buttons[id] as Button
 		b.visible = _wheel_open

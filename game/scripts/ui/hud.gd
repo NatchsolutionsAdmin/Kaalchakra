@@ -6,7 +6,7 @@
 ## Interactions — the HUD never owns game state.
 extends CanvasLayer
 
-const DIM := Color(1, 1, 1, 0.55)
+const DIM := UIStyle.INK_DIM
 
 var _era_short: Label
 var _era_title: Label
@@ -76,7 +76,7 @@ func _build() -> void:
 	gap.custom_minimum_size = Vector2(0, 14)
 	top.add_child(gap)
 
-	_objective = _label("", 17)
+	_objective = _label("", 17, UIStyle.DUST)
 	_objective.custom_minimum_size = Vector2(540, 0)
 	_objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	top.add_child(_objective)
@@ -95,7 +95,11 @@ func _build() -> void:
 	prompt_box.add_child(_prompt)
 
 	_hold_bar = ProgressBar.new()
-	_hold_bar.custom_minimum_size = Vector2(240, 7)
+	_hold_bar.custom_minimum_size = Vector2(240, 8)
+	_hold_bar.add_theme_stylebox_override("background",
+		UIStyle.panel(Color(0.06, 0.05, 0.05, 0.6), Color(0.66, 0.44, 0.25, 0.35), 4, 0))
+	_hold_bar.add_theme_stylebox_override("fill",
+		UIStyle.panel(UIStyle.OCHRE, UIStyle.HIGHLIGHT, 4, 0))
 	_hold_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_hold_bar.show_percentage = false
 	_hold_bar.max_value = 1.0
@@ -185,29 +189,12 @@ func _safe_inset() -> Vector4:
 	)
 
 
-func _label(text: String, size: int, colour: Color = Color.WHITE) -> Label:
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", colour)
-	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
-	l.add_theme_constant_override("shadow_offset_x", 1)
-	l.add_theme_constant_override("shadow_offset_y", 2)
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return l
+func _label(text: String, size: int, colour: Color = UIStyle.INK) -> Label:
+	return UIStyle.label(text, size, colour)
 
 
 func _panel_style() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.04, 0.05, 0.84)
-	sb.border_color = Color(1, 1, 1, 0.14)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(4)
-	sb.content_margin_left = 22
-	sb.content_margin_right = 22
-	sb.content_margin_top = 16
-	sb.content_margin_bottom = 16
-	return sb
+	return UIStyle.panel()
 
 
 # --- reactions -----------------------------------------------------------
