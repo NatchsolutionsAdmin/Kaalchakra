@@ -27,3 +27,17 @@ A stylized, story-driven 3D time-shift adventure set in the Indus Valley. An arc
 ---
 
 © Prabhjot / Natch Solutions. All rights reserved.
+
+## Running it locally
+
+```
+./dev            list everything it can do
+./dev play       play the game
+./dev prologue   read the Prologue script in-engine
+./dev test       run the smoke test
+./dev vo         regenerate the voice recording sheet
+./dev doctor     check this machine: Godot, Git LFS, phone build tools
+```
+
+`./dev doctor` is the one to run on a new machine, or when something stops
+working — it says what is installed and what is missing.

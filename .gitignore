@@ -27,6 +27,9 @@ desktop.ini
 # Placeholder voice — never shipped, never committed
 /audio/voice/scratch/
 
+# Local screenshot output from ./dev shots
+/.shots/
+
 # Secrets
 .env
 *.key

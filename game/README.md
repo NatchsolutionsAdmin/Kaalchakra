@@ -2,6 +2,18 @@
 
 Open this folder in Godot 4.7.2 (`/Applications/Godot.app`) and press **Play** (▶, top right, or F5).
 
+Or from the repo root, without typing paths:
+
+```
+./dev play       play the game
+./dev prologue   read the Prologue script in-engine
+./dev test       run the smoke test
+./dev vo         regenerate the voice recording sheet
+./dev shots      render reference screenshots
+./dev edit       open the Godot editor
+./dev doctor     check what is installed on this machine
+```
+
 This is a **mobile** game (Android + iOS, landscape). "Emulate Touch From Mouse"
 is on, so dragging with the mouse on the Mac behaves exactly like a thumb.
 
