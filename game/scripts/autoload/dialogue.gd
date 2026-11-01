@@ -37,6 +37,7 @@ var _chunk := ""
 var _index := 0
 var _active := false
 var _unhandled: Array[String] = []
+var _file := ""
 var _resume_flag := ""
 var _resume_chunk := ""
 
@@ -57,6 +58,7 @@ func is_active() -> bool:
 ## smoke test) can fail loudly on a typo instead of playing a broken scene.
 func play_file(path: String, from_chunk: String = "start") -> Array:
 	var parsed := DialogueParser.parse_file(path)
+	_file = path
 	var errors: Array = parsed["errors"]
 	if not errors.is_empty():
 		for e: String in errors:
@@ -124,6 +126,39 @@ func _on_flag_set(flag: String) -> void:
 	_resume_chunk = ""
 	# Deferred: the flag often arrives from inside a physics callback.
 	call_deferred("play", _chunks, scene_id, chunk)
+
+
+## Enough to put a half-played scene back. A scene that was mid-speech is
+## restored to the START of its current chunk rather than the exact line —
+## re-hearing a line is a far smaller sin than skipping one.
+func state() -> Dictionary:
+	return {
+		"file": _file,
+		"scene": scene_id,
+		"chunk": _chunk,
+		"active": _active,
+		"resume_flag": _resume_flag,
+		"resume_chunk": _resume_chunk,
+	}
+
+
+func restore(data: Dictionary) -> void:
+	stop()
+	var file := String(data.get("file", ""))
+	if file.is_empty():
+		return
+	var parsed := DialogueParser.parse_file(file)
+	if parsed["chunks"].is_empty():
+		return
+	_chunks = parsed["chunks"]
+	_file = file
+	scene_id = String(data.get("scene", file.get_file().get_basename()))
+	_resume_flag = String(data.get("resume_flag", ""))
+	_resume_chunk = String(data.get("resume_chunk", ""))
+	if bool(data.get("active", false)):
+		var chunk := String(data.get("chunk", "start"))
+		if _chunks.has(chunk):
+			play(_chunks, scene_id, chunk)
 
 
 ## True when the scene is paused waiting for the player to do something.

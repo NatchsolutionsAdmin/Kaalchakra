@@ -156,10 +156,26 @@ func knows(id: String) -> bool:
 	return _knowledge.has(id)
 
 
-## Everything SaveSystem will need from this manager later (R4.1).
 func to_dict() -> Dictionary:
+	var unlocked_out: Dictionary = {}
+	for era: Era.Id in Era.ALL:
+		unlocked_out[str(int(era))] = bool(unlocked.get(era, true))
 	return {
 		"era": int(current_era),
-		"unlocked": unlocked.duplicate(),
-		"knowledge": _knowledge.duplicate(),
+		"unlocked": unlocked_out,
+		"knowledge": _knowledge.keys(),
 	}
+
+
+func from_dict(data: Dictionary) -> void:
+	_knowledge.clear()
+	for id: Variant in data.get("knowledge", []):
+		_knowledge[String(id)] = true
+	for key: Variant in data.get("unlocked", {}):
+		unlocked[int(String(key)) as Era.Id] = bool(data["unlocked"][key])
+	# Set the era directly: a restore should not play a transition.
+	var from := current_era
+	current_era = int(data.get("era", int(Era.Id.PRESENT))) as Era.Id
+	_hard_cut = false
+	_shifting = false
+	era_changed.emit(from, current_era)

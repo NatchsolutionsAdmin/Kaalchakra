@@ -70,7 +70,23 @@ func reset() -> void:
 func to_dict() -> Dictionary:
 	return {
 		"objective": objective,
-		"flags": _flags.duplicate(),
-		"skills": _skills.duplicate(),
-		"contacts": _contacts.duplicate(),
+		"flags": _flags.keys(),
+		"skills": _skills.keys(),
+		"contacts": _contacts.keys(),
 	}
+
+
+func from_dict(data: Dictionary) -> void:
+	reset()
+	for name: Variant in data.get("flags", []):
+		_flags[String(name)] = true
+	for name: Variant in data.get("skills", []):
+		_skills[String(name)] = true
+		skill_unlocked.emit(String(name))
+	for name: Variant in data.get("contacts", []):
+		_contacts[String(name)] = true
+		contact_available.emit(String(name))
+	set_objective(String(data.get("objective", "")))
+	# One announcement after the fact, so listeners refresh once rather than
+	# once per flag.
+	flag_set.emit("")

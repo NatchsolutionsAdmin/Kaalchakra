@@ -154,4 +154,16 @@ func reset() -> void:
 
 
 func to_dict() -> Dictionary:
-	return {"signs": _state.duplicate()}
+	var out: Dictionary = {}
+	for id: String in _state:
+		out[id] = int(_state[id])
+	return {"signs": out, "header_announced": _header_announced}
+
+
+func from_dict(data: Dictionary) -> void:
+	_state.clear()
+	var saved: Dictionary = data.get("signs", {})
+	for id: Variant in saved:
+		_state[String(id)] = int(saved[id]) as Step
+	_header_announced = bool(data.get("header_announced", false))
+	sign_advanced.emit("", Step.UNKNOWN)

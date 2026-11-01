@@ -25,14 +25,14 @@ plays the Prologue, and the `./dev` tooling.
 
 ## The order, and why
 
-### 1. Save, load, checkpoints, app lifecycle — R4.1, R4.2, CLAUDE.md §9
+### 1. ~~Save, load, checkpoints, app lifecycle~~ — R4.1, R4.2 — **DONE**
 **First because everything after it has to be save-aware anyway.** Every system
 I add from here has state; retrofitting saving later means touching all of
 them twice. It is also a hard mobile requirement — a phone call arrives
 mid-session and the game must come back exactly where it was. Cheap right now
 because TimeShift, Story and Decipher already hand out plain dictionaries.
 
-### 2. The excavation minigame — R2.4
+### 2. The excavation minigame — R2.4 ← current
 The signature verb, currently a hold-to-dig placeholder. Swipe-to-brush, with
 success and failure states, and it is the thing a player does most.
 

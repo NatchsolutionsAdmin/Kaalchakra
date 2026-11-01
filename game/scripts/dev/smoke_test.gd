@@ -762,6 +762,83 @@ func _run() -> void:
 
 	Story.reset()
 
+	print("\n-- saving and loading --")
+	SaveGame.autosave = false
+	SaveGame.delete_save()
+	Story.reset()
+	Decipher.reset()
+	TimeShift.reset_knowledge()
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+
+	# Build up a run worth losing.
+	Story.set_flag("ishita_present_at_discovery")
+	Story.set_objective("Clear the doorway")
+	Story.unlock_skill("excavation")
+	Story.make_contact_available("sakshi")
+	TimeShift.learn("keeper_mark")
+	Decipher.advance("water", Era.Id.PAST)
+	Decipher.advance("water", Era.Id.PRESENT)
+	player.global_position = Vector3(2.0, -10.5, -12.0)
+	await _settle(10)
+	var saved_at := player.global_position
+
+	_ok("it writes a save", SaveGame.save_now("test"))
+	_ok("and the file is there", SaveGame.has_save())
+
+	# Wreck everything.
+	Story.reset()
+	Decipher.reset()
+	TimeShift.reset_knowledge()
+	TimeShift.request_shift(Era.Id.FUTURE)
+	await _settle(4)
+	player.global_position = Vector3(-30, 2, -40)
+	await _settle(6)
+	_ok("the run is genuinely gone before loading",
+		not Story.has_flag("ishita_present_at_discovery")
+		and Decipher.step_of("water") == Decipher.Step.UNKNOWN)
+
+	_ok("it loads", SaveGame.load_game())
+	await _settle(6)
+	_ok("  flags come back", Story.has_flag("ishita_present_at_discovery"))
+	_ok("  the objective comes back", Story.objective == "Clear the doorway")
+	_ok("  skills come back", Story.has_skill("excavation"))
+	_ok("  Sakshi is reachable again", Story.has_contact("sakshi"))
+	_ok("  knowledge comes back", TimeShift.knows("keeper_mark"))
+	_ok("  half-deciphered signs keep their place",
+		Decipher.step_of("water") == Decipher.Step.MATCHED,
+		"step %d" % Decipher.step_of("water"))
+	_ok("  the era comes back", TimeShift.current_era == Era.Id.PRESENT,
+		Era.SHORT[TimeShift.current_era])
+	_ok("  and she is standing where she was",
+		player.global_position.distance_to(saved_at) < 1.2,
+		"%v vs %v" % [player.global_position, saved_at])
+	_ok("  with no transition played on load", not TimeShift.is_shifting())
+
+	print("\n-- checkpoints --")
+	SaveGame.clear_checkpoint()
+	_ok("there is none to begin with", not SaveGame.has_checkpoint())
+	player.global_position = Vector3(1.0, -10.5, -11.0)
+	await _settle(8)
+	var safe := player.global_position
+	SaveGame.set_checkpoint("trench floor")
+	_ok("one can be set", SaveGame.has_checkpoint())
+	player.global_position = Vector3(0, -300, 0)
+	Story.set_flag("drowned")
+	await _settle(4)
+	_ok("restoring is instant and in memory", SaveGame.restore_checkpoint())
+	await _settle(6)
+	_ok("  she is back on her feet where it was safe",
+		player.global_position.distance_to(safe) < 1.2, "%v" % player.global_position)
+	_ok("  and what happened after the checkpoint did not", not Story.has_flag("drowned"))
+
+	SaveGame.delete_save()
+	_ok("a save can be deleted", not SaveGame.has_save())
+	SaveGame.clear_checkpoint()
+	Story.reset()
+	Decipher.reset()
+	SaveGame.autosave = true
+
 	print("\n-- every script in the project compiles --")
 	# Eva's rig script had a parse error and the whole suite still passed,
 	# because a script that fails to load just leaves its node un-scripted and
