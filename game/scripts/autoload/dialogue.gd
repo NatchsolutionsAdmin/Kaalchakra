@@ -42,7 +42,11 @@ var _resume_chunk := ""
 
 
 func _ready() -> void:
+	# A handover can wait on either kind of progress. Story flags come from
+	# walking into places; TimeShift knowledge comes from puzzles like the
+	# excavation. A writer should not have to know which is which.
 	Story.flag_set.connect(_on_flag_set)
+	TimeShift.knowledge_gained.connect(_on_flag_set)
 
 
 func is_active() -> bool:

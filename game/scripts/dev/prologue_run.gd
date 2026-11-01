@@ -31,6 +31,10 @@ func _ready() -> void:
 		for e: String in errors:
 			print("  ", e)
 	Dialogue.finished.connect(func(_id: String) -> void:
+		if Dialogue.is_waiting():
+			print("\n--- paused: over to you. waiting for '%s' ---"
+				% Dialogue.waiting_for())
+			return
 		print("\n--- end of the Prologue ---")
 		print("flags set: ", Story.to_dict()["flags"].keys())
 		var todo := Dialogue.unhandled_directives()

@@ -58,6 +58,29 @@ func _missing_markers(chunks: Dictionary) -> Array[String]:
 	return absent
 
 
+## Every bit of progress the world is capable of handing out: flags from
+## trigger volumes, and knowledge from anything you can interact with.
+func _producible_progress() -> Array[String]:
+	var out: Array[String] = []
+	_collect_progress(_main, out)
+	return out
+
+
+func _collect_progress(node: Node, out: Array[String]) -> void:
+	if node is StoryTrigger:
+		var flag: String = (node as StoryTrigger).flag
+		if flag.is_empty():
+			flag = node.name
+		if flag not in out:
+			out.append(flag)
+	elif node is Interactable:
+		var granted: Variant = node.get("grants_knowledge")
+		if granted is String and not (granted as String).is_empty() and granted not in out:
+			out.append(granted)
+	for child: Node in node.get_children():
+		_collect_progress(child, out)
+
+
 func _count_lines(chunks: Dictionary) -> int:
 	var n := 0
 	for name: String in chunks:
@@ -457,6 +480,62 @@ func _run() -> void:
 	_ok("a wrapped line is one beat, not two",
 		wrapped_steps.size() == 2 and wrapped_steps[0]["text"] == "one line that is wrapped in the editor",
 		str(wrapped_steps[0].get("text", "")))
+
+	print("\n-- every pause can actually be ended --")
+	# The Prologue sat forever on "Clear the doorway" because the dig granted
+	# TimeShift knowledge while the handover listened for a Story flag. The
+	# scene simply never resumed. Nothing in the suite noticed, because the
+	# walker set the flags itself. This is that check.
+	var producible := _producible_progress()
+	var orphans: Array[String] = []
+	for chunk_name: String in parsed["chunks"]:
+		for step: Dictionary in parsed["chunks"][chunk_name]:
+			if step["type"] != "directive" or step["name"] != "handover":
+				continue
+			var flag: String = step["args"][0]
+			if flag not in producible and flag not in orphans:
+				orphans.append(flag)
+	_ok("nothing in the script waits on something the world cannot give it",
+		orphans.is_empty(), "nothing produces: %s" % ", ".join(orphans))
+	print("        the world can produce: %s" % ", ".join(producible))
+
+	print("\n-- progress from a puzzle resumes the scene too --")
+	# The actual bug: the dig announces itself through TimeShift.knowledge,
+	# the handover was listening to Story.flags, and the Prologue hung on
+	# "Clear the doorway" for ever. A structural check could not see it;
+	# only driving the real signal can.
+	Story.reset()
+	TimeShift.reset_knowledge()
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	Dialogue.play_file(PROLOGUE)
+	var safety := 0
+	while safety < 300:
+		safety += 1
+		if Dialogue.is_active():
+			if not Dialogue.pending_choices.is_empty():
+				Dialogue.choose(0)
+			else:
+				Dialogue.advance()
+			continue
+		if Dialogue.waiting_for() == "chamber_opened":
+			break
+		if Dialogue.waiting_for().is_empty():
+			break
+		Story.set_flag(Dialogue.waiting_for())
+		await get_tree().process_frame
+		await get_tree().process_frame
+	_ok("the scene reaches the sealed door and waits there",
+		Dialogue.waiting_for() == "chamber_opened", Dialogue.waiting_for())
+	_ok("  and the doorway is diggable by then — the script unlocked it",
+		TimeShift.knows("keeper_mark"))
+	TimeShift.learn("chamber_opened")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_ok("  opening the door starts the scene again", Dialogue.is_active(),
+		"still waiting on '%s'" % Dialogue.waiting_for())
+	Dialogue.stop()
+	Story.reset()
 
 	print("\n-- the scene breathes --")
 	Story.reset()

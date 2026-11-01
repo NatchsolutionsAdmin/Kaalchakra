@@ -543,7 +543,9 @@ def main():
     # --- places the Prologue waits for Eva to reach --------------------
     emit_trigger("at_trench_top", "Present", (0.5, -6.3, -6.6), 2.8, 4)
     emit_trigger("at_trench_bottom", "Present", (0.5, -10.2, -11.6), 2.8, 4)
-    emit_trigger("in_chamber", "Present", (-5.0, -10.0, -13.25), 3.2, 4)
+    # Deep in the room and tight: at 3.2 it reached out through the sealed
+    # door and fired while she was still standing in the trench.
+    emit_trigger("in_chamber", "Present", (-5.6, -10.0, -13.25), 1.9, 4)
 
     # --- PAST: the Keeper's mark (teaches the location) ---
     emit_decal("KeeperMarkSlab", "Past", MARK_POS, (2, 0.2, 2), "mat_marker")

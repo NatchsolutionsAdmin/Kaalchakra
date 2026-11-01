@@ -143,6 +143,12 @@ func learn(id: String) -> void:
 	knowledge_gained.emit(id)
 
 
+## Wipe what Eva has learned. Needed for starting a new game, and for tests
+## that have to re-run a discovery.
+func reset_knowledge() -> void:
+	_knowledge.clear()
+
+
 func knows(id: String) -> bool:
 	return _knowledge.has(id)
 

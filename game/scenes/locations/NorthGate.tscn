@@ -564,7 +564,7 @@ size = Vector3(0.5, 6, 0.5)
 radius = 2.8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_t2"]
-radius = 3.2
+radius = 1.9
 
 [node name="NorthGate" type="Node3D"]
 
@@ -6253,7 +6253,7 @@ script = ExtResource("ext_4")
 shape = SubResource("SphereShape3D_t1")
 
 [node name="in_chamber" type="Area3D" parent="Present"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -10, -13.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, -10, -13.25)
 script = ExtResource("ext_4")
 
 [node name="Reach" type="CollisionShape3D" parent="Present/in_chamber"]
