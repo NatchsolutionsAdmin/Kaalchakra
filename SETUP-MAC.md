@@ -14,6 +14,11 @@
    ```
 4. *(Later)* **Blender**: https://www.blender.org/download/
 
+### For phone builds (Claude will guide you when we get there)
+- **iOS:** install **Xcode** from the Mac App Store (large download). For testing on your iPhone beyond basics, and to publish, you'll need the **Apple Developer Program** (yearly fee).
+- **Android:** install **Android Studio** (gives the Android SDK) and a Java JDK; then point Godot to them in Editor Settings → Export → Android. Turn on Developer Options + USB debugging on your Android phone. To publish, you'll need a **Google Play developer account** (one-time fee).
+- In Godot: Editor → **Manage Export Templates** → Download.
+
 ## 2. Put these files in your folder
 Unzip `Kaalchakra.zip` so the files (`CLAUDE.md`, `docs/`, `game/`, …) sit **directly inside** your Kaalchakra folder.
 
@@ -37,5 +42,5 @@ Tip: easier still, let Claude run these commands for you once the folder is conn
 2. Paste the prompt from `SESSION-PROMPT.md`.
 3. Claude reads `CLAUDE.md` and starts the first greybox prototype.
 
-## 5. Moving to Windows later
-Install the **same Godot version**, Git for Windows (includes LFS), and the Claude app. Then `git clone https://github.com/NatchsolutionsAdmin/Kaalchakra.git` — done.
+## 5. Adding a Windows PC later (optional)
+Not needed for mobile; the Mac does both Android and iOS. If you want a second machine: install the **same Godot version**, Git for Windows (includes LFS), and the Claude app, then `git clone https://github.com/NatchsolutionsAdmin/Kaalchakra.git`.

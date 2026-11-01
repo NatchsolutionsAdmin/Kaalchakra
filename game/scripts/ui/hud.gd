@@ -21,6 +21,8 @@ var _hint: Label
 
 var _banner_timer: float = 0.0
 var _watched: Interactable = null
+var _top_block: VBoxContainer
+var _prompt_box: VBoxContainer
 
 
 func _ready() -> void:
@@ -32,10 +34,12 @@ func _ready() -> void:
 	TimeShift.reduced_motion_changed.connect(func(_enabled: bool) -> void: _refresh_hint())
 	Interactions.focus_changed.connect(_on_focus_changed)
 	Interactions.message.connect(_on_message)
+	get_viewport().size_changed.connect(_layout)
 	_apply_era(TimeShift.current_era)
 	_refresh_objective()
 	_refresh_hint()
 	_on_focus_changed(null)
+	_layout()
 
 
 func _process(delta: float) -> void:
@@ -56,10 +60,9 @@ func _build() -> void:
 
 	# Top-left: era + objective.
 	var top := VBoxContainer.new()
-	top.offset_left = 28
-	top.offset_top = 22
 	top.add_theme_constant_override("separation", 2)
 	root.add_child(top)
+	_top_block = top
 
 	_era_short = _label("", 30)
 	top.add_child(_era_short)
@@ -78,12 +81,11 @@ func _build() -> void:
 	# Bottom strip: interaction prompt + hold bar.
 	var prompt_box := VBoxContainer.new()
 	prompt_box.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	prompt_box.offset_top = -124
-	prompt_box.offset_bottom = -64
 	prompt_box.alignment = BoxContainer.ALIGNMENT_END
 	prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	prompt_box.add_theme_constant_override("separation", 7)
 	root.add_child(prompt_box)
+	_prompt_box = prompt_box
 
 	_prompt = _label("", 20)
 	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -145,10 +147,39 @@ func _build() -> void:
 	# Bottom-left: the controls, so Prabhjot never has to guess.
 	_hint = _label("", 13, DIM)
 	_hint.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_hint.offset_left = 28
-	_hint.offset_top = -62
-	_hint.offset_bottom = -18
 	root.add_child(_hint)
+
+
+## Phones have notches, rounded corners and home indicators. Everything the
+## player has to read gets pushed inside the safe area, and the bottom strip
+## also clears the thumb controls.
+func _layout() -> void:
+	var inset := _safe_inset()
+	var pad := 26.0
+	_top_block.offset_left = inset.x + pad
+	_top_block.offset_top = inset.y + pad
+	# High enough to sit above the action and jump buttons.
+	_prompt_box.offset_top = -(inset.w + 212.0)
+	_prompt_box.offset_bottom = -(inset.w + 152.0)
+	_hint.offset_left = inset.x + pad
+	_hint.offset_top = -(inset.w + 58.0)
+	_hint.offset_bottom = -(inset.w + 14.0)
+
+
+## Unusable screen edges, in viewport pixels. Zero on a desktop window.
+func _safe_inset() -> Vector4:
+	var vp := get_viewport().get_visible_rect().size
+	var win := Vector2(DisplayServer.window_get_size())
+	if win.x <= 0.0 or win.y <= 0.0:
+		return Vector4.ZERO
+	var safe := DisplayServer.get_display_safe_area()
+	var k := vp / win
+	return Vector4(
+		maxf(0.0, safe.position.x * k.x),
+		maxf(0.0, safe.position.y * k.y),
+		maxf(0.0, (win.x - safe.end.x) * k.x),
+		maxf(0.0, (win.y - safe.end.y) * k.y)
+	)
 
 
 func _label(text: String, size: int, colour: Color = Color.WHITE) -> Label:
@@ -237,4 +268,4 @@ func _refresh_objective() -> void:
 
 func _refresh_hint() -> void:
 	var rm := "on" if TimeShift.reduced_motion else "off"
-	_hint.text = "WASD move  ·  Shift run  ·  Space jump / pull up a ledge  ·  E interact\n1 / 2 / 3 shift era  ·  hold Q the Wheel  ·  M reduced motion: %s  ·  R respawn  ·  Esc free the mouse" % rm
+	_hint.text = "Left thumb to walk  ·  drag the right of the screen to look  ·  tap the dial to turn the Wheel, or swipe it\nDesk testing: WASD, Shift, Space, E, 1 / 2 / 3, hold Q  ·  M reduced motion: %s  ·  R respawn" % rm

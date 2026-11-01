@@ -8,9 +8,11 @@
 
 ## 1. Platform & technical baseline
 
-- **R1.1 [AI]** Target platform: PC (Windows first), Steam. Architecture must not block a later mobile port. Development starts on Mac; test on Windows before any release.
-- **R1.2 [AI]** Engine: **Godot 4 (standard build, GDScript)** — one project, PC build.
-- **R1.3 [BOTH]** Target hardware: run smoothly on a mid-range PC (stylized art = far wider reach).
+- **R1.1 [AI]** Target platform: **Android and iOS** (Google Play, App Store), landscape. Architecture must not block a later PC port. Development on Mac (required for iOS builds).
+- **R1.2 [AI]** Engine: **Godot 4 (standard build, GDScript, Mobile renderer)** — one project, Android + iOS exports.
+- **R1.3 [BOTH]** Target hardware: steady 30 fps (60 where possible) on a mid-range Android phone a few years old and on supported iPhones; manage heat, battery and memory. Minimum devices to be fixed after the first device test.
+- **R1.6 [AI]** Mobile lifecycle: frequent autosave, exact resume after the app is backgrounded or closed, safe-area/notch and aspect-ratio support, tablets.
+- **R1.7 [BOTH]** Download size: small first download; later chapters as downloadable content packs if needed.
 - **R1.4 [AI]** Frame budget and save architecture designed in from the start (three-era state is non-trivial — see R4).
 - **R1.5 [AI]** Version control (Git + LFS on GitHub) and a clean project structure from day one.
 
@@ -71,9 +73,10 @@
 
 ## 6. UI / UX  *(buildable together)*
 
-- **R6.1 [AI]** Main menu, pause, settings (graphics/audio/controls/accessibility).
+- **R6.0 [AI]** **Touch controls:** virtual joystick, drag-to-orbit camera, contextual action button, large tap targets, adjustable control layout and sensitivity; optional gamepad support.
+- **R6.1 [AI]** Main menu, pause, settings (graphics quality presets, audio, controls, accessibility).
 - **R6.2 [AI]** In-game HUD: era indicator, objective, interaction prompts, inventory.
-- **R6.3 [AI]** The Wheel interface for switching eras.
+- **R6.3 [AI]** The Wheel interface for switching eras — an on-screen dial you tap or swipe.
 - **R6.4 [AI]** Journal / codex for lore and collectibles.
 - **R6.5 [AI]** Accessibility baseline: remappable controls, subtitles, colorblind-safe cues, reduced-motion option for the shift effect.
 - **R6.7 [BOTH]** Final UI art/skin.
@@ -84,7 +87,8 @@
 
 - **R7.1 [HUMAN]** Producer / project management once a team exists.
 - **R7.2 [HUMAN]** QA and playtesting across hardware.
-- **R7.3 [BOTH]** Steam page, store assets, trailer, demo build.
+- **R7.3 [BOTH]** Google Play and App Store pages, store assets, trailer, free Chapter 1 or demo, soft launch in a test market.
+- **R7.6 [HUMAN/you]** Store accounts: Google Play developer account and Apple Developer Program; store compliance (age rating, privacy labels).
 - **R7.4 [HUMAN]** Marketing / community, launch, post-launch support (S8UL contact for India reach).
 - **R7.5 [AI]** Build pipeline and packaging setup.
 
@@ -99,6 +103,7 @@
 - **VS.5 [AI]** Save/load and failure/retry working.
 - **VS.6 [BOTH]** At least **one** hero asset at near-final quality (Evara or the reservoir).
 - **VS.7 [AI]** Everything else greybox.
+- **VS.8 [AI]** Runs on a real Android phone and a real iPhone at target frame rate, with touch controls.
 
 **If the vertical slice is fun with placeholder art, the game works.**
 

@@ -3,7 +3,7 @@
 A stylized, story-driven 3D time-shift adventure set in the Indus Valley. An archaeologist named Evara finds a copper wheel that lets her stand in the same city across three eras (1900 BCE, 2026, 2087) and carry knowledge between them.
 
 - **Engine:** Godot 4 (GDScript)
-- **Platform:** PC / Steam (Windows first)
+- **Platform:** Mobile — Android and iOS
 - **Status:** Phase 0 → Phase 1 (design done, first greybox prototype next)
 
 ## Where things are

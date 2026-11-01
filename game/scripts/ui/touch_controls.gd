@@ -1,0 +1,264 @@
+## TouchControls — the on-screen thumb controls.
+##
+## Left half of the screen is a *floating* joystick: it appears wherever your
+## left thumb lands, rather than at a fixed spot you have to find. Right half
+## is drag-to-orbit. Buttons sit bottom-right, with the Wheel dial top-right.
+##
+## Buttons are ordinary Control nodes, so they swallow their own touches before
+## anything reaches `_unhandled_input` below — that is what keeps a thumb on the
+## jump button from also spinning the camera.
+##
+## Everything here only writes into the `Touch` autoload. Movement code never
+## looks at this file.
+extends CanvasLayer
+
+const JOY_RADIUS := 92.0       # how far the knob can travel
+const JOY_DEADZONE := 0.12
+const KNOB_RADIUS := 42.0
+const ACTION_SIZE := 128.0     # all well above the ~44pt minimum tap target
+const JUMP_SIZE := 108.0
+const WHEEL_SIZE := 96.0
+const ERA_SIZE := 92.0
+const SWIPE_STEP := 70.0       # px of horizontal drag on the dial = one era
+
+var _root: Control
+var _paint: Control
+var _action: Button
+var _jump: Button
+var _wheel: Button
+var _era_buttons: Dictionary = {}
+
+var _joy_touch := -1
+var _look_touch := -1
+var _joy_origin := Vector2.ZERO
+var _joy_point := Vector2.ZERO
+var _wheel_open := false
+var _wheel_swipe := 0.0
+
+
+func _ready() -> void:
+	layer = 20
+	_build()
+	get_viewport().size_changed.connect(_layout)
+	Interactions.focus_changed.connect(_on_focus_changed)
+	TimeShift.era_changed.connect(func(_f: Era.Id, _t: Era.Id) -> void: _refresh_wheel())
+	_on_focus_changed(null)
+	_refresh_wheel()
+	_layout()
+
+
+# --- construction --------------------------------------------------------
+
+func _build() -> void:
+	_root = Control.new()
+	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_root)
+
+	# The joystick is drawn, not built from nodes, so it can follow the thumb.
+	_paint = Control.new()
+	_paint.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_paint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_paint.draw.connect(_draw_joystick)
+	_root.add_child(_paint)
+
+	_action = _round_button("", ACTION_SIZE, Color(0.95, 0.78, 0.32))
+	_action.button_down.connect(func() -> void: Touch.set_interact(true))
+	_action.button_up.connect(func() -> void: Touch.set_interact(false))
+	_root.add_child(_action)
+
+	_jump = _round_button("JUMP", JUMP_SIZE, Color(1, 1, 1))
+	_jump.button_down.connect(func() -> void: Touch.queue_jump())
+	_root.add_child(_jump)
+
+	_wheel = _round_button("", WHEEL_SIZE, Color(1, 1, 1))
+	_wheel.pressed.connect(_toggle_wheel)
+	_wheel.gui_input.connect(_on_wheel_gui_input)
+	_root.add_child(_wheel)
+
+	for era: Era.Id in Era.ALL:
+		var b := _round_button(Era.SHORT[era], ERA_SIZE, Era.TINT[era])
+		b.visible = false
+		b.pressed.connect(_pick_era.bind(era))
+		_era_buttons[era] = b
+		_root.add_child(b)
+
+
+func _round_button(text: String, diameter: float, tint: Color) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.custom_minimum_size = Vector2(diameter, diameter)
+	b.size = Vector2(diameter, diameter)
+	b.focus_mode = Control.FOCUS_NONE
+	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_color_override("font_color", tint)
+	b.add_theme_color_override("font_hover_color", tint)
+	b.add_theme_color_override("font_pressed_color", Color.BLACK)
+	for state: String in ["normal", "hover", "focus"]:
+		b.add_theme_stylebox_override(state, _circle(diameter, Color(0, 0, 0, 0.42), tint))
+	b.add_theme_stylebox_override("pressed", _circle(diameter, tint, tint))
+	b.add_theme_stylebox_override("disabled", _circle(diameter, Color(0, 0, 0, 0.2), Color(1, 1, 1, 0.2)))
+	return b
+
+
+func _circle(diameter: float, fill: Color, edge: Color) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = fill
+	sb.border_color = Color(edge.r, edge.g, edge.b, 0.85)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(int(diameter * 0.5))
+	sb.corner_detail = 12
+	return sb
+
+
+# --- layout (safe areas: notches, rounded corners, home indicator) --------
+
+## How much of each edge is unusable on this device, in viewport pixels.
+func _safe_inset() -> Vector4:
+	var vp := get_viewport().get_visible_rect().size
+	var win := Vector2(DisplayServer.window_get_size())
+	if win.x <= 0.0 or win.y <= 0.0:
+		return Vector4.ZERO
+	var safe := DisplayServer.get_display_safe_area()
+	var k := vp / win
+	return Vector4(
+		maxf(0.0, safe.position.x * k.x),
+		maxf(0.0, safe.position.y * k.y),
+		maxf(0.0, (win.x - safe.end.x) * k.x),
+		maxf(0.0, (win.y - safe.end.y) * k.y)
+	)
+
+
+func _layout() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	var inset := _safe_inset()
+	var pad := 26.0
+	var right := vp.x - inset.z - pad
+	var bottom := vp.y - inset.w - pad
+	var top := inset.y + pad
+
+	_action.position = Vector2(right - ACTION_SIZE, bottom - ACTION_SIZE)
+	_jump.position = Vector2(right - ACTION_SIZE - JUMP_SIZE - 22.0,
+		bottom - JUMP_SIZE - (ACTION_SIZE - JUMP_SIZE) * 0.5)
+	_wheel.position = Vector2(right - WHEEL_SIZE, top)
+
+	# The three era buttons fan down-and-left of the dial, inside the screen,
+	# where a right thumb can sweep them without covering the view.
+	# Screen angles: y grows downward, so 90..180 degrees is "below and left".
+	var centre := _wheel.position + Vector2(WHEEL_SIZE, WHEEL_SIZE) * 0.5
+	var radius := WHEEL_SIZE + 62.0
+	var angles := [176.0, 143.0, 110.0]
+	for era: Era.Id in Era.ALL:
+		var a := deg_to_rad(angles[int(era)])
+		var c := centre + Vector2(cos(a), sin(a)) * radius
+		(_era_buttons[era] as Button).position = c - Vector2(ERA_SIZE, ERA_SIZE) * 0.5
+	_paint.queue_redraw()
+
+
+# --- the floating joystick ----------------------------------------------
+
+func _draw_joystick() -> void:
+	if _joy_touch == -1:
+		return
+	_paint.draw_circle(_joy_origin, JOY_RADIUS, Color(1, 1, 1, 0.08))
+	_paint.draw_arc(_joy_origin, JOY_RADIUS, 0.0, TAU, 48, Color(1, 1, 1, 0.28), 2.0, true)
+	_paint.draw_circle(_joy_point, KNOB_RADIUS, Color(1, 1, 1, 0.30))
+	_paint.draw_arc(_joy_point, KNOB_RADIUS, 0.0, TAU, 32, Color(1, 1, 1, 0.55), 2.0, true)
+
+
+func _set_joy(point: Vector2) -> void:
+	var offset := point - _joy_origin
+	if offset.length() > JOY_RADIUS:
+		offset = offset.normalized() * JOY_RADIUS
+	_joy_point = _joy_origin + offset
+	var v := offset / JOY_RADIUS
+	Touch.move = Vector2.ZERO if v.length() < JOY_DEADZONE else v
+	_paint.queue_redraw()
+
+
+func _clear_joy() -> void:
+	_joy_touch = -1
+	Touch.move = Vector2.ZERO
+	_paint.queue_redraw()
+
+
+# Runs only for touches no Control claimed, so buttons always win.
+func _unhandled_input(event: InputEvent) -> void:
+	var half := get_viewport().get_visible_rect().size.x * 0.5
+
+	if event is InputEventScreenTouch:
+		var t := event as InputEventScreenTouch
+		if t.pressed:
+			if t.position.x < half and _joy_touch == -1:
+				_joy_touch = t.index
+				_joy_origin = t.position
+				_set_joy(t.position)
+			elif _look_touch == -1:
+				_look_touch = t.index
+		else:
+			if t.index == _joy_touch:
+				_clear_joy()
+			elif t.index == _look_touch:
+				_look_touch = -1
+
+	elif event is InputEventScreenDrag:
+		var d := event as InputEventScreenDrag
+		if d.index == _joy_touch:
+			_set_joy(d.position)
+		elif d.index == _look_touch:
+			Touch.add_look(d.relative)
+
+
+# --- the Wheel dial ------------------------------------------------------
+
+func _toggle_wheel() -> void:
+	_wheel_open = not _wheel_open
+	_refresh_wheel()
+
+
+func _pick_era(era: Era.Id) -> void:
+	TimeShift.request_shift(era)
+	_wheel_open = false
+	_refresh_wheel()
+
+
+## Swiping across the dial steps through the eras without opening it.
+func _on_wheel_gui_input(event: InputEvent) -> void:
+	if event is InputEventScreenDrag:
+		_wheel_swipe += (event as InputEventScreenDrag).relative.x
+		if absf(_wheel_swipe) >= SWIPE_STEP:
+			var step := 1 if _wheel_swipe > 0.0 else -1
+			_wheel_swipe = 0.0
+			var next := (int(TimeShift.current_era) + step + Era.ALL.size()) % Era.ALL.size()
+			TimeShift.request_shift(next as Era.Id)
+	elif event is InputEventScreenTouch and not (event as InputEventScreenTouch).pressed:
+		_wheel_swipe = 0.0
+
+
+func _refresh_wheel() -> void:
+	var era := TimeShift.current_era
+	_wheel.text = Era.SHORT[era]
+	_wheel.add_theme_color_override("font_color", Era.TINT[era])
+	_wheel.add_theme_color_override("font_hover_color", Era.TINT[era])
+	for id: Era.Id in Era.ALL:
+		var b := _era_buttons[id] as Button
+		b.visible = _wheel_open
+		b.disabled = (id == era)
+
+
+# --- the contextual action button ---------------------------------------
+
+func _on_focus_changed(target: Interactable) -> void:
+	if target == null:
+		_action.visible = false
+		Touch.set_interact(false)
+		return
+	_action.visible = true
+	_action.text = _verb(target.prompt_text())
+
+
+## The button is round and small, so it gets a one-word verb; the full prompt
+## stays in the HUD line above it.
+func _verb(prompt: String) -> String:
+	var first := prompt.strip_edges().split(" ")[0]
+	return first.to_upper()

@@ -33,6 +33,9 @@ func _settle(n: int = 30) -> void:
 
 
 func _shot(name: String) -> void:
+	# Two frames: the viewport texture lags one frame behind the state change,
+	# which silently swapped a pair of these the first time round.
+	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("%s/%s.png" % [_dir, name])
@@ -74,6 +77,31 @@ func _run() -> void:
 		TimeShift.request_shift(e[0])
 		await _stand(Vector3(13, 1.2, -13), 270.0)
 		await _shot("street_%s" % e[1])
+
+	# 4b. The touch layer. State is set directly rather than by faking input —
+	# these shots exist to check layout; the smoke test covers the input path.
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _stand(Vector3(3, 1.2, -24.5), 180.0)
+	var touch_ui := _main.get_node("TouchControls")
+	touch_ui.set("_joy_touch", 0)
+	touch_ui.set("_joy_origin", Vector2(250, 470))
+	touch_ui.set("_joy_point", Vector2(312, 408))
+	Touch.move = Vector2(0.67, -0.67)
+	touch_ui.get("_paint").queue_redraw()
+	await _settle(6)
+	await _shot("touch_joystick")
+
+	touch_ui.set("_wheel_open", true)
+	touch_ui.call("_refresh_wheel")
+	await _settle(6)
+	await _shot("touch_wheel_open")
+
+	touch_ui.set("_wheel_open", false)
+	touch_ui.call("_refresh_wheel")
+	touch_ui.set("_joy_touch", -1)
+	Touch.move = Vector2.ZERO
+	touch_ui.get("_paint").queue_redraw()
+	await _settle(6)
 
 	# 5. Overview from the south-east.
 	_overview.global_position = Vector3(52, 40, 26)

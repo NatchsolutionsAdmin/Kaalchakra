@@ -27,6 +27,11 @@ extends CharacterBody3D
 @export var mantle_rise_time := 0.22
 @export var mantle_over_time := 0.15
 
+@export_group("Low steps")
+## Ledges this low she simply walks up, no button. This is what makes the
+## reservoir stairs usable with a thumb instead of a jump per step.
+@export var auto_step_height := 0.7
+
 @export_group("Safety net")
 ## Below this height she is considered fallen out of the world.
 @export var fall_limit := -40.0
@@ -36,6 +41,8 @@ extends CharacterBody3D
 @onready var cam_pivot: Node3D = $CameraPivot
 @onready var wall_cast: RayCast3D = $Model/WallCast
 @onready var ledge_cast: RayCast3D = $Model/LedgeCast
+@onready var step_wall_cast: RayCast3D = $Model/StepWallCast
+@onready var step_cast: RayCast3D = $Model/StepCast
 
 var _spawn: Transform3D
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 24.0)
@@ -56,6 +63,8 @@ func _ready() -> void:
 	# Make the ledge casts reach exactly as far as mantle_max_height allows.
 	ledge_cast.position.y = mantle_max_height + 0.35
 	ledge_cast.target_position = Vector3(0.0, -(mantle_max_height + 0.3), 0.0)
+	step_cast.position.y = auto_step_height + 0.3
+	step_cast.target_position = Vector3(0.0, -(auto_step_height + 0.28), 0.0)
 
 
 func _physics_process(delta: float) -> void:
@@ -70,6 +79,8 @@ func _physics_process(delta: float) -> void:
 
 	_handle_interaction(delta)
 
+	# Read the thumb buttons once per frame, before anything can return early.
+	var jump_now := Touch.consume_jump()
 	var dir := _wish_direction()
 	var speed := run_speed if Input.is_action_pressed("sprint") else walk_speed
 	var accel := ground_accel if is_on_floor() else air_accel
@@ -84,7 +95,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = 0.0
 
 	# Jump is always just a jump. It never turns into something else.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if (jump_now or Input.is_action_just_pressed("jump")) and is_on_floor():
 		velocity.y = jump_velocity
 
 	# The pull-up is a mid-air recovery, not a ground action: you jump at a
@@ -102,12 +113,17 @@ func _physics_process(delta: float) -> void:
 	model.rotation.y = rotate_toward(model.rotation.y, _facing, turn_speed * delta)
 
 	move_and_slide()
+	_auto_step(dir)
 
 
-## Turns WASD into a direction in world space, relative to where the camera is
-## looking — so "forward" always means "away from the camera".
+## Turns the joystick (and WASD, for desk testing) into a direction in world
+## space relative to where the camera is looking — so "forward" always means
+## "away from the camera", which is the only scheme that works with a thumbstick.
 func _wish_direction() -> Vector3:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	input += Touch.move
+	if input.length() > 1.0:
+		input = input.normalized()
 	var basis := cam_pivot.global_transform.basis
 	var dir := basis.x * input.x + basis.z * input.y
 	dir.y = 0.0
@@ -115,15 +131,38 @@ func _wish_direction() -> Vector3:
 
 
 func _handle_interaction(delta: float) -> void:
+	# Consume the one-shot first, so a tap with nothing in range cannot leak
+	# onto whatever she walks up to next.
+	var pressed := Touch.consume_interact() or Input.is_action_just_pressed("interact")
+	var held := Touch.interact_down or Input.is_action_pressed("interact")
 	var target := Interactions.focus()
 	if target == null:
 		return
-	if Input.is_action_just_pressed("interact"):
+	if pressed:
 		target.press(self)
-	elif Input.is_action_pressed("interact"):
+	elif held:
 		target.hold(self, delta)
-	elif Input.is_action_just_released("interact"):
+	else:
 		target.release()
+
+
+## Walk straight up anything shorter than auto_step_height. Without this every
+## stair tread needs a jump, which is miserable on a phone.
+func _auto_step(dir: Vector3) -> void:
+	if not is_on_floor() or dir.length_squared() < 0.01:
+		return
+	if not step_wall_cast.is_colliding() or not step_cast.is_colliding():
+		return
+	var top := step_cast.get_collision_point()
+	var rise := top.y - global_position.y
+	if rise <= 0.02 or rise > auto_step_height:
+		return
+	# Up AND over. Lifting her straight up would leave her hovering above the
+	# step she is already on, and she would just drop back down; the cast point
+	# is far enough ahead to land her on the new tread.
+	var target := Vector3(top.x, top.y + 0.02, top.z)
+	if _space_free(target):
+		global_position = target
 
 
 # --- Ledge climb ---------------------------------------------------------
@@ -178,6 +217,8 @@ func _apply_era(era: Era.Id) -> void:
 	var arm := cam_pivot.get_node_or_null("SpringArm3D") as SpringArm3D
 	if arm:
 		arm.collision_mask = collision_mask
+	for cast: RayCast3D in [wall_cast, ledge_cast, step_wall_cast, step_cast]:
+		cast.collision_mask = collision_mask
 
 
 ## Is there room for her capsule standing with her feet at `foot_pos`?

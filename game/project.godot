@@ -1,5 +1,5 @@
 ; Engine configuration file for Kaalchakra: The Drowned City
-; Godot 4.7 — standard build, GDScript, Forward+
+; Godot 4.7 — standard build, GDScript, Mobile renderer, landscape
 ; Edit most of this safely from the editor: Project -> Project Settings.
 
 config_version=5
@@ -9,19 +9,32 @@ config_version=5
 config/name="Kaalchakra"
 config/description="A three-era time-shift adventure set in the Indus Valley."
 run/main_scene="res://scenes/Main.tscn"
-config/features=PackedStringArray("4.7", "Forward Plus")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 TimeShift="*res://scripts/autoload/time_shift_manager.gd"
 Interactions="*res://scripts/autoload/interactions.gd"
+Touch="*res://scripts/autoload/touch_input.gd"
 
 [display]
 
-window/size/viewport_width=1600
-window/size/viewport_height=900
+; Phone-shaped window for desk testing. stretch "expand" keeps the UI the same
+; physical size across the many aspect ratios phones come in, rather than
+; letterboxing or squashing it.
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+; 4 = sensor landscape: locks to landscape, lets the player flip the phone.
+window/handheld/orientation=4
+
+[input_devices]
+
+; Mouse drags become touch events, so the whole touch scheme is testable on the
+; Mac without a phone plugged in.
+pointing/emulate_touch_from_mouse=true
 
 [input]
 
@@ -110,6 +123,11 @@ respawn={
 
 [rendering]
 
-renderer/rendering_method="forward_plus"
-anti_aliasing/quality/msaa_3d=2
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=2
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+; Mobile budget (CLAUDE.md §9): no MSAA, one cheap directional shadow, no
+; anisotropic filtering. Revisit once we have profiled on a real phone.
+anti_aliasing/quality/msaa_3d=0
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+textures/default_filters/anisotropic_filtering_level=0

@@ -1,7 +1,7 @@
 # KAALCHAKRA: The Drowned City
 ## Narrative Design Document — Version 1.0 (Story Bible)
 
-**Format:** Story-driven 3rd-person 3D adventure · Single-player · PC (Steam)
+**Format:** Story-driven 3rd-person 3D adventure · Single-player · Mobile (Android + iOS)
 **Target playtime:** ~5 hours main path (prologue + 5 chapters + finale), with failure/retry loops
 **Tone reference:** *Uncharted*'s pacing, *Prince of Persia*'s time fantasy, *Death Stranding*'s melancholy — but grounded in real archaeology
 **Franchise:** Volume One of the **Kaalchakra** series ("The Wheel of Time" across the cradles of civilization)

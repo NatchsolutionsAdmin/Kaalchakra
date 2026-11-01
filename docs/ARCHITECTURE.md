@@ -35,7 +35,14 @@ The key idea: **Layer 2 is built with greybox placeholders, so it works before L
 
 ## 2. The engine (Layer 1 foundation)
 
-**Decided: Godot 4, standard build, GDScript.** Free, open-source, no royalties ever, one project exports to PC now and mobile later. The Godot project lives in `game/` in this repo.
+**Decided: Godot 4, standard build, GDScript, Mobile renderer.** Free, open-source, no royalties ever, one project exports to **Android and iOS** (PC later if wanted). The Godot project lives in `game/` in this repo.
+
+**Mobile build chain:**
+- **Android:** Godot's Android export (Android SDK + Java JDK). One-click deploy to a phone over USB for quick tests; Android App Bundle (.aab) for Google Play.
+- **iOS:** Godot exports an Xcode project → build and sign in **Xcode on the Mac** → TestFlight for testing → App Store. Needs an Apple Developer account for device testing beyond basics and for release.
+- **Input:** touch first (virtual joystick, camera drag, action button, Wheel dial); keyboard/gamepad for desk testing.
+- **Performance:** Mobile renderer, baked lighting where possible, low draw calls, LODs, texture compression per platform, quality presets. Profile on real phones.
+- **Lifecycle:** handle app pause/resume; autosave on pause.
 
 ---
 
@@ -85,6 +92,8 @@ Story content lives in **data files, not code**, so writers and designers (and y
 | Music | a DAW (Reaper, GarageBand) to polish | Suno/Udio for drafts (paid tier for commercial rights) |
 | Voice | any recording setup | — (your friends; AI voice avoided) |
 
+**Mobile asset budgets:** all models, textures and effects must fit phone limits (lower polygon counts, smaller and fewer textures, few transparent effects). Give every artist mobile targets up front; the Evara commission brief's PC targets need updating before hiring.
+
 **The one habit that keeps AI 3D usable:** always run a "quad remesh" cleanup pass on any AI-generated mesh before it enters Godot.
 
 **Always test the round-trip early:** make one model, clean it, import it into Godot, confirm it works — *before* generating a whole library.
@@ -119,7 +128,7 @@ Story content lives in **data files, not code**, so writers and designers (and y
 - **Git** + **GitHub**: `https://github.com/NatchsolutionsAdmin/Kaalchakra.git`
 - **Git LFS** for big art/audio files (configured in `.gitattributes`; run `git lfs install` once per machine).
 - A shared drive for raw art source files and reference if they get too big for the repo.
-- **Mac now, Windows later:** same Godot version on both; relative paths only; consistent filename case.
+- **Develop on the Mac** (needed for iOS). If a Windows PC is added later: same Godot version on both; relative paths only; consistent filename case.
 
 ---
 

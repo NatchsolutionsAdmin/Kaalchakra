@@ -44,10 +44,16 @@ def structure(tag):
         ("CitadelWall", (-23, 4.5, -15), (2, 9, 30), base),
     ]
     # Stepped descent on the north side — Dholavira's reservoirs are stepped.
-    for i in range(4):
-        top = -1.4 * (i + 1)
+    # 12 risers of 0.58 m: human-scale, and low enough that auto-climb carries
+    # the whole flight. At 1.4 m a phone player had to jump every single step.
+    rise = 7.0 / 12.0
+    tread = 0.75
+    for i in range(11):
+        top = -rise * (i + 1)
         h = top + 7.0
-        out.append((f"BasinStep{i}", (-5, -7.0 + h / 2.0, -22 + 1.4 * i + 0.7), (20.5, h, 1.4), acc))
+        out.append((f"BasinStep{i:02d}",
+                    (-5, -7.0 + h / 2.0, -22 + tread * i + tread / 2.0),
+                    (20.5, h, tread), acc))
     # A stack of ledges east of the basin that teaches the two traversal verbs:
     # 1.1 m up onto A is a plain jump; A->B is 1.8 m and B->C is 2.0 m, both
     # above what she can jump, so they can only be taken by pulling up.
@@ -189,6 +195,13 @@ def xform(pos):
     return "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, %s, %s, %s)" % tuple(fmt(c) for c in pos)
 
 
+def scale_xform(size, pos=(0, 0, 0)):
+    """Transform that scales the shared unit cube to `size` at `pos`."""
+    sx, sy, sz = (fmt(c) for c in size)
+    return "Transform3D(%s, 0, 0, 0, %s, 0, 0, 0, %s, %s, %s, %s)" % (
+        sx, sy, sz, *(fmt(c) for c in pos))
+
+
 def vec3(s):
     return "Vector3(%s, %s, %s)" % tuple(fmt(c) for c in s)
 
@@ -213,9 +226,48 @@ def main():
     dig_script = ext_id("res://scripts/interact/dig_site.gd", "Script")
 
     sub.append(("SphereShape3D_reach", "SphereShape3D", "radius = 2.6\n"))
-    sub.append(("BoxMesh_water_past", "BoxMesh", "size = %s\n" % vec3((19, 0.2, 16.5))))
-    sub.append(("BoxMesh_water_future", "BoxMesh", "size = %s\n" % vec3((132, 0.2, 62))))
-    sub.append(("BoxMesh_hatch", "BoxMesh", "size = %s\n" % vec3((2.2, 0.9, 2.2))))
+    # Every greybox box renders from this one mesh, scaled. One resource for the
+    # whole level lets the renderer batch them, which CSG could never do.
+    sub.append(("BoxMesh_unit", "BoxMesh", "size = %s\n" % vec3((1, 1, 1))))
+    box_shapes = {}
+
+    def shape_id(size):
+        key = tuple(round(c, 4) for c in size)
+        if key not in box_shapes:
+            sid = "BoxShape3D_%d" % (len(box_shapes) + 1)
+            box_shapes[key] = sid
+            sub.append((sid, "BoxShape3D", "size = %s\n" % vec3(size)))
+        return box_shapes[key]
+
+    def emit_box(name, parent, pos, size, matkey, layer):
+        """One solid greybox box: a static body with a mesh and a shape."""
+        nodes.append(
+            '[node name="%s" type="StaticBody3D" parent="%s"]\n'
+            'transform = %s\n'
+            'collision_layer = %d\n'
+            'collision_mask = 0\n' % (name, parent, xform(pos), layer)
+        )
+        nodes.append(
+            '[node name="Mesh" type="MeshInstance3D" parent="%s/%s"]\n'
+            'transform = %s\n'
+            'mesh = SubResource("BoxMesh_unit")\n'
+            'material_override = ExtResource("%s")\n'
+            % (parent, name, scale_xform(size), mat(matkey))
+        )
+        nodes.append(
+            '[node name="Shape" type="CollisionShape3D" parent="%s/%s"]\n'
+            'shape = SubResource("%s")\n' % (parent, name, shape_id(size))
+        )
+
+    def emit_decal(name, parent, pos, size, matkey):
+        """Visual only — no collision, so it never becomes a lip to trip on."""
+        nodes.append(
+            '[node name="%s" type="MeshInstance3D" parent="%s"]\n'
+            'transform = %s\n'
+            'mesh = SubResource("BoxMesh_unit")\n'
+            'material_override = ExtResource("%s")\n'
+            % (name, parent, scale_xform(size, pos), mat(matkey))
+        )
 
     for tag, era_name, era_value, layer in ERAS:
         nodes.append(
@@ -227,16 +279,7 @@ def main():
         boxes = structure(tag) + {"past": extras_past, "present": extras_present,
                                   "future": extras_future}[tag]()
         for name, pos, size, matkey in boxes:
-            nodes.append(
-                '[node name="%s" type="CSGBox3D" parent="%s"]\n'
-                'transform = %s\n'
-                'size = %s\n'
-                'use_collision = true\n'
-                'collision_layer = %d\n'
-                'collision_mask = 0\n'
-                'material = ExtResource("%s")\n'
-                % (name, era_name, xform(pos), vec3(size), layer, mat(matkey))
-            )
+            emit_box(name, era_name, pos, size, matkey, layer)
 
         # Water. A plain MeshInstance3D, so Evara walks through it — swimming is
         # not a verb in this game yet.
@@ -244,26 +287,21 @@ def main():
             nodes.append(
                 '[node name="WaterOneThird" type="MeshInstance3D" parent="Past"]\n'
                 'transform = %s\n'
-                'mesh = SubResource("BoxMesh_water_past")\n'
+                'mesh = SubResource("BoxMesh_unit")\n'
                 'material_override = ExtResource("%s")\n'
-                % (xform((-5, -4.67, -13.75)), mat("mat_water_past"))
+                % (scale_xform((19, 0.2, 16.5), (-5, -4.67, -13.75)), mat("mat_water_past"))
             )
         if tag == "future":
             nodes.append(
                 '[node name="FloodPlane" type="MeshInstance3D" parent="Future"]\n'
                 'transform = %s\n'
-                'mesh = SubResource("BoxMesh_water_future")\n'
+                'mesh = SubResource("BoxMesh_unit")\n'
                 'material_override = ExtResource("%s")\n'
-                % (xform((5, 1.6, -20)), mat("mat_water_future"))
+                % (scale_xform((132, 0.2, 62), (5, 1.6, -20)), mat("mat_water_future"))
             )
 
     # --- PAST: the Keeper's mark (teaches the location) ---
-    nodes.append(
-        '[node name="KeeperMarkSlab" type="CSGBox3D" parent="Past"]\n'
-        'transform = %s\nsize = %s\nuse_collision = false\n'
-        'material = ExtResource("%s")\n'
-        % (xform(MARK_POS), vec3((2, 0.2, 2)), mat("mat_marker"))
-    )
+    emit_decal("KeeperMarkSlab", "Past", MARK_POS, (2, 0.2, 2), "mat_marker")
     nodes.append(
         '[node name="KeeperMark" type="Area3D" parent="Past"]\n'
         'transform = %s\n'
@@ -279,19 +317,15 @@ def main():
     )
 
     # --- PRESENT: the same spot, twelve paces south, under the basin floor ---
-    nodes.append(
-        '[node name="DigPatch" type="CSGBox3D" parent="Present"]\n'
-        'transform = %s\nsize = %s\nuse_collision = false\n'
-        'material = ExtResource("%s")\n'
-        % (xform(DIG_POS), vec3((2.4, 0.1, 2.4)), mat("mat_dig"))
-    )
+    emit_decal("DigPatch", "Present", DIG_POS, (2.4, 0.1, 2.4), "mat_dig")
     nodes.append(
         '[node name="ChamberHatch" type="MeshInstance3D" parent="Present"]\n'
         'transform = %s\n'
-        'mesh = SubResource("BoxMesh_hatch")\n'
+        'mesh = SubResource("BoxMesh_unit")\n'
         'material_override = ExtResource("%s")\n'
         'visible = false\n'
-        % (xform((DIG_POS[0], DIG_POS[1] + 0.45, DIG_POS[2])), mat("mat_chamber"))
+        % (scale_xform((2.2, 0.9, 2.2), (DIG_POS[0], DIG_POS[1] + 0.45, DIG_POS[2])),
+           mat("mat_chamber"))
     )
     nodes.append(
         '[node name="DigSite" type="Area3D" parent="Present"]\n'

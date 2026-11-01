@@ -7,7 +7,7 @@
 
 ## 1. What the game is
 
-A single-player, story-driven 3rd-person 3D adventure for **PC (Steam first)**. The player is **Evara**, a 24-year-old archaeologist who finds a copper wheel that lets her stand in the same place across three eras (1900 BCE, 2026, 2087) and carry knowledge between them to solve puzzles she cannot brute-force. ~5 hours, five chapters plus prologue and finale. Full story is in `kaalchakra-story-bible.md`.
+A single-player, story-driven 3rd-person 3D adventure for **mobile: Android and iOS** (landscape, touch controls, short play sessions; PC port optional later). The player is **Evara**, a 24-year-old archaeologist who finds a copper wheel that lets her stand in the same place across three eras (1900 BCE, 2026, 2087) and carry knowledge between them to solve puzzles she cannot brute-force. ~5 hours, five chapters plus prologue and finale. Full story is in `kaalchakra-story-bible.md`.
 
 Reference feel: the traversal and set-piece pacing of *Uncharted* / *Prince of Persia: The Sands of Time*, the melancholy of *Death Stranding*, grounded in real archaeology. The look you want — "attractive, high-end graphics" — is the single most demanding part of this project, and Section 4 is brutally honest about why.
 
@@ -62,7 +62,7 @@ Realistically, with just you and me, we can reach a **vertical slice in greybox*
 
 ## 5. Engine choice — DECIDED: Godot 4
 
-**Godot 4 (standard build, GDScript).** Free, open-source (MIT), no royalties or revenue share ever, no required splash screen or credit, exports to PC (and later mobile) from one project, and I can write GDScript directly.
+**Godot 4 (standard build, GDScript, Mobile renderer).** Free, open-source (MIT), no royalties or revenue share ever, no required splash screen or credit, exports to Android and iOS (and PC later) from one project, and I can write GDScript directly. iOS builds need a Mac with Xcode, which we have.
 
 Alternatives considered: **Unity** (free under $200k/yr revenue, then paid Pro seats; terms have changed before) and **Unreal** (5% royalty after $1M lifetime gross; pushes toward photoreal). Revisit Unreal only if a funded Phase 3 goes visually ambitious with a full team.
 
@@ -78,7 +78,7 @@ Alternatives considered: **Unity** (free under $200k/yr revenue, then paid Pro s
 
 **Phase 3 — Team & art (needs money).** Artists, animator, composer. Replace greybox with the real look. Build remaining chapters.
 
-**Phase 4 — Polish, QA, release.** Optimization, bug-fixing, Steam page, demo, launch.
+**Phase 4 — Polish, QA, release.** Device testing across phones, optimization, bug-fixing, Google Play and App Store pages, soft launch, launch.
 
 **Phase 5 — Franchise.** Volume 2 (Egypt) reuses all systems built in v1.
 
@@ -105,7 +105,9 @@ What I do **not** need from you: any coding ability.
 4. ~~Scope~~ → **build the vertical slice with AI first**, commission the Evara hero model from a freelancer, then decide on team.
 5. ~~Sakshi~~ → **alive, on the phone.**
 
-**Still open:** final title; art bible lock; Evara's canon face; Meera Easter egg; future-era playability. See `DECISIONS.md`.
+6. ~~Platform~~ → **mobile, Android + iOS** (2026-11-01; replaces PC/Steam first).
+
+**Still open:** mobile business model; minimum devices; final title; art bible lock; Evara's canon face; Meera Easter egg; future-era playability. See `DECISIONS.md`.
 
 ---
 

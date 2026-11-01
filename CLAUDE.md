@@ -16,7 +16,7 @@
 
 ## 2. What we're building
 
-A single-player, story-driven, 3rd-person **3D time-shift adventure** set in the Indus Valley. PC / Steam first (Windows), later mobile maybe. ~5 hours: prologue + 5 chapters + finale.
+A single-player, story-driven, 3rd-person **3D time-shift adventure** set in the Indus Valley. **A mobile game for Android and iOS** (landscape, touch-first). ~5 hours: prologue + 5 chapters + finale, broken into short play sessions. A PC/Steam port stays possible later; Godot makes that cheap, but it is not the target.
 
 - **Protagonist: Evara** — female, 24, Gen Z archaeologist. **One name, no surname.** Narrates to her phone camera; carries her late father's trowel.
 - **The Kaalchakra:** an eight-spoked copper wheel that snaps between **three fixed "mornings" of the same place:**
@@ -33,14 +33,16 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 
 | Area | Decision |
 |---|---|
-| Engine | **Godot 4, standard build (not .NET), GDScript.** Chosen partly because it never takes a revenue share or requires a credit/splash. |
+| Platform | **Mobile: Android + iOS** (decided 2026-11-01, replaces "PC/Steam first"). Landscape orientation. PC port optional later. |
+| Engine | **Godot 4, standard build (not .NET), GDScript.** Chosen partly because it never takes a revenue share or requires a credit/splash. Use the **Mobile renderer**; fall back to Compatibility only if low-end Android testing demands it. |
 | 3D tool | **Blender** (free, open-source). |
 | Art direction | **Stylized realism** (*Sable*, *RiME*, *Journey* lane). Not photoreal. Not cartoon. Formal art bible still to be written. |
 | Ownership | **No tools that take revenue share or require credits.** Check commercial-use terms of any AI tool (Suno, Meshy, Tripo, Midjourney…) before using its output; free tiers often forbid commercial use. Friends who contribute art/voice need a simple written agreement (ownership + credit). |
-| Machines | **Start on Mac, move to Windows later.** Use the *same Godot version* on both. Windows is the ship target — test there before any release. |
+| Machines | **Develop on the Mac.** It's required anyway: iOS builds need a Mac with Xcode. Android builds also work from the Mac. Windows is optional now. If it's used, keep the *same Godot version* on both. **Test on real phones** (one iPhone, one mid-range Android) from the first prototype. |
+| Stores | Google Play developer account (one-time fee) and Apple Developer Program (yearly fee). Needed only once we test on devices outside USB/TestFlight or publish. |
 | Version control | **Git + GitHub**: `https://github.com/NatchsolutionsAdmin/Kaalchakra.git`. Git LFS for large art/audio. |
 | Protagonist | Evara, female, 24, no surname. Sakshi alive (phone calls). |
-| Price (planning) | $19.99 base. See `docs/MARKET-POSITIONING.md`. |
+| Price / business model | **Open — re-decide for mobile** (see §4). The $19.99 PC plan in `docs/MARKET-POSITIONING.md` no longer applies. |
 | Vertical slice | Chapter 2, "The Index" (see `docs/REQUIREMENTS.md` §8). |
 | Evara 3D model | To be commissioned from a freelance character artist (brief exists: `Evara_Character_Brief.docx`). Locked 2D Evara = `ComfyUI_00009`. Turnaround/expression/gear sheets exist. Put them in `art/characters/evara/`. |
 | Learning approach | Learn game design by **teardown → rebuild**: study how great games solve a problem, then rebuild that system in greybox. **Never** decompile/rip commercial game files (EULA/copyright risk, contaminates the project). |
@@ -53,21 +55,25 @@ Full detail: `docs/kaalchakra-story-bible.md`.
 4. Meera (from the early 2D prototype) as a past-Keeper Easter egg in ledger collectibles — recommended yes.
 5. How playable the future era is (current: fully walkable, no combat).
 6. Engine re-evaluation (Unreal) only if the vertical slice raises real money for a visually ambitious production — Phase 3, not now.
+7. **Mobile business model:** premium paid up front, vs. **free download with Chapter 1 free and a one-time unlock for the full game** (common for mobile narrative games), vs. a subscription platform deal (Netflix Games, Apple Arcade, as Raji did on Netflix). Avoid aggressive free-to-play monetization; it doesn't fit a 5-hour story. Market doc must be redone for mobile.
+8. **Minimum devices:** pick target low-end Android and oldest supported iPhone after the first device test.
+9. **Evara 3D brief:** the commission brief's poly/texture targets were written for PC. Update them for mobile before hiring.
 
 ## 5. The immediate next step (start here if nothing else is asked)
 
 **First prototype: a greybox of one Dholarath area with the three-era switch.**
 
 1. Confirm Godot 4 is installed on the Mac and note the exact version (Help → About). Record it in `docs/DECISIONS.md`.
-2. Create the Godot project inside `game/` (project name "Kaalchakra"). Renderer: Forward+.
-3. Build in greybox (plain boxes, no art):
+2. Create the Godot project inside `game/` (project name "Kaalchakra"). Renderer: **Mobile**. Orientation: **landscape**. Turn on "Emulate Touch From Mouse" so touch can be tested on the Mac.
+3. Build in greybox (plain boxes, no art), **touch-first**:
    - The **north gate** and the **reservoir** below it, with a market street running east. Use real-feeling Harappan proportions: grid streets, stepped reservoir walls, a walled citadel edge.
-   - **Evara** as a capsule: 3rd-person controller, orbit camera, walk/run/jump, basic ledge climb.
-   - **TimeShiftManager** (autoload): keys 1/2/3 (and a simple Wheel UI) switch Past/Present/Future. Each location has `Past`, `Present`, `Future` child nodes; only one visible/collidable at a time. Player position persists. Add a short shift transition (fade/flash) with a reduced-motion option.
+   - **Evara** as a capsule: 3rd-person controller with an **on-screen virtual joystick** (left), **drag-to-orbit camera** (right side of screen), a jump/climb button, and auto-climb on low ledges. Keyboard/gamepad also work for desk testing.
+   - **TimeShiftManager** (autoload): an **on-screen Wheel dial** (tap or swipe between the three eras) switches Past/Present/Future; keys 1/2/3 for desk testing. Each location has `Past`, `Present`, `Future` child nodes; only one visible/collidable at a time. Player position persists. Add a short shift transition (fade/flash) with a reduced-motion option.
    - Make each era *physically different*: e.g. a passage open in the past but collapsed in the present; water filling the reservoir in the past, dry in the present, flooded in the future.
    - One tiny cross-era puzzle to prove the loop: see something in the past (a sign marking a buried door) → find and dig it in the present.
 4. Walk Prabhjot through: opening the project, pressing Play, moving, switching eras, and changing one value himself (e.g. Evara's speed) so he learns the editor.
-5. Commit and push to GitHub with a clear message.
+5. **Get it running on a real phone** (Android via USB one-click deploy is the quickest first test; iOS via Xcode export). Check frame rate and how the controls feel with thumbs.
+6. Commit and push to GitHub with a clear message.
 
 Then: game teardowns that feed directly into our systems (see §8).
 
@@ -103,8 +109,20 @@ Sources: playing the games, gameplay footage, GDC talks, developer postmortems, 
 - *Uncharted 2 / 4* (set-piece pacing, chase/escape → our flood sequence)
 - *Outer Wilds* / *Return of the Obra Dinn* (knowledge as progression)
 - *Chants of Sennaar* / *Heaven's Vault* (decipherment)
+- **Mobile references:** *Monument Valley* (touch-first puzzle spaces, short chapters), *Alto's Odyssey* (premium mobile polish), *Sky: Children of the Light* (3rd-person touch movement and camera in a stylized 3D world), *Genshin Impact* (3rd-person touch controls at high fidelity).
 
-## 9. Working rules
+## 9. Mobile design rules (apply to every system)
+
+- **Touch first.** Every action works with thumbs: virtual joystick, camera drag, big tap targets (at least ~44 pt), contextual action button instead of many buttons. Gamepad support is a bonus.
+- **Short sessions.** Split chapters into 10–20 minute segments with natural stopping points. Autosave often; resume exactly where the player left off if the app is closed or a call comes in (handle app pause/resume).
+- **Performance budget from day one.** Target a steady 30 fps on a mid-range Android phone that's a few years old, 60 fps where possible. Keep draw calls and polygon counts low, prefer baked lighting, keep the number of real-time shadows and transparent effects small, and watch for phone heat and battery drain. Profile on device, not just on the Mac.
+- **Three eras = three versions of a location in memory.** Keep each era's version lightweight, or stream them, so switching stays instant without running out of memory.
+- **Download size.** Keep the first download small; put later chapters in downloadable packs if needed.
+- **Screens vary.** Support notches and safe areas, many aspect ratios, and tablets.
+- **Stylized art matters even more on mobile.** It's the only realistic way to look high-end on a phone.
+- **Puzzles suit touch:** brushing in the excavation minigame (swipe), dragging sluice gates, tracing signs in decipherment.
+
+## 10. Working rules
 
 - **Explain before you build, briefly.** One sentence on what you're about to do and why.
 - **Teach in context.** First time a Godot concept appears (node, scene, autoload, signal, collision layer…), explain it in one or two plain lines.

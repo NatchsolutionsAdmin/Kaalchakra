@@ -6,10 +6,15 @@
 ##
 ## The SpringArm3D under it pulls the camera in when a wall gets between the
 ## camera and Evara.
+##
+## Orbiting is drag-based: a thumb anywhere on the right of the screen, fed in
+## through the `Touch` autoload. The mouse is never captured — "Emulate Touch
+## From Mouse" turns a mouse drag into exactly the same event, so the phone
+## scheme is what gets tested at the desk too.
 extends Node3D
 
 @export var target: Node3D
-@export var sensitivity := 0.0024
+@export var drag_sensitivity := 0.0042
 @export var follow_speed := 14.0
 @export var shoulder_height := 1.45
 @export var pitch_min_deg := -62.0
@@ -23,27 +28,22 @@ func _ready() -> void:
 	if target == null:
 		target = get_parent() as Node3D
 	global_position = _desired_position()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("toggle_mouse"):
-		var captured := Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if captured else Input.MOUSE_MODE_CAPTURED
-		return
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		var motion := event as InputEventMouseMotion
-		rotation.y -= motion.relative.x * sensitivity
-		arm.rotation.x = clampf(
-			arm.rotation.x - motion.relative.y * sensitivity,
-			deg_to_rad(pitch_min_deg),
-			deg_to_rad(pitch_max_deg)
-		)
 
 
 func _physics_process(delta: float) -> void:
 	if target == null:
 		return
+
+	# One read per frame; reading clears the accumulated drag.
+	var look := Touch.take_look()
+	if look != Vector2.ZERO:
+		rotation.y -= look.x * drag_sensitivity
+		arm.rotation.x = clampf(
+			arm.rotation.x - look.y * drag_sensitivity,
+			deg_to_rad(pitch_min_deg),
+			deg_to_rad(pitch_max_deg)
+		)
+
 	# Exponential smoothing: frame-rate independent, unlike a raw lerp(x, 0.2).
 	var weight := 1.0 - exp(-follow_speed * delta)
 	global_position = global_position.lerp(_desired_position(), weight)

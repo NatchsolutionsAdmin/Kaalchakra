@@ -1,9 +1,10 @@
 ; Main — the scene that runs when you press Play.
 ; It holds the shared stuff (sky, sun, HUD), the location, and Evara.
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/era_lighting.gd" id="ext_1"]
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="ext_2"]
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="ext_5"]
 [ext_resource type="PackedScene" path="res://scenes/locations/NorthGate.tscn" id="ext_3"]
 [ext_resource type="PackedScene" path="res://scenes/player/Evara.tscn" id="ext_4"]
 
@@ -26,9 +27,6 @@ ambient_light_sky_contribution = 1.0
 ambient_light_energy = 1.0
 tonemap_mode = 2
 tonemap_white = 6.0
-glow_enabled = true
-glow_intensity = 0.5
-glow_bloom = 0.08
 fog_enabled = true
 fog_light_color = Color(0.74, 0.76, 0.76, 1)
 fog_light_energy = 1.0
@@ -59,3 +57,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -26)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("ext_2")
+
+[node name="TouchControls" type="CanvasLayer" parent="."]
+script = ExtResource("ext_5")

@@ -209,28 +209,48 @@ func _run() -> void:
 		player.global_position.y > below + 1.5,
 		"y %.2f -> %.2f" % [below, player.global_position.y])
 
-	print("\n-- the reservoir steps (the reported bug) --")
-	# Steps are 1.4 m. Jumping up a flight must climb exactly one, never fling
-	# her up the whole run.
+	print("\n-- the reservoir steps, with thumbs --")
+	# Risers are 0.58 m now, under auto_step_height, so walking up the flight
+	# must need no jump at all. A phone player should never tap jump on stairs.
 	pivot.rotation.y = 0.0
 	player.set("_facing", 0.0)
 	model.rotation.y = 0.0
-	player.global_position = Vector3(0, -2.7, -19.9)
+	player.global_position = Vector3(0, -3.4, -17.9)
 	player.velocity = Vector3.ZERO
 	await _settle(30)
-	var step_y := player.global_position.y
+	var bottom := player.global_position.y
 	Input.action_press("move_forward")
-	await _settle(8)
-	Input.action_press("jump")
-	await _settle(3)
-	Input.action_release("jump")
-	await _settle(70)
+	await _settle(90)
 	Input.action_release("move_forward")
+	await _settle(20)
+	var gained := player.global_position.y - bottom
+	_ok("she walks up the stairs without jumping", gained > 1.0,
+		"gained %.2f m (y %.2f -> %.2f)" % [gained, bottom, player.global_position.y])
+
+	print("\n-- the virtual joystick --")
+	# The joystick feeds the same path as WASD, through the Touch autoload.
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(4)
+	player.global_position = Vector3(-10, 1.0, -26)
+	player.velocity = Vector3.ZERO
 	await _settle(25)
-	var climbed := player.global_position.y - step_y
-	_ok("jumping up the steps climbs one step, not the flight",
-		climbed > 0.5 and climbed < 2.2,
-		"climbed %.2f m (y %.2f -> %.2f)" % [climbed, step_y, player.global_position.y])
+	var stick_from := player.global_position
+	Touch.move = Vector2(0, -1)
+	await _settle(45)
+	Touch.move = Vector2.ZERO
+	var stick_moved := stick_from.distance_to(player.global_position)
+	_ok("pushing the stick forward walks her", stick_moved > 1.5,
+		"moved %.2f m" % stick_moved)
+
+	player.velocity = Vector3.ZERO
+	await _settle(25)
+	var before_tap := player.global_position.y
+	Touch.queue_jump()
+	await _settle(10)
+	_ok("the jump button gets her off the ground",
+		player.global_position.y > before_tap + 0.4,
+		"y %.2f -> %.2f" % [before_tap, player.global_position.y])
+	await _settle(45)
 
 	print("\n-- era lighting --")
 	# This section leaves the world in FUTURE; the sections after it rely on that.

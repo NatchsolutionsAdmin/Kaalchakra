@@ -1,5 +1,7 @@
 # MARKET-POSITIONING.md — Kaalchakra: The Drowned City
 
+> ⚠️ **2026-11-01: the game is now mobile (Android + iOS).** This document was written for a PC/Steam release. The positioning, lane and S8UL analysis still largely hold (S8UL's mobile audience is now a *better* fit). The **pricing ($19.99), Steam economics, wishlist targets and revenue scenarios below no longer apply** and must be redone with mobile comps (e.g. *Monument Valley*, *Alto's Odyssey*, *Florence*, *Sky*, and *Raji*'s Netflix mobile release) and app-store economics.
+
 > Where this game sits in the market, who it competes with, what those competitors earned, and the realistic revenue we can defend to a partner or investor.
 > Companion to `PROJECT.md`, `REQUIREMENTS.md`, `ARCHITECTURE.md`. Read those first for scope; this doc is the money argument.
 > All sales figures below are either developer/publisher-confirmed or third-party estimates (SteamSpy / GameSensor / Steam-revenue-calculator class tools). Estimates are labelled as such. Numbers current as of mid-2026 — **refresh before any external pitch.**
