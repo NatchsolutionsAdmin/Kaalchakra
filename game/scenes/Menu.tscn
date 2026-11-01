@@ -1,0 +1,7 @@
+; The front end. Backdrop is the real north gate at first light.
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="e1"]
+
+[node name="Menu" type="Node3D"]
+script = ExtResource("e1")

@@ -155,6 +155,17 @@ func _run() -> void:
 	Decipher.reset()
 	await _settle(30)
 
+	# 4b4. Paused.
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _stand(Vector3(0, 1.2, -24), 180.0)
+	var pause_menu := _main.get_node_or_null("PauseMenu")
+	if pause_menu:
+		pause_menu.call("toggle")
+		await _settle(8)
+		await _shot("pause_menu")
+		pause_menu.call("toggle")
+		await _settle(6)
+
 	# 4c. Portrait — does she have a face worth framing?
 	TimeShift.request_shift(Era.Id.PRESENT)
 	await _stand(Vector3(0, 1.2, -24), 180.0)
