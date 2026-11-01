@@ -29,6 +29,8 @@ MARKET_X = [12, 19, 26, 33, 40, 47]
 
 KIT_INDEX = pathlib.Path(__file__).resolve().parent.parent / "game/art/kit/kit_sizes.json"
 KIT = json.loads(KIT_INDEX.read_text()) if KIT_INDEX.exists() else {}
+PROP_INDEX = pathlib.Path(__file__).resolve().parent.parent / "game/art/props/prop_sizes.json"
+PROPS = json.loads(PROP_INDEX.read_text()) if PROP_INDEX.exists() else {}
 
 
 WEAR_SUFFIX = {"past": "", "present": "_eroded", "future": "_collapsed"}
@@ -219,7 +221,7 @@ def chamber_contents(tag):
     return [
         ("ChamberSilt", (-5.5, -10.3, -13.25), (6.6, 1.0, 4.2), "mat_future"),
         ("TrenchSilt", (0.5, -10.5, -12.0), (4.6, 0.6, 3.8), "mat_future"),
-        ("ArchiveDrone", (-5.5, -9.1, -13.25), (0.4, 0.4, 0.4), "mat_drone"),
+
     ]
 
 
@@ -264,6 +266,59 @@ def citadel(tag):
     for i in range(3):
         out.append((f"CitadelStep{i}", (-23.5 + i * 0.9, 0.75 + i * 1.5, -15),
                     (1.8, 1.5 + i * 3.0, 34), tone(tag, i + 1)))
+    return out
+
+
+def dressing(tag):
+    """Props per era. Positions are deterministic so the scene file does not
+    churn in git, and clustered rather than sprinkled — a market has heaps by
+    the stalls and clear ground to walk on, not evenly spaced pots."""
+    out = []
+    if tag == "past":
+        # Goods stacked along the market street, both sides, leaving the
+        # middle clear.
+        for i, x in enumerate([13.5, 20.5, 27.5, 34.5, 41.5, 48.0]):
+            z = -17.0 if i % 2 == 0 else -9.0
+            out += [
+                (f"PotA{i}", (x, 0, z), "pot_large", "mat_past_accent", 15 * i, 1.0, False),
+                (f"PotB{i}", (x + 0.7, 0, z + 0.5), "pot_small", "mat_past_dark", 40 * i, 1.0, False),
+                (f"Basket{i}", (x - 0.8, 0, z - 0.4), "basket", "mat_past_light", 25 * i, 1.0, False),
+            ]
+            if i % 2 == 0:
+                out.append((f"Sack{i}", (x + 1.5, 0, z - 0.8), "grain_sack",
+                            "mat_past_accent", 10 * i, 1.0, False))
+        out += [
+            ("CartA", (18.0, 0, -13.5), "handcart", "mat_past_dark", 95, 1.0, True),
+            ("CartB", (37.0, 0, -12.5), "handcart", "mat_past_dark", 80, 1.0, True),
+            # Water jars on the reservoir apron — this is what the basin is for.
+            ("PotApronA", (-9.5, 0, -24.5), "pot_large", "mat_past_accent", 20, 1.0, False),
+            ("PotApronB", (-8.6, 0, -25.4), "pot_large", "mat_past_dark", 70, 0.9, False),
+            ("PotApronC", (-10.4, 0, -25.6), "pot_small", "mat_past_light", 45, 1.0, False),
+            ("BasketApron", (-7.6, 0, -24.0), "basket", "mat_past_light", 0, 1.0, False),
+        ]
+    elif tag == "present":
+        out += [
+            ("DigTent", (-9.5, 0, -25.0), "dig_tent", "mat_present_light", 8, 1.0, True),
+            ("CrateA", (-12.5, 0, -24.0), "field_crate", "mat_helix", 20, 1.0, False),
+            ("CrateB", (-12.9, 0, -25.1), "field_crate", "mat_present_dark", -15, 1.0, False),
+            ("CrateC", (-12.2, 0.52, -24.3), "field_crate", "mat_present_dark", 5, 1.0, False),
+            ("BucketA", (1.8, 0, -6.2), "spoil_bucket", "mat_present_dark", 0, 1.0, False),
+            ("BucketB", (2.6, 0, -6.9), "spoil_bucket", "mat_helix", 30, 1.0, False),
+            # Down in the trench, where she is actually working.
+            ("BucketTrench", (1.9, -10.8, -11.0), "spoil_bucket", "mat_present_dark", 10, 1.0, False),
+            ("CrateTrench", (2.1, -10.8, -12.6), "field_crate", "mat_present_light", -20, 0.9, False),
+        ]
+        for i, x in enumerate([-8, -4, 0, 4]):
+            out.append((f"Tripod{i}", (x, 0, -22.6), "survey_tripod",
+                        "mat_present_dark", 20 * i, 1.0, False))
+    else:
+        out += [
+            ("PylonA", (-8, 0, -25), "scan_pylon", "mat_drone", 0, 1.0, True),
+            ("PylonB", (12, 0, -13), "scan_pylon", "mat_drone", 25, 1.0, True),
+            ("PylonC", (-20, 0, -10), "scan_pylon", "mat_drone", -40, 1.0, True),
+            ("DroneChamber", (-5.5, -9.3, -13.25), "archive_drone", "mat_drone", 0, 1.0, False),
+            ("DroneApron", (-3.0, 1.1, -24.0), "archive_drone", "mat_drone", 35, 1.0, False),
+        ]
     return out
 
 
@@ -330,9 +385,6 @@ def extras_past():
            + market("past", [5, 8.5, 4.5, 9.5, 5.5, 7], [7, 4.5, 6.5, 5, 8.5, 4], parapets=True)
            + trench_and_chamber("past") + chamber_contents("past")
            + horizon("past") + citadel("past") + scatter("past", 11, 14, 0.3, 0.9))
-    for i, x in enumerate([15, 22, 29, 36, 43]):
-        z = -15 if i % 2 == 0 else -11
-        out.append((f"Stall{i}", (x, 0.9, z), (2, 1.8, 2), "mat_past_accent"))
     return out
 
 
@@ -346,8 +398,7 @@ def extras_present():
         ("SpoilHeapB", (-13, 0.5, -27.5),  (3.5, 1, 3),     "mat_present"),
         ("HelixContainer", (11, 1.4, -26), (6, 2.8, 2.6),   "mat_helix"),
     ]
-    for i, x in enumerate([-8, -4, 0, 4]):
-        out.append((f"ScaffoldPole{i}", (x, 1.5, -22.6), (0.12, 3, 0.12), "mat_present_accent"))
+
     for i in range(6):
         out.append((f"SurveyPeg{i}", (-14 + i * 3.6, 0.6, -24), (0.1, 1.2, 0.1), "mat_marker"))
     return out
@@ -361,9 +412,7 @@ def extras_future():
     out += [
         ("SiltMoundA", (-9, -6.6, -12), (6, 0.8, 5), "mat_future"),
         ("SiltMoundB", (0, -6.75, -9),  (5, 0.5, 4), "mat_future"),
-        ("DronePylonA", (-8, 3, -25),   (0.5, 6, 0.5), "mat_drone"),
-        ("DronePylonB", (12, 3, -13),   (0.5, 6, 0.5), "mat_drone"),
-        ("DronePylonC", (-20, 3, -10),  (0.5, 6, 0.5), "mat_drone"),
+
     ]
     return out
 
@@ -553,6 +602,42 @@ def main():
                fmt(energy), fmt(rng))
         )
 
+    def emit_prop(name, parent, pos, piece, matkey, yaw=0.0, scale=1.0, collide=False,
+                  layer=0):
+        """A prop: an instanced .glb with a material and an optional collider.
+
+        Most props have NO collision on purpose. A pot you can walk through is
+        a smaller annoyance than a pot that traps you against a wall, and on a
+        phone every collider costs something. Only the things big enough to
+        read as obstacles get one.
+        """
+        if piece not in PROPS:
+            return
+        c, sn = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+        basis = [c * scale, 0.0, -sn * scale, 0.0, scale, 0.0, sn * scale, 0.0, c * scale]
+        nodes.append(
+            '[node name="%s" parent="%s" instance=ExtResource("%s")]\n'
+            'transform = Transform3D(%s, %s)\n'
+            % (name, parent, ext_id("res://art/props/%s.glb" % piece, "PackedScene"),
+               ", ".join(fmt(v) for v in basis), ", ".join(fmt(v) for v in pos))
+        )
+        nodes.append(
+            '[node name="%s" parent="%s/%s" index="0"]\n'
+            'material_override = ExtResource("%s")\n' % (piece, parent, name, mat(matkey))
+        )
+        if collide:
+            size = [d * scale for d in PROPS[piece]["size"]]
+            body_pos = (pos[0], pos[1] + size[1] * 0.5, pos[2])
+            nodes.append(
+                '[node name="%sBody" type="StaticBody3D" parent="%s"]\n'
+                'transform = %s\ncollision_layer = %d\ncollision_mask = 0\n'
+                % (name, parent, xform(body_pos), layer)
+            )
+            nodes.append(
+                '[node name="Shape" type="CollisionShape3D" parent="%s/%sBody"]\n'
+                'shape = SubResource("%s")\n' % (parent, name, shape_id(size))
+            )
+
     def emit_decal(name, parent, pos, size, matkey):
         """Visual only — no collision, so it never becomes a lip to trip on."""
         nodes.append(
@@ -587,6 +672,10 @@ def main():
                 'material_override = ExtResource("%s")\n'
                 % (scale_xform((19, 0.2, 16.5), (-5, -4.67, -13.75)), mat("mat_water_past"))
             )
+        for prop in dressing(tag):
+            emit_prop(prop[0], era_name, prop[1], prop[2], prop[3],
+                      yaw=prop[4], scale=prop[5], collide=prop[6], layer=layer)
+
         if tag == "future":
             nodes.append(
                 '[node name="FloodPlane" type="MeshInstance3D" parent="Future"]\n'

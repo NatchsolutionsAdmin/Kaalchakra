@@ -1,0 +1,101 @@
+{
+  "archive_drone": {
+    "base_offset": -0.07,
+    "size": [
+      0.8,
+      0.21,
+      0.8
+    ],
+    "tris": 128
+  },
+  "basket": {
+    "base_offset": 0.0,
+    "size": [
+      0.5897,
+      0.36,
+      0.62
+    ],
+    "tris": 72
+  },
+  "dig_tent": {
+    "base_offset": -0.005,
+    "size": [
+      2.6,
+      1.105,
+      2.2
+    ],
+    "tris": 72
+  },
+  "field_crate": {
+    "base_offset": 0.0,
+    "size": [
+      0.76,
+      0.565,
+      0.52
+    ],
+    "tris": 24
+  },
+  "grain_sack": {
+    "base_offset": 0.0,
+    "size": [
+      0.42,
+      0.45,
+      0.3
+    ],
+    "tris": 24
+  },
+  "handcart": {
+    "base_offset": 0.305,
+    "size": [
+      1.605,
+      0.485,
+      1.48
+    ],
+    "tris": 136
+  },
+  "pot_large": {
+    "base_offset": 0.0,
+    "size": [
+      0.68,
+      0.8,
+      0.68
+    ],
+    "tris": 122
+  },
+  "pot_small": {
+    "base_offset": 0.0,
+    "size": [
+      0.3804,
+      0.42,
+      0.4
+    ],
+    "tris": 64
+  },
+  "scan_pylon": {
+    "base_offset": 0.0,
+    "size": [
+      0.4945,
+      3.69,
+      0.52
+    ],
+    "tris": 76
+  },
+  "spoil_bucket": {
+    "base_offset": 0.0,
+    "size": [
+      0.4185,
+      0.325,
+      0.44
+    ],
+    "tris": 72
+  },
+  "survey_tripod": {
+    "base_offset": 0.0118,
+    "size": [
+      0.3179,
+      1.4082,
+      0.2928
+    ],
+    "tris": 64
+  }
+}
