@@ -2,7 +2,7 @@
 # Kaalchakra — one command for everything you need to run locally.
 #
 #   ./dev            list what it can do
-#   ./dev play       play the game
+#   ./dev play       play the game  (add a shape: phone | tall | tablet | wide)
 #   ./dev prologue   read the Prologue script in-engine
 #   ./dev test       run the smoke test
 #   ./dev vo         regenerate the voice recording sheet
@@ -45,11 +45,22 @@ headless() { need_godot "$1"; shift; "$GODOT_BIN" --headless --path "$GAME" "$@"
 
 case "${1:-help}" in
   play)
-    run play
+    # Real phones in landscape are far wider than a 16:9 window, and tablets
+    # are squarer. Testing the actual proportions catches UI that only fits
+    # on a desktop.  ./dev play phone
+    case "${2:-phone}" in
+      phone)  RES="1230x568" ; NOTE="19.5:9 — iPhone 15 / most modern phones" ;;
+      tall)   RES="1200x540" ; NOTE="20:9 — many Android phones" ;;
+      tablet) RES="1180x820" ; NOTE="1.44:1 — iPad" ;;
+      wide)   RES="1280x720" ; NOTE="16:9 — older phones and desktop" ;;
+      *)      RES="$2"       ; NOTE="custom" ;;
+    esac
+    echo "window $RES  ($NOTE)"
+    run play --resolution "$RES"
     ;;
   prologue)
     echo "Tap to advance. Tap again while text types to finish the line."
-    run prologue scenes/dev/Prologue.tscn
+    run prologue scenes/dev/Prologue.tscn --resolution "${2:-1230x568}"
     ;;
   test)
     headless test scenes/dev/SmokeTest.tscn --quit-after 12000

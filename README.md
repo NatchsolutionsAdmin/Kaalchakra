@@ -32,7 +32,7 @@ A stylized, story-driven 3D time-shift adventure set in the Indus Valley. An arc
 
 ```
 ./dev            list everything it can do
-./dev play       play the game
+./dev play       play the game (./dev play phone | tall | tablet | wide)
 ./dev prologue   read the Prologue script in-engine
 ./dev test       run the smoke test
 ./dev vo         regenerate the voice recording sheet

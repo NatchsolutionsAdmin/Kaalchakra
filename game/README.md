@@ -5,7 +5,7 @@ Open this folder in Godot 4.7.2 (`/Applications/Godot.app`) and press **Play** (
 Or from the repo root, without typing paths:
 
 ```
-./dev play       play the game
+./dev play       play the game (./dev play phone | tall | tablet | wide)
 ./dev prologue   read the Prologue script in-engine
 ./dev test       run the smoke test
 ./dev vo         regenerate the voice recording sheet

@@ -13,7 +13,12 @@ func _ready() -> void:
 	_dir = OS.get_environment("SHOT_DIR")
 	if _dir.is_empty():
 		_dir = "/tmp"
-	DisplayServer.window_set_size(Vector2i(1280, 720))
+	# SHOT_SIZE=1230x568 renders at phone proportions instead of 16:9.
+	var size := Vector2i(1280, 720)
+	var want := OS.get_environment("SHOT_SIZE")
+	if want.contains("x"):
+		size = Vector2i(int(want.get_slice("x", 0)), int(want.get_slice("x", 1)))
+	DisplayServer.window_set_size(size)
 	_main = load("res://scenes/Main.tscn").instantiate()
 	add_child(_main)
 	TimeShift.reduced_motion = true
