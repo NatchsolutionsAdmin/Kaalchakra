@@ -139,6 +139,13 @@ def main():
     part("Belt", "Model/Hips", (0, 0.055, 0), (0.315, 0.065, 0.215), DARK)
     part("BeltPouch", "Model/Hips", (-0.145, -0.03, -0.045), (0.075, 0.12, 0.09), DARK)
     part("ThighRig", "Model/Hips", (0.125, -0.13, -0.035), (0.07, 0.11, 0.085), DARK)
+
+    # Her father's hand trowel, stowed on the belt. ~22 cm: a pointing trowel
+    # you scrape soil with, NOT the long shovel the reference sheets draw —
+    # the brief supersedes the sheets on this one point (decision #31).
+    part("TrowelHandle", "Model/Hips", (-0.175, -0.015, 0.055), (0.03, 0.09, 0.03), PATINA)
+    part("TrowelFerrule", "Model/Hips", (-0.175, -0.065, 0.055), (0.026, 0.02, 0.026), COPPER)
+    part("TrowelBlade", "Model/Hips", (-0.175, -0.125, 0.055), (0.055, 0.105, 0.012), COPPER)
     node("Spine", "Node3D", "Model/Hips", (0, 0.06, 0))
     part("Chest", "Model/Hips/Spine", (0, 0.20, 0), (0.355, 0.42, 0.21), CLOTH)
     # Teal collared undershirt, showing at the open neck.
@@ -153,11 +160,7 @@ def main():
     part("Backpack", "Model/Hips/Spine", (0, 0.19, 0.175), (0.255, 0.33, 0.135), DARK)
     part("PackFlap", "Model/Hips/Spine", (0, 0.31, 0.19), (0.255, 0.11, 0.115), BOOT)
 
-    # The shovel — her father's, and in almost every scene. Stowed on her back
-    # here; the commissioned model attaches it to a hand or back socket.
-    part("ShovelShaft", "Model/Hips/Spine", (-0.21, 0.30, 0.16), (0.034, 0.80, 0.034), PATINA)
-    part("ShovelGrip", "Model/Hips/Spine", (-0.21, 0.72, 0.16), (0.085, 0.065, 0.034), COPPER)
-    part("ShovelBlade", "Model/Hips/Spine", (-0.21, -0.19, 0.16), (0.10, 0.22, 0.028), COPPER)
+
 
     node("Head", "Node3D", "Model/Hips/Spine", (0, 0.46, 0))
     part("Skull", "Model/Hips/Spine/Head", (0, 0.11, 0), (0.185, 0.235, 0.21), SKIN)

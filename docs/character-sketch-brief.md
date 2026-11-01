@@ -26,7 +26,7 @@
 - **Age/build:** 24, Gen Z. Lean, athletic-practical (she climbs, digs, hauls gear), not a fashion-model build. Real, capable body.
 - **Face:** expressive, quick. Reads as sharp and a little sardonic even at rest. This is the face players see for 5 hours — it must carry subtle emotion (grief, wonder, stubbornness).
 - **Hair:** practical for fieldwork — tied back, a bit unruly from heat and dust. Something that reads in silhouette.
-- **Signature object:** her late father's worn hand **trowel**, always on her. And her **phone**, which she narrates to (her channel). These two objects — one old, one new — are her whole character in a glance.
+- **Signature object:** her late father's worn hand **trowel** (~20–30 cm, one-handed — NOT the long shovel on Sheet C, which is superseded; decision #31), always on her. And her **phone**, which she narrates to (her channel). These two objects — one old, one new — are her whole character in a glance.
 - **Wardrobe (present, 2026):** field clothes — rolled sleeves, utility trousers, boots, a light scarf against the sun, a small gear harness/bag. Practical, lived-in, a little personal style poking through (she's an influencer, not a bureaucrat).
 - **Wardrobe (past, 1900 BCE):** a *disguise* over her modern clothes — a traded cloak/wrap to pass as a foreign trader. The fun visual: modern boots and phone peeking out of ancient cloth. She never fully belongs.
 - **Personality to convey:** irreverent, brilliant, underestimated, ethical. Not a grim action hero — she's wry. Carries old grief lightly (water took her family).
