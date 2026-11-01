@@ -46,6 +46,7 @@ var reduced_motion := false:
 var _knowledge: Dictionary = {}
 
 var _shifting := false
+var _hard_cut := false
 var _overlay: ColorRect
 
 
@@ -86,6 +87,13 @@ func request_shift(era: Era.Id) -> bool:
 	return true
 
 
+## Make the NEXT shift a hard cut: no fade, one frame here and the next frame
+## four thousand years away, with a single white frame to sell the hit. Used
+## by the Prologue, where easing into 1900 BCE would be exactly wrong.
+func arm_hard_cut() -> void:
+	_hard_cut = true
+
+
 ## Hook for the "anchored events" rule. Nothing is anchored in the prototype;
 ## chapters will override this with real conditions.
 func is_anchored(_era: Era.Id) -> bool:
@@ -96,7 +104,17 @@ func _do_shift(era: Era.Id) -> void:
 	_shifting = true
 	var from := current_era
 
-	if reduced_motion:
+	if _hard_cut:
+		_hard_cut = false
+		current_era = era
+		era_changed.emit(from, era)
+		if not reduced_motion:
+			_overlay.color = Color(1, 1, 1, 0.85)
+			var flash := create_tween()
+			flash.tween_property(_overlay, "color", Color(1, 1, 1, 0.0), 0.3)
+			await flash.finished
+			_overlay.color = Color(0, 0, 0, 0)
+	elif reduced_motion:
 		current_era = era
 		era_changed.emit(from, era)
 	else:

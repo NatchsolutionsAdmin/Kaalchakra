@@ -22,6 +22,8 @@ var _direction: Label
 var _text: Label
 var _choices: VBoxContainer
 
+var _card: ColorRect
+var _card_label: Label
 var _full := ""
 var _typed := 0.0
 var _typing := false
@@ -34,6 +36,7 @@ func _ready() -> void:
 	Dialogue.finished.connect(_on_finished)
 	Dialogue.line_shown.connect(_on_line)
 	Dialogue.choices_shown.connect(_on_choices)
+	Dialogue.directive.connect(_on_directive)
 	get_viewport().size_changed.connect(_layout)
 	_root.visible = false
 	_layout()
@@ -79,6 +82,23 @@ func _build() -> void:
 	_text = _label(21, Color(1, 1, 1))
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(_text)
+
+	# Title card, over everything.
+	_card = ColorRect.new()
+	_card.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_card.color = Color(0, 0, 0, 0)
+	_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_card.visible = false
+	_root.add_child(_card)
+
+	_card_label = Label.new()
+	_card_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_card_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_card_label.add_theme_font_size_override("font_size", 64)
+	_card_label.add_theme_color_override("font_color", Color(0.96, 0.84, 0.52, 0))
+	_card_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_card.add_child(_card_label)
 
 	_choices = VBoxContainer.new()
 	_choices.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
@@ -209,6 +229,24 @@ func _clear_choices() -> void:
 	_choices.visible = false
 	for c: Node in _choices.get_children():
 		c.queue_free()
+
+
+## @ title_card "KAALCHAKRA" — hold the whole screen for a moment.
+func _on_directive(name: String, args: Array) -> void:
+	if name != "title_card":
+		return
+	_card_label.text = args[0] if not args.is_empty() else ""
+	_card.visible = true
+	_card.color = Color(0, 0, 0, 0)
+	var tween := create_tween()
+	tween.tween_property(_card, "color", Color(0, 0, 0, 1), 0.5)
+	tween.parallel().tween_property(_card_label, "theme_override_colors/font_color",
+		Color(0.96, 0.84, 0.52, 1), 0.9)
+	tween.tween_interval(2.2)
+	tween.tween_property(_card_label, "theme_override_colors/font_color",
+		Color(0.96, 0.84, 0.52, 0), 0.8)
+	tween.parallel().tween_property(_card, "color", Color(0, 0, 0, 0), 0.9)
+	tween.tween_callback(func() -> void: _card.visible = false)
 
 
 func _on_tap(event: InputEvent) -> void:

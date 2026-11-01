@@ -12,8 +12,18 @@ const SCRIPT_PATH := "res://data/dialogue/prologue_overburden.dialogue"
 
 
 func _ready() -> void:
-	add_child(load("res://scenes/Main.tscn").instantiate())
-	await get_tree().process_frame
+	var main := load("res://scenes/Main.tscn").instantiate()
+	add_child(main)
+	await get_tree().physics_frame
+	# The Prologue opens at the top of Trench 4, not out on the apron.
+	var eva := main.get_node_or_null("Eva") as Node3D
+	if eva:
+		eva.global_position = Vector3(0.5, -6.6, -6.4)
+		var pivot := eva.get_node_or_null("CameraPivot") as Node3D
+		if pivot:
+			pivot.rotation.y = PI
+			pivot.global_position = eva.global_position + Vector3.UP * 1.45
+	await get_tree().physics_frame
 	var errors := Dialogue.play_file(SCRIPT_PATH)
 	if not errors.is_empty():
 		print("\n--- problems in the script ---")

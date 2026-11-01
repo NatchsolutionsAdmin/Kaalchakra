@@ -57,7 +57,12 @@ def structure(tag):
         ("GroundNorth", (-5, -0.5, -121),  (22, 1, 198),  base),
         ("GroundSouth", (-5, -0.5, 88),    (22, 1, 184),  base),
         # The great reservoir: floor at y = -7, sheer on three sides.
-        ("BasinFloor",      (-5, -7.5, -13),     (22, 1, 18),   base),
+        # Basin floor, split around Trench 4's footprint (x -2..3, z -14..-7.5)
+        # so the trench is a real hole rather than a box sitting in a pit.
+        ("BasinFloorWest",  (-9, -7.5, -13),     (14, 1, 18),   base),
+        ("BasinFloorEast",  (4.5, -7.5, -13),    (3, 1, 18),    base),
+        ("BasinFloorNorth", (0.5, -7.5, -18),    (5, 1, 8),     base),
+        ("BasinFloorSouth", (0.5, -7.5, -5.75),  (5, 1, 3.5),   base),
         ("BasinWallWest",   (-15.25, -3.5, -13), (1.5, 7, 18),  acc),
         ("BasinWallEast",   (5.25, -3.5, -13),   (1.5, 7, 18),  acc),
         ("BasinWallSouth",  (-5, -3.5, -4.75),   (22, 7, 1.5),  acc),
@@ -82,6 +87,85 @@ def structure(tag):
         ("LedgeC", (8.5, 2.45, -14), (3, 4.9, 3), acc),
     ]
     return out
+
+
+def trench_and_chamber(tag):
+    """L2 — Trench 4 and the sealed chamber beneath the reservoir floor.
+
+    The same hole in all three eras: in 1900 BCE it is a working shaft down to
+    the knowledge-house deposit, in 2026 it is Eva's trench, in 2087 it is
+    silted and drowned. Only the dressing and whether the door is sealed
+    change, which is the cheap way to do a three-era room (LEVELS.md §5).
+    """
+    base, acc = f"mat_{tag}", f"mat_{tag}_accent"
+    out = []
+
+    # Excavated steps down the south end, 0.63 m risers so they auto-climb and
+    # a thumb never has to tap jump on them.
+    rise, tread = 3.8 / 6.0, 0.633
+    for i in range(5):
+        top = -7.0 - rise * (i + 1)
+        h = top + 10.8
+        out.append((f"TrenchStep{i}", (0.5, -10.8 + h / 2.0, -7.5 - tread * i - tread / 2.0),
+                    (5, h, tread), acc))
+
+    out += [
+        ("TrenchFloor", (0.5, -10.95, -10.75), (5, 0.3, 6.5), base),
+        ("TrenchWallNorth", (0.5, -8.9, -13.85), (5, 3.8, 0.3), acc),
+        ("TrenchWallEast", (2.85, -8.9, -10.75), (0.3, 3.8, 6.5), acc),
+        ("TrenchWallSouth", (0.5, -8.9, -7.65), (5, 3.8, 0.3), acc),
+        # West wall, with the doorway left out of it (z -13.4..-12.2).
+        ("TrenchWallWestA", (-1.85, -8.9, -13.7), (0.3, 3.8, 0.6), acc),
+        ("TrenchWallWestB", (-1.85, -8.9, -9.85), (0.3, 3.8, 4.7), acc),
+        ("DoorLintel", (-1.85, -7.9, -12.8), (0.3, 1.8, 1.2), acc),
+
+        # The chamber itself.
+        ("ChamberFloor", (-5.5, -10.95, -13.25), (7, 0.3, 4.5), base),
+        ("ChamberCeiling", (-5.5, -8.05, -13.25), (7, 0.3, 4.5), base),
+        ("ChamberWallWest", (-8.85, -9.5, -13.25), (0.3, 2.6, 4.5), acc),
+        ("ChamberWallNorth", (-5.5, -9.5, -15.35), (7, 2.6, 0.3), acc),
+        ("ChamberWallSouth", (-5.5, -9.5, -11.15), (7, 2.6, 0.3), acc),
+        ("ChamberWallEastA", (-2.0, -9.5, -14.45), (0.3, 2.6, 2.1), acc),
+        ("ChamberWallEastB", (-2.0, -9.5, -11.6), (0.3, 2.6, 1.2), acc),
+    ]
+
+    # The manifest wall: the signs Eva cannot read. Eight columns, three rows,
+    # on the chamber's back wall facing the door.
+    sign_mat = {"past": "mat_marker", "present": acc, "future": "mat_drone"}[tag]
+    for col in range(8):
+        for row in range(3):
+            out.append((f"ManifestSign{col}{row}",
+                        (-8.62, -9.95 + row * 0.42, -14.9 + col * 0.47),
+                        (0.14, 0.3, 0.26), sign_mat))
+    return out
+
+
+def chamber_contents(tag):
+    """What is actually in the room, which is where the three eras separate."""
+    if tag == "past":
+        # 1900 BCE: in use, and empty. The Keeper who dies here has not been
+        # born yet — the skeleton is carbon-dated 2140 CE.
+        return [
+            ("DepositShelfA", (-7.0, -10.5, -12.0), (1.6, 0.6, 1.2), "mat_past_accent"),
+            ("DepositShelfB", (-7.0, -10.5, -14.4), (1.6, 0.6, 1.2), "mat_past_accent"),
+            ("TabletStack", (-7.0, -10.05, -12.0), (0.9, 0.3, 0.7), "mat_past_light"),
+        ]
+    if tag == "present":
+        # Seated upright, hands cupped, facing the door.
+        return [
+            ("SealedDoor", (-1.9, -9.8, -12.8), (0.5, 2.0, 1.2), "mat_rubble"),
+            ("KeeperPelvis", (-5.0, -10.55, -13.25), (0.5, 0.5, 0.42), "mat_present_light"),
+            ("KeeperTorso", (-5.0, -10.0, -13.25), (0.5, 0.7, 0.32), "mat_present_light"),
+            ("KeeperHead", (-5.0, -9.5, -13.25), (0.3, 0.3, 0.3), "mat_present_light"),
+            ("KeeperArmL", (-4.65, -10.1, -13.0), (0.6, 0.12, 0.12), "mat_present_light"),
+            ("KeeperArmR", (-4.65, -10.1, -13.5), (0.6, 0.12, 0.12), "mat_present_light"),
+            ("TheWheel", (-4.35, -10.05, -13.25), (0.45, 0.07, 0.45), "mat_marker"),
+        ]
+    return [
+        ("ChamberSilt", (-5.5, -10.3, -13.25), (6.6, 1.0, 4.2), "mat_future"),
+        ("TrenchSilt", (0.5, -10.5, -12.0), (4.6, 0.6, 3.8), "mat_future"),
+        ("ArchiveDrone", (-5.5, -9.1, -13.25), (0.4, 0.4, 0.4), "mat_drone"),
+    ]
 
 
 def market(tag, north_h, south_h, parapets=False):
@@ -190,6 +274,7 @@ def gate_future():
 def extras_past():
     out = (gate_past()
            + market("past", [5, 8.5, 4.5, 9.5, 5.5, 7], [7, 4.5, 6.5, 5, 8.5, 4], parapets=True)
+           + trench_and_chamber("past") + chamber_contents("past")
            + horizon("past") + citadel("past") + scatter("past", 11, 14, 0.3, 0.9))
     for i, x in enumerate([15, 22, 29, 36, 43]):
         z = -15 if i % 2 == 0 else -11
@@ -200,6 +285,7 @@ def extras_past():
 def extras_present():
     out = (gate_present()
            + market("present", [1.2, 1.9, 0.9, 1.6, 1.1, 1.7], [1.4, 0.9, 1.3, 1.0, 1.8, 0.8])
+           + trench_and_chamber("present") + chamber_contents("present")
            + horizon("present") + citadel("present") + scatter("present", 29, 18, 0.2, 0.8))
     out += [
         ("SpoilHeapA", (-9, 0.6, -25),     (4, 1.2, 3),     "mat_present"),
@@ -216,6 +302,7 @@ def extras_present():
 def extras_future():
     out = (gate_future()
            + market("future", [2.2, 3.4, 1.6, 2.9, 1.9, 3.1], [2.6, 1.7, 2.3, 1.8, 3.2, 1.4])
+           + trench_and_chamber("future") + chamber_contents("future")
            + horizon("future") + citadel("future") + scatter("future", 47, 16, 0.2, 0.7))
     out += [
         ("SiltMoundA", (-9, -6.6, -12), (6, 0.8, 5), "mat_future"),
@@ -231,22 +318,25 @@ def extras_future():
 # Same x, twelve metres apart in z: the mark is on the apron in 1900 BCE, the
 # chamber is under the basin floor in 2026. Learn it in one era, dig in another.
 MARK_POS = (3, 0.1, -25)
-DIG_POS = (3, -6.96, -13)
+# At the foot of Trench 4, in front of the sealed doorway.
+DIG_POS = (-0.9, -10.7, -12.8)
 
 KEEPER_LINE = (
     "A slab cut flush with the pavement, and on it one sign she does know — "
-    "the Keeper's mark. Beneath it, a measure: twelve paces south, under the "
-    "floor of the great basin.  \"Four thousand years. Let's see if your "
-    "masonry holds, whoever you were.\""
+    "the Keeper's mark. Beneath it, a measure: down, under the floor of the "
+    "great basin, behind a door they bricked up on purpose.  \"Four thousand "
+    "years. Let's see if your masonry holds, whoever you were.\""
 )
 CHAMBER_LINE = (
-    "The brush turns up a lintel, then a sealed stone face, then signs — "
+    "The brick gives, and the dark behind it is older than the dark in front. "
+    "Signs across the header — "
     "and across the header, ten of them in a row she can finally read:\n\n"
     "WHAT THE WATER MUST NOT TAKE"
 )
 LOCKED_LINE = (
-    "Silt, salt, and more silt. Nothing down here marks a spot. She needs to be "
-    "told where to dig — and 2026 has nobody left who knows."
+    "Brick, laid flush and mortared tight. Somebody sealed this from the "
+    "outside and meant it to stay sealed. She has no reason yet to think "
+    "there is anything behind it."
 )
 WARDEN_LINE = (
     "ARCHIVE NODE 11-DH. FLOOD BAND: PERMANENT. CATALOGUE STATUS: COMPLETE, "
@@ -332,6 +422,20 @@ def main():
             'shape = SubResource("%s")\n' % (parent, name, shape_id(size))
         )
 
+    def emit_light(name, parent, pos, colour, energy, rng):
+        """One omni light. Shadows off — omni shadows are expensive on a phone
+        and an interior this small does not need them."""
+        nodes.append(
+            '[node name="%s" type="OmniLight3D" parent="%s"]\n'
+            'transform = %s\n'
+            'light_color = Color(%s, %s, %s, 1)\n'
+            'light_energy = %s\n'
+            'omni_range = %s\n'
+            'shadow_enabled = false\n'
+            % (name, parent, xform(pos), fmt(colour[0]), fmt(colour[1]), fmt(colour[2]),
+               fmt(energy), fmt(rng))
+        )
+
     def emit_decal(name, parent, pos, size, matkey):
         """Visual only — no collision, so it never becomes a lip to trip on."""
         nodes.append(
@@ -373,6 +477,34 @@ def main():
                 % (scale_xform((132, 0.2, 62), (5, 1.6, -20)), mat("mat_water_future"))
             )
 
+    # --- named camera targets -------------------------------------------
+    # So a writer can put `@ camera push_in sealed_door` in the script and
+    # never touch a transform. Shared across eras: the places are the same,
+    # only their dressing changes.
+    nodes.append('[node name="Markers" type="Node3D" parent="."]\n')
+    for mark_name, mark_pos in [
+        ("sealed_door", (-1.9, -9.6, -12.8)),
+        ("chamber", (-5.5, -9.6, -13.25)),
+        ("wheel", (-4.35, -10.0, -13.25)),
+        ("manifest_wall", (-8.6, -9.5, -13.25)),
+        ("trench", (0.5, -9.4, -11.0)),
+        ("signboard", (0, 8.4, -31.05)),
+        ("reservoir", (-5, -3.0, -13)),
+        ("north_gate", (0, 3.5, -30)),
+    ]:
+        nodes.append(
+            '[node name="%s" type="Marker3D" parent="Markers" groups=["camera_target"]]\n'
+            'transform = %s\n' % (mark_name, xform(mark_pos))
+        )
+
+    # --- the chamber is underground: it needs its own light in every era ---
+    emit_light("LampChamber", "Past", (-5.5, -8.7, -13.25), (1.0, 0.72, 0.42), 4.0, 10.0)
+    emit_light("LampShaft", "Past", (0.5, -9.0, -12.0), (1.0, 0.80, 0.55), 2.2, 9.0)
+    emit_light("WorkLight", "Present", (-3.2, -8.7, -13.0), (0.92, 0.96, 1.0), 5.0, 11.0)
+    emit_light("TrenchLight", "Present", (0.5, -9.0, -11.5), (0.90, 0.94, 1.0), 2.4, 9.0)
+    emit_light("DroneGlow", "Future", (-5.5, -9.1, -13.25), (0.30, 0.78, 0.92), 4.0, 9.0)
+    emit_light("SiltGlow", "Future", (0.5, -9.2, -12.0), (0.26, 0.56, 0.72), 1.8, 8.0)
+
     # --- PAST: the Keeper's mark (teaches the location) ---
     emit_decal("KeeperMarkSlab", "Past", MARK_POS, (2, 0.2, 2), "mat_marker")
     nodes.append(
@@ -390,16 +522,7 @@ def main():
     )
 
     # --- PRESENT: the same spot, twelve paces south, under the basin floor ---
-    emit_decal("DigPatch", "Present", DIG_POS, (2.4, 0.1, 2.4), "mat_dig")
-    nodes.append(
-        '[node name="ChamberHatch" type="MeshInstance3D" parent="Present"]\n'
-        'transform = %s\n'
-        'mesh = SubResource("BoxMesh_unit")\n'
-        'material_override = ExtResource("%s")\n'
-        'visible = false\n'
-        % (scale_xform((2.2, 0.9, 2.2), (DIG_POS[0], DIG_POS[1] + 0.45, DIG_POS[2])),
-           mat("mat_chamber"))
-    )
+    emit_decal("DigPatch", "Present", (-1.4, -10.75, -12.8), (0.9, 0.1, 1.4), "mat_dig")
     nodes.append(
         '[node name="DigSite" type="Area3D" parent="Present"]\n'
         'transform = %s\n'
@@ -410,8 +533,9 @@ def main():
         'grants_knowledge = "chamber_opened"\n'
         'line_locked = "%s"\n'
         'line_done = "%s"\n'
-        'reveal_path = NodePath("../ChamberHatch")\n'
-        % (xform((DIG_POS[0], DIG_POS[1] + 0.6, DIG_POS[2])), dig_script, esc(LOCKED_LINE), esc(CHAMBER_LINE))
+        'remove_path = NodePath("../SealedDoor")\n'
+        % (xform((DIG_POS[0], DIG_POS[1] + 0.9, DIG_POS[2])), dig_script,
+           esc(LOCKED_LINE), esc(CHAMBER_LINE))
     )
     nodes.append(
         '[node name="Reach" type="CollisionShape3D" parent="Present/DigSite"]\n'

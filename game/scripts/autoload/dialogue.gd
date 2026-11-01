@@ -23,7 +23,11 @@ signal choices_shown(options: Array)
 signal directive(name: String, args: Array)
 
 ## Directives this node consumes. Everything else is passed along.
-const STORY_DIRECTIVES := ["flag", "objective", "skill_unlock", "phone_available", "era"]
+const STORY_DIRECTIVES := ["flag", "objective", "skill_unlock", "phone_available",
+	"era", "music", "sfx", "hard_cut"]
+## Handled by whoever listens to `directive` rather than here — the camera rig
+## stages shots, the dialogue UI draws title cards. Known, not missing.
+const PRESENTATION_DIRECTIVES := ["camera", "title_card"]
 
 var scene_id := ""
 var pending_choices: Array = []
@@ -190,13 +194,15 @@ func _apply(name: String, args: Array) -> void:
 		"sfx":
 			if args.size() >= 1:
 				Audio.play_sfx(args[0])
+		"hard_cut":
+			TimeShift.arm_hard_cut()
 		"era":
 			var map := {"past": Era.Id.PAST, "present": Era.Id.PRESENT, "future": Era.Id.FUTURE}
 			if args.size() >= 1 and map.has(args[0]):
 				TimeShift.request_shift(map[args[0]])
 		_:
-			# Camera, title cards, hard cuts: not built yet. The
-			# writer is allowed to ask for them; record and move on.
-			if name not in _unhandled:
+			# The writer is allowed to ask for things nothing implements yet.
+			# Record them rather than erroring: the list is the to-do.
+			if name not in PRESENTATION_DIRECTIVES and name not in _unhandled:
 				_unhandled.append(name)
 	directive.emit(name, args)

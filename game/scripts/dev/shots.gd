@@ -83,6 +83,22 @@ func _run() -> void:
 		await _stand(Vector3(13, 1.2, -13), 270.0)
 		await _shot("street_%s" % e[1])
 
+	# 3b. Down in Trench 4, looking at the sealed doorway.
+	for e: Array in eras:
+		TimeShift.request_shift(e[0])
+		await _stand(Vector3(1.2, -10.5, -12.6), 90.0)
+		await _shot("trench_%s" % e[1])
+
+	# 3c. Inside the chamber, looking at the manifest wall.
+	for e: Array in eras:
+		TimeShift.request_shift(e[0])
+		if e[1] == "present":
+			var sealed := _main.get_node_or_null("NorthGate/Present/SealedDoor")
+			if sealed:
+				sealed.visible = false
+		await _stand(Vector3(-3.2, -10.5, -13.25), 90.0)
+		await _shot("chamber_%s" % e[1])
+
 	# 4b. The touch layer. State is set directly rather than by faking input —
 	# these shots exist to check layout; the smoke test covers the input path.
 	TimeShift.request_shift(Era.Id.PRESENT)

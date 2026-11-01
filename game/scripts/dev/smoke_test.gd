@@ -39,6 +39,25 @@ func _settle(frames: int = 20) -> void:
 		await get_tree().physics_frame
 
 
+## Camera targets a script names but the level does not provide. This is the
+## check that stops a writer's shot silently doing nothing.
+func _missing_markers(chunks: Dictionary) -> Array[String]:
+	var have: Array[String] = []
+	for node: Node in get_tree().get_nodes_in_group("camera_target"):
+		have.append(node.name)
+	var absent: Array[String] = []
+	for name: String in chunks:
+		for step: Dictionary in chunks[name]:
+			if step["type"] != "directive" or step["name"] != "camera":
+				continue
+			var args: Array = step["args"]
+			if args.size() < 2:
+				continue
+			if args[1] not in have and args[1] not in absent:
+				absent.append(args[1])
+	return absent
+
+
 func _count_lines(chunks: Dictionary) -> int:
 	var n := 0
 	for name: String in chunks:
@@ -90,7 +109,7 @@ func _run() -> void:
 
 	print("\n-- the dig site, before she knows anything --")
 	var dig := _main.get_node("NorthGate/Present/DigSite") as Interactable
-	var hatch := _main.get_node("NorthGate/Present/ChamberHatch") as Node3D
+	var door := _main.get_node("NorthGate/Present/SealedDoor") as StaticBody3D
 	_ok("dig site belongs to 2026", dig.era == Era.Id.PRESENT)
 	_ok("nothing is known yet", not TimeShift.knows("keeper_mark"))
 	_ok("so it offers only a probe, not a dig", dig.hold_seconds() == 0.0)
@@ -98,7 +117,7 @@ func _run() -> void:
 		dig.prompt_text())
 	dig.press(player)
 	_ok("probing teaches her nothing", not TimeShift.knows("chamber_opened"))
-	_ok("the chamber is still sealed", not hatch.visible)
+	_ok("the chamber is still sealed", door.visible and door.collision_layer != 0)
 
 	print("\n-- shift to 1900 BCE --")
 	_ok("the Wheel turns", TimeShift.request_shift(Era.Id.PAST))
@@ -136,9 +155,11 @@ func _run() -> void:
 	_ok("half a second of digging is not enough", not TimeShift.knows("chamber_opened"))
 	dig.hold(player, 3.0)
 	_ok("holding long enough opens the chamber", TimeShift.knows("chamber_opened"))
-	_ok("the dig site is wired to the chamber hatch", dig.get("reveal") == hatch,
-		"reveal = %s" % str(dig.get("reveal")))
-	_ok("the chamber is revealed", hatch.visible)
+	_ok("the dig site is wired to the sealed door", dig.get("remove") == door,
+		"remove = %s" % str(dig.get("remove")))
+	_ok("the door is gone once dug", not door.visible)
+	_ok("and the doorway is actually walkable, not just invisible",
+		door.collision_layer == 0, "layer still %d" % door.collision_layer)
 	_ok("a finished dig stops offering itself", not dig.is_available())
 
 	print("\n-- shift to 2087 --")
@@ -321,6 +342,23 @@ func _run() -> void:
 	await _settle(50)
 	_ok("the shift finishes", not TimeShift.is_shifting())
 	_ok("and it landed in PAST", TimeShift.current_era == Era.Id.PAST)
+	TimeShift.reduced_motion = true
+
+	print("\n-- the chamber, in three eras --")
+	for probe: Array in [
+		["Past", "TabletStack", "1900 BCE: in use, and empty — the Keeper is not born yet"],
+		["Present", "TheWheel", "2026: the skeleton, hands cupped around the Wheel"],
+		["Future", "ChamberSilt", "2087: silted and drowned"],
+	]:
+		_ok("  %s" % probe[2],
+			_main.get_node_or_null("NorthGate/%s/%s" % [probe[0], probe[1]]) != null)
+	_ok("the manifest wall is in all three eras",
+		_main.get_node_or_null("NorthGate/Past/ManifestSign00") != null
+		and _main.get_node_or_null("NorthGate/Present/ManifestSign00") != null
+		and _main.get_node_or_null("NorthGate/Future/ManifestSign00") != null)
+	_ok("only 2026 has a door bricked across it",
+		_main.get_node_or_null("NorthGate/Past/SealedDoor") == null
+		and _main.get_node_or_null("NorthGate/Future/SealedDoor") == null)
 
 	print("\n-- the Prologue script --")
 	const PROLOGUE := "res://data/dialogue/prologue_overburden.dialogue"
@@ -406,6 +444,25 @@ func _run() -> void:
 	_ok("a wrapped line is one beat, not two",
 		wrapped_steps.size() == 2 and wrapped_steps[0]["text"] == "one line that is wrapped in the editor",
 		str(wrapped_steps[0].get("text", "")))
+
+	print("\n-- staging --")
+	_ok("every camera target the Prologue names exists",
+		_missing_markers(parsed["chunks"]).is_empty(),
+		"missing: %s" % ", ".join(_missing_markers(parsed["chunks"])))
+	Story.reset()
+	# Deliberately with fades ON, because the point of a hard cut is that it
+	# ignores them.
+	TimeShift.reduced_motion = false
+	TimeShift.request_shift(Era.Id.PRESENT)
+	await _settle(45)
+	TimeShift.arm_hard_cut()
+	TimeShift.request_shift(Era.Id.PAST)
+	_ok("a hard cut changes era on the very same frame — no fade to sit through",
+		TimeShift.current_era == Era.Id.PAST,
+		"era=%s" % Era.SHORT[TimeShift.current_era])
+	await _settle(40)
+	_ok("and the white frame is gone a moment later", not TimeShift.is_shifting())
+	TimeShift.reduced_motion = true
 
 	var todo := Dialogue.unhandled_directives()
 	print("        script asks for, not built yet: %s" % ", ".join(todo))
