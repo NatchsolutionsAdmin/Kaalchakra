@@ -35,6 +35,8 @@ static func parse(text: String, source: String = "") -> Dictionary:
 	var order: Array[String] = []
 	var errors: Array[String] = []
 	var current := ""
+	# Counts spoken lines within the current chunk, to build voice-file ids.
+	var line_number := 0
 
 	var speaker_re := RegEx.create_from_string("^([A-Z][A-Z0-9_ ]*):\\s*(.*)$")
 	var cond_re := RegEx.create_from_string("^\\[(if|ifnot)\\s+([A-Za-z0-9_]+)\\]\\s*(.*)$")
@@ -49,6 +51,7 @@ static func parse(text: String, source: String = "") -> Dictionary:
 
 		# :: chunk
 		if line.begins_with("::"):
+			line_number = 0
 			current = line.substr(2).strip_edges()
 			if current.is_empty():
 				errors.append("%s: chunk with no name" % where)
@@ -116,6 +119,13 @@ static func parse(text: String, source: String = "") -> Dictionary:
 		# NAME: line
 		var m := speaker_re.search(line)
 		if m == null:
+			# A bare line continues the one above it, so a long speech can be
+			# wrapped in the editor and still be ONE beat on screen and ONE
+			# file for the voice actor.
+			if not steps.is_empty() and steps[-1].get("type") == "line":
+				var prev: Dictionary = steps[-1]
+				prev["text"] = (prev["text"] + " " + line).strip_edges()
+				continue
 			errors.append("%s: don't understand this line — %s" % [where, line])
 			continue
 		var rest := m.get_string(2).strip_edges()
@@ -131,8 +141,13 @@ static func parse(text: String, source: String = "") -> Dictionary:
 		if d != null:
 			direction = d.get_string(1).strip_edges()
 			rest = d.get_string(2).strip_edges()
+		line_number += 1
 		steps.append({
 			"type": "line",
+			# Stable name for this line's voice file. Changes if lines are
+			# added or removed above it — which is exactly when a recording
+			# would need redoing anyway.
+			"id": "%s_%02d" % [current, line_number],
 			"speaker": m.get_string(1).strip_edges(),
 			"text": rest,
 			"direction": direction,

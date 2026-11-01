@@ -19,6 +19,11 @@ Interactions="*res://scripts/autoload/interactions.gd"
 Touch="*res://scripts/autoload/touch_input.gd"
 Story="*res://scripts/autoload/story.gd"
 Dialogue="*res://scripts/autoload/dialogue.gd"
+Audio="*res://scripts/autoload/audio_manager.gd"
+
+[audio]
+
+buses/default_bus_layout="res://default_bus_layout.tres"
 
 [display]
 

@@ -362,8 +362,51 @@ func _run() -> void:
 		with_her["lines"] > without_her["lines"],
 		"%d vs %d lines" % [with_her["lines"], without_her["lines"]])
 
+	# Capture this before the audio tests below clear the list.
+	var wanted_audio: Array = Audio.missing()
+
+	print("\n-- audio --")
+	for bus: String in ["Music", "SFX", "Voice"]:
+		_ok("there is a %s bus" % bus, AudioServer.get_bus_index(bus) != -1)
+	Audio.clear_missing()
+	_ok("a cue with no file is silent, not a crash", not Audio.play_music("nothing_here"))
+	_ok("and it is recorded as missing", Audio.missing().size() == 1, str(Audio.missing()))
+	_ok("\"silence\" stops the music rather than looking for a file",
+		Audio.play_music("silence"))
+	_ok("no voice file means no voice, quietly",
+		not Audio.play_voice("prologue_overburden", "start_01"))
+
+	print("\n-- voice-line ids --")
+	var ids: Dictionary = {}
+	var blank := 0
+	for chunk: String in parsed["chunks"]:
+		for step: Dictionary in parsed["chunks"][chunk]:
+			if step["type"] != "line":
+				continue
+			var id: String = step.get("id", "")
+			if id.is_empty():
+				blank += 1
+			ids[id] = int(ids.get(id, 0)) + 1
+	var duped := 0
+	for id: String in ids:
+		if ids[id] > 1:
+			duped += 1
+	_ok("every line has an id", blank == 0, "%d without one" % blank)
+	_ok("and no two lines share one", duped == 0, "%d collisions" % duped)
+
+	var wrapped := DialogueParser.parse("::a\nEVA: one line that is\n    wrapped in the editor\n-> END\n")
+	var wrapped_steps: Array = wrapped["chunks"]["a"]
+	_ok("a wrapped line is one beat, not two",
+		wrapped_steps.size() == 2 and wrapped_steps[0]["text"] == "one line that is wrapped in the editor",
+		str(wrapped_steps[0].get("text", "")))
+
 	var todo := Dialogue.unhandled_directives()
 	print("        script asks for, not built yet: %s" % ", ".join(todo))
+	print("        audio files the script wants and we do not have: %d" % wanted_audio.size())
+	for a: String in wanted_audio.slice(0, 6):
+		print("          ", a)
+	if wanted_audio.size() > 6:
+		print("           ... and %d more" % (wanted_audio.size() - 6))
 
 	# A typo must produce a readable complaint, not a crash.
 	var broken := DialogueParser.parse("::a\nEVA: hi\n-> nowhere\n")

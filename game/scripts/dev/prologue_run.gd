@@ -24,4 +24,9 @@ func _ready() -> void:
 		print("flags set: ", Story.to_dict()["flags"].keys())
 		var todo := Dialogue.unhandled_directives()
 		if not todo.is_empty():
-			print("the script asked for, not built yet: ", ", ".join(todo)))
+			print("the script asked for, not built yet: ", ", ".join(todo))
+		var absent := Audio.missing()
+		if not absent.is_empty():
+			print("\naudio the script asked for and we do not have (%d):" % absent.size())
+			for a: String in absent:
+				print("   ", a))

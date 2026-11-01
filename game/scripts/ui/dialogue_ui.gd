@@ -160,7 +160,7 @@ func _on_finished(_id: String) -> void:
 	_clear_choices()
 
 
-func _on_line(speaker: String, text: String, direction: String) -> void:
+func _on_line(speaker: String, text: String, direction: String, _id: String) -> void:
 	_clear_choices()
 	_tapper.mouse_filter = Control.MOUSE_FILTER_STOP
 	_panel.visible = true

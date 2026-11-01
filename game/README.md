@@ -32,7 +32,8 @@ scenes/
   ui/ (built in code)    HUD and the touch controls
   dev/SmokeTest.tscn     dev-only test harness (not shipped)
 scripts/
-  autoload/              TimeShiftManager, Interactions, TouchInput — global
+  autoload/              TimeShift, Interactions, Touch, Story, Dialogue, Audio
+  dialogue/              the .dialogue parser
   world/                 Era (the shared vocabulary), EraRoot, EraLighting
   player/                movement, camera
   interact/              Interactable base, LoreMarker, DigSite
@@ -69,6 +70,41 @@ TextEdit, run this again, and your words are in the game. No Godot required.
 
 When the time comes to export a real build, `*.dialogue` has to be added to the
 export filters, or the scripts get left out of the package.
+
+## Sound
+
+There is no audio in the game yet — no music, no effects, no voice. The system
+is built and waiting; it plays whatever it finds and stays quiet about what it
+cannot, so a missing file is never a crash.
+
+Files are found **by name**, so adding sound needs no code and no Godot:
+
+| The script says | Drop a file at |
+|---|---|
+| `@ music bansuri_sparse` | `game/audio/music/bansuri_sparse.ogg` |
+| `@ sfx phone_dial` | `game/audio/sfx/phone_dial.ogg` |
+| a spoken line with id `start_02` | `game/audio/voice/prologue_overburden/start_02.ogg` |
+
+`.ogg`, `.wav` and `.mp3` all work; `.ogg` for anything that ships, because
+download size matters on a phone.
+
+Two folders, on purpose: `/audio` at the top of the repo is for **sources** —
+full-quality WAVs, session files, anything an artist hands over. `game/audio`
+is only what ships.
+
+### What still needs recording
+
+```
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path game scenes/dev/VOManifest.tscn
+```
+
+Writes `data/dialogue/prologue_overburden.recording.csv` — one row per spoken
+line, with the exact filename that line's audio must have. Open it in Numbers.
+That is the script you hand a voice actor, and the checklist for what comes
+back. Re-run it after any rewrite and diff the two to see what needs redoing.
+
+Running the Prologue also prints every audio file it looked for and could not
+find, which is the same list from the other direction.
 
 ## Before committing
 

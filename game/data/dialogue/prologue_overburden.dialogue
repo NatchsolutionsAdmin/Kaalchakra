@@ -34,7 +34,7 @@
 @ objective "Walk the trench line"
 EVA: (to the phone, quiet, the whole site still asleep) Day nineteen.
 EVA: Sun's not up. Ishita's not up. The monsoon is three weeks early and
-EVA: nobody at the Institute wants to talk about what that does to a trench.
+    nobody at the Institute wants to talk about what that does to a trench.
 EVA: (beat) But you lot didn't come here for drainage.
 EVA: (turning the camera to the pit) You came for this.
 -> the_pitch
@@ -42,14 +42,14 @@ EVA: (turning the camera to the pit) You came for this.
 
 :: the_pitch
 EVA: Dholarath. Four and a half thousand years old. Grid streets, covered
-EVA: drains, a reservoir that could hold a season of rain —
+    drains, a reservoir that could hold a season of rain —
 EVA: — and a writing system that nobody on Earth can read.
 EVA: Four hundred signs. Thousands of inscriptions. Not one of them understood.
 # ?? DECISION — this is where she names her mother's theory. I put it in the
 # cold open because it is the engine of the whole game and the player should
 # hear it before anything supernatural happens. You may want it later.
 EVA: Thirty years ago somebody worked out why. She said: stop reading it
-EVA: like a language. It isn't sentences. It's an index — labels, pointing
+    like a language. It isn't sentences. It's an index — labels, pointing
 EVA: at something that isn't the writing.
 EVA: The field laughed her out of the room.
 EVA: (flat) She's my mother. So, you know. Personal stake.
@@ -62,7 +62,7 @@ EVA: (flat) She's my mother. So, you know. Personal stake.
 ISHITA: (above, dry) Two million people and you still can't operate a kettle.
 EVA: Two million people fund your remote sensing, Dr Vaid.
 ISHITA: Two million people think you found a "lost city." You found a
-ISHITA: well-documented site with a new trench in it.
+    well-documented site with a new trench in it.
 EVA: Two million people have hope. You should try it.
 > "Come and look at the floor."        -> ishita_down      @ flag ishita_invited
 > "Go back to bed."                    -> ishita_stays
@@ -99,7 +99,7 @@ EVA: (a beat, to herself, almost ritual) Brush, don't scrape. Dad's rule.
 @ sfx trowel_on_pottery
 EVA: (genuine delight) Oh, hello.
 EVA: (holding it up to the lens) Potsherd. Red slip. Probably a storage jar,
-EVA: probably nothing, probably the single most beautiful nothing you'll
+    probably nothing, probably the single most beautiful nothing you'll
 EVA: see today.
 @ phone_available sakshi
 @ objective "Keep clearing — something is under the silt"
@@ -122,9 +122,9 @@ SAKSHI: Because it's five in the morning and you're whispering.
 EVA: (caught) Ma.
 SAKSHI: What did you find?
 EVA: Red slip sherd. And the floor's wrong. It's too flat, and it's too
-EVA: flat in a straight line.
+    flat in a straight line.
 SAKSHI: (a long pause) Check the drainage, beta. Not the walls. Everyone
-SAKSHI: always checks the walls.
+    always checks the walls.
 SAKSHI: I told the reviewers that in '98 and they laughed at me for an hour.
 # ?? DECISION — "beta" and "Ma". Your call on the register: Ma / Mumma / Amma,
 # and how much Gujarati or Hindi threads through. I defaulted to the lightest
@@ -143,7 +143,7 @@ SAKSHI: Don't "I know" me. Go and look at the drain.
 @ music drop_out
 @ sfx brush_on_stone
 EVA: (to the phone, still presenting) Okay, so this is — this is probably
-EVA: a kerb stone, these run along the —
+    a kerb stone, these run along the —
 EVA: (stops)
 EVA: (long pause)
 EVA: That's a lintel.
@@ -180,7 +180,7 @@ EVA: And the whole back wall is covered in signs.
 :: the_wall
 EVA: I can't read any of it. Nobody can read any of it.
 EVA: (moving closer) Except —
-EVA: (stopping) Except that pairing. There, and there, and — six times.
+    (stopping) Except that pairing. There, and there, and — six times.
 EVA: That's the pairing off the north gate signboard.
 EVA: The one every tourist photograph in Gujarat has in the background.
 EVA: (the thought arriving) It's a label. It's labelling something.
@@ -195,7 +195,7 @@ EVA: (down to the skeleton's hands) And you're holding something.
 EVA: Copper. Disc. Eight spokes.
 EVA: (the archaeologist and the daughter arguing in one sentence)
 EVA: I should not touch this. I should photograph this, and log this, and
-EVA: call it in, and not touch this.
+    call it in, and not touch this.
 > Lift it                              -> lift
 > Photograph it first                  -> photograph
 

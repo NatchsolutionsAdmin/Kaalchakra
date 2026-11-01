@@ -18,7 +18,7 @@ extends Node
 
 signal started(scene_id: String)
 signal finished(scene_id: String)
-signal line_shown(speaker: String, text: String, direction: String)
+signal line_shown(speaker: String, text: String, direction: String, id: String)
 signal choices_shown(options: Array)
 signal directive(name: String, args: Array)
 
@@ -89,6 +89,7 @@ func choose(index: int) -> void:
 func stop() -> void:
 	if not _active:
 		return
+	Audio.stop_voice()
 	_active = false
 	pending_choices = []
 	var id := scene_id
@@ -132,7 +133,9 @@ func _run() -> void:
 				if not _passes(step):
 					_index += 1
 					continue
-				line_shown.emit(step["speaker"], step["text"], step["direction"])
+				Audio.play_voice(scene_id, step.get("id", ""))
+				line_shown.emit(step["speaker"], step["text"], step["direction"],
+					step.get("id", ""))
 				return
 			_:
 				_index += 1
@@ -178,12 +181,18 @@ func _apply(name: String, args: Array) -> void:
 		"phone_available":
 			if args.size() >= 1:
 				Story.make_contact_available(args[0])
+		"music":
+			if args.size() >= 1:
+				Audio.play_music(args[0])
+		"sfx":
+			if args.size() >= 1:
+				Audio.play_sfx(args[0])
 		"era":
 			var map := {"past": Era.Id.PAST, "present": Era.Id.PRESENT, "future": Era.Id.FUTURE}
 			if args.size() >= 1 and map.has(args[0]):
 				TimeShift.request_shift(map[args[0]])
 		_:
-			# Camera, music, sfx, title cards, hard cuts: not built yet. The
+			# Camera, title cards, hard cuts: not built yet. The
 			# writer is allowed to ask for them; record and move on.
 			if name not in _unhandled:
 				_unhandled.append(name)
