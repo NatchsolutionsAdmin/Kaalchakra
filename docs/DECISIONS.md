@@ -14,7 +14,7 @@
 | 7 | 2026-07 | Positioning: "Make it about the Indus Valley, make it in English, offer it in Hindi." Invented script for decipherment. | Global-first; Hindi as additive localization. |
 | 8 | 2026-07 | Planning price **$19.99**. *(Withdrawn by #20.)* | Comps cluster $16.99–$24.99; ~5 h runtime. |
 | 9 | 2026-07 | Vertical slice = **Chapter 2, "The Index"**. | Shows decipherment + three-era shift + rescue set piece. |
-| 10 | 2026-07 | Character pipeline: 2D concept → turnaround → freelance 3D artist. Eva brief written (`Evara_Character_Brief.docx`); locked 2D = `ComfyUI_00009`. | 2D is cheap to change; freelancer handles Blender sculpt/retopo/rig. |
+| 10 | 2026-07 | Character pipeline: 2D concept → turnaround → freelance 3D artist. Eva brief written (`Eva_Character_Brief.docx`); locked 2D = `ComfyUI_00009`. | 2D is cheap to change; freelancer handles Blender sculpt/retopo/rig. |
 | 11 | 2026-10-31 | Learn design by **teardown → rebuild** (Titanfall 2, Dishonored 2, PoP Sands of Time, Uncharted, Outer Wilds, Chants of Sennaar). No decompiling commercial games. | Legal, and design is learned by observation. |
 | 12 | 2026-10-31 | Claude carries engine/code work and teaches on our own project; Prabhjot directs. | Prabhjot's weak spots are engine work, level geometry and 3D modeling. |
 | 13 | 2026-11-01 | Engine: **Godot 4, standard build, GDScript.** 3D: **Blender.** | No revenue share, no required credit/splash, open-source. |
@@ -32,10 +32,13 @@
 | 25 | 2026-11-01 | Realistic/photoreal graphics ruled out again for mobile; the look comes from **lighting, silhouette and colour**, not polygon count. Greybox gets a directed look pass; hero art still waits for people and money. | Stylized is the only way to look high-end on a phone, and art on an unproven game is wasted money. |
 | 26 | 2026-11-01 | **Protagonist renamed Eva** (was Evara). Still one name, no surname. | Creative lead's call. Note: the commission brief file is still `Evara_Character_Brief.docx` and should be renamed on disk. |
 | 27 | 2026-11-01 | **AI voice is allowed for scratch/placeholder only**, never in anything released or shown publicly (no trailer, no demo, no store build). Real voice artists for the shipped game, per R5.7. Scratch audio lives in `audio/voice/scratch/` and is git-ignored. | Lets Prabhjot judge pacing and performance early without paying for sessions on lines that will change. Keeps the ownership rule intact. |
+| 28 | 2026-11-01 | **Eva ships as TWO models from one source**: a high-detail hero model (~80k–150k tris) used only in pre-rendered cutscenes, and a mobile in-game model (~8k–20k tris, 1–2 LODs) that runs live. Shared silhouette, UV approach and rig. | Standard mobile practice: cutscenes are video and not limited by phone hardware, so "looks great" lives there; in-game the high-end feel comes from art direction and lighting, not polygon count. |
+| 29 | 2026-11-01 | Mobile texture targets: hero 2K–4K, in-game 1K (512 where it fits), compressed per platform (ASTC/ETC2 Android, PVRTC/ASTC iOS). Baked-lighting friendly, hair as cards not alpha stacks, few transparent effects. Closes open decision #8. | Written into the Eva brief; applies to every asset we commission from here. |
+| 30 | 2026-11-01 | Eva's rig is **traversal-focused, no combat**, Mixamo-compatible, IK-friendly feet, shared by both models. | There is no combat in the game; a combat rig would be paid-for work nobody uses. |
 
 ## To record next
+- **How much of the Prologue is pre-rendered video?** The Eva brief says the hero model is for "pre-rendered video (the prologue and story cinematics)". The Prologue as built is *playable*, with two branching choices. Video cannot branch, and video is download size. Likely answer: cinematic beats are pre-rendered, the rest stays playable — but it needs deciding before anyone animates anything.
 - **Trowel or shovel?** The story bible and sketch brief say Eva carries her father's *hand trowel*. The approved commission sheets show a **long-handled shovel** reaching her shoulder. Different object, different silhouette, different dig animation. Pick one.
-- **The commission brief still says "Evara"** throughout and must be renamed before it goes to a freelancer
 - **No scarf** in the approved sheets, though `character-sketch-brief.md` §1 calls for one. Removed from the blockout; confirm it is gone for good
 - **Language plan:** English VO + Hindi subtitles, vs. full Hindi VO, vs. both (see the voice discussion, 2026-11-01)
 - **What language the 1900 BCE characters speak**, and whether early incomprehension is a mechanic
