@@ -283,4 +283,4 @@ func _refresh_objective() -> void:
 
 func _refresh_hint() -> void:
 	var rm := "on" if TimeShift.reduced_motion else "off"
-	_hint.text = "Left thumb to walk  ·  drag the right of the screen to look  ·  tap the dial to turn the Wheel, or swipe it\nDesk testing: WASD, Shift, Space, E, 1 / 2 / 3, hold Q  ·  M reduced motion: %s  ·  R respawn" % rm
+	_hint.text = "Left thumb to walk, push it to the edge to run  ·  drag the right to look  ·  tap the dial to turn the Wheel, or swipe it\nDesk testing: WASD, Shift, Space, E, 1 / 2 / 3, hold Q  ·  M reduced motion: %s  ·  R respawn" % rm

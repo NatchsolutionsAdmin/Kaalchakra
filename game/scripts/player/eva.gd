@@ -87,7 +87,7 @@ func _physics_process(delta: float) -> void:
 	# Read the thumb buttons once per frame, before anything can return early.
 	var jump_now := Touch.consume_jump()
 	var dir := _wish_direction()
-	var speed := run_speed if Input.is_action_pressed("sprint") else walk_speed
+	var speed := _wish_speed()
 	var accel := ground_accel if is_on_floor() else air_accel
 
 	var target := dir * speed
@@ -119,6 +119,23 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	_auto_step(dir)
+
+
+## How hard she is being asked to move, 0..1. The joystick is analogue — push
+## it a little and she walks, push it to the edge and she runs. There is no
+## sprint button on a phone, and there should not be one.
+func _throttle() -> float:
+	var keys := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var from_keys := 0.0
+	if keys.length() > 0.01:
+		from_keys = 1.0 if Input.is_action_pressed("sprint") else 0.62
+	return clampf(maxf(from_keys, Touch.move.length()), 0.0, 1.0)
+
+
+func _wish_speed() -> float:
+	# Walk until the stick is most of the way over, then ramp into a run.
+	var hard := clampf((_throttle() - 0.68) / 0.32, 0.0, 1.0)
+	return lerpf(walk_speed, run_speed, hard)
 
 
 ## Turns the joystick (and WASD, for desk testing) into a direction in world

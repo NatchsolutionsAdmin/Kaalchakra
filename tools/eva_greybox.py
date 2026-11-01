@@ -19,12 +19,15 @@ import pathlib
 OUT = pathlib.Path(__file__).resolve().parent.parent / "game/scenes/player/Eva.tscn"
 
 SKIN, CLOTH, DARK, HAIR, EYE = "ext_skin", "ext_cloth", "ext_dark", "ext_hair", "ext_eye"
+METAL, SCARF = "ext_metal", "ext_scarf"
 MATS = {
     SKIN: "res://materials/mat_eva.tres",
     CLOTH: "res://materials/mat_eva_cloth.tres",
     DARK: "res://materials/mat_eva_dark.tres",
     HAIR: "res://materials/mat_eva_hair.tres",
     EYE: "res://materials/mat_eva_eye.tres",
+    METAL: "res://materials/mat_eva_metal.tres",
+    SCARF: "res://materials/mat_eva_scarf.tres",
 }
 
 lines = []
@@ -115,6 +118,16 @@ def main():
     node("Spine", "Node3D", "Model/Hips", (0, 0.06, 0))
     part("Chest", "Model/Hips/Spine", (0, 0.20, 0), (0.355, 0.42, 0.21), CLOTH)
     part("Satchel", "Model/Hips/Spine", (0.17, 0.02, 0.10), (0.10, 0.20, 0.16), DARK)
+    # The scarf against the sun — and the one block of colour that makes her
+    # read in silhouette (character-sketch-brief.md §1).
+    part("Scarf", "Model/Hips/Spine", (0, 0.40, 0.01), (0.30, 0.075, 0.235), SCARF)
+    part("ScarfTail", "Model/Hips/Spine", (0.11, 0.30, 0.12), (0.07, 0.22, 0.04), SCARF)
+
+    # "One old, one new — these two objects are her whole character in a
+    # glance." Her father's trowel on the left hip, her phone on the right.
+    part("TrowelHandle", "Model/Hips", (-0.165, -0.03, 0.055), (0.032, 0.10, 0.032), DARK)
+    part("TrowelBlade", "Model/Hips", (-0.165, -0.13, 0.055), (0.052, 0.13, 0.016), METAL)
+    part("PhonePouch", "Model/Hips", (0.155, -0.08, -0.055), (0.055, 0.115, 0.035), DARK)
 
     node("Head", "Node3D", "Model/Hips/Spine", (0, 0.46, 0))
     part("Skull", "Model/Hips/Spine/Head", (0, 0.11, 0), (0.185, 0.235, 0.21), SKIN)

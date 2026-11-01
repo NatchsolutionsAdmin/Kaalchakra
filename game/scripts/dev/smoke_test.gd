@@ -342,6 +342,32 @@ func _run() -> void:
 	_ok("pushing the stick forward walks her", stick_moved > 1.5,
 		"moved %.2f m" % stick_moved)
 
+	print("\n-- running without a run button --")
+	# A phone has no Shift. The stick is analogue instead: nudge it and she
+	# walks, push it to the edge and she runs.
+	# Out on open ground facing south: at a run she covers over five metres in
+	# the measuring window, and the city walls would otherwise stop her short
+	# and make a run look like a walk.
+	pivot.rotation.y = PI
+	player.set("_facing", PI)
+	model.rotation.y = PI
+	var paces: Array[float] = []
+	for push: float in [0.45, 1.0]:
+		player.global_position = Vector3(34, 1.0, -14)
+		player.velocity = Vector3.ZERO
+		Touch.move = Vector2.ZERO
+		await _settle(25)
+		var from := player.global_position
+		Touch.move = Vector2(0, -push)
+		await _settle(50)
+		paces.append(from.distance_to(player.global_position))
+		Touch.move = Vector2.ZERO
+		await _settle(10)
+	_ok("a gentle push walks her", paces[0] > 1.0, "%.2f m" % paces[0])
+	_ok("pushing it to the edge runs her", paces[1] > paces[0] * 1.4,
+		"%.2f m walking vs %.2f m running" % [paces[0], paces[1]])
+
+	player.global_position = Vector3(-10, 1.0, -26)
 	player.velocity = Vector3.ZERO
 	await _settle(25)
 	var before_tap := player.global_position.y
