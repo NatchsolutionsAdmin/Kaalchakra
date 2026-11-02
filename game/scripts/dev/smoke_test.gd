@@ -38,6 +38,16 @@ func _settle(frames: int = 20) -> void:
 	for _i in frames:
 		await get_tree().physics_frame
 
+## Shifting now takes the review's full 900 ms (ART-DIRECTION.md §8), which is
+## longer than any fixed number of settle frames. Wait for the real thing.
+func _shift(era: Era.Id) -> bool:
+	var accepted := TimeShift.request_shift(era)
+	while TimeShift.is_shifting():
+		await get_tree().process_frame
+	await _settle(4)
+	return accepted
+
+
 
 ## Camera targets a script names but the level does not provide. This is the
 ## check that stops a writer's shot silently doing nothing.
@@ -176,7 +186,7 @@ func _run() -> void:
 	_ok("the chamber is still sealed", door.visible and door.collision_layer != 0)
 
 	print("\n-- shift to 1900 BCE --")
-	_ok("the Wheel turns", TimeShift.request_shift(Era.Id.PAST))
+	_ok("the Wheel turns", await _shift(Era.Id.PAST))
 	await _settle(4)
 	_ok("era is PAST", TimeShift.current_era == Era.Id.PAST)
 	_ok("collision mask = shared + past", player.collision_mask == (1 | 2),
@@ -202,7 +212,7 @@ func _run() -> void:
 	_ok("she now knows where the chamber is", TimeShift.knows("keeper_mark"))
 
 	print("\n-- back to 2026 and dig --")
-	_ok("the Wheel turns", TimeShift.request_shift(Era.Id.PRESENT))
+	_ok("the Wheel turns", await _shift(Era.Id.PRESENT))
 	await _settle(4)
 	_ok("era is PRESENT", TimeShift.current_era == Era.Id.PRESENT)
 	_ok("the same patch of silt is now a dig", dig.hold_seconds() > 0.0)
@@ -219,7 +229,7 @@ func _run() -> void:
 	_ok("a finished dig stops offering itself", not dig.is_available())
 
 	print("\n-- shift to 2087 --")
-	_ok("the Wheel turns", TimeShift.request_shift(Era.Id.FUTURE))
+	_ok("the Wheel turns", await _shift(Era.Id.FUTURE))
 	await _settle(4)
 	_ok("collision mask = shared + future", player.collision_mask == (1 | 8),
 		"got %d" % player.collision_mask)
@@ -230,7 +240,7 @@ func _run() -> void:
 	_ok("WARDEN belongs to 2087", warden.era == Era.Id.FUTURE)
 
 	print("\n-- she actually moves --")
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	player.global_position = Vector3(-10, 1.0, -26)
 	player.velocity = Vector3.ZERO
@@ -329,7 +339,7 @@ func _run() -> void:
 
 	print("\n-- the virtual joystick --")
 	# The joystick feeds the same path as WASD, through the Touch autoload.
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	player.global_position = Vector3(-10, 1.0, -26)
 	player.velocity = Vector3.ZERO
@@ -380,7 +390,7 @@ func _run() -> void:
 
 	print("\n-- era lighting --")
 	# This section leaves the world in FUTURE; the sections after it rely on that.
-	TimeShift.request_shift(Era.Id.FUTURE)
+	await _shift(Era.Id.FUTURE)
 	await _settle(4)
 	var lighting := _main.get_node("EraLighting")
 	var sun := lighting.get("sun") as DirectionalLight3D
@@ -390,20 +400,40 @@ func _run() -> void:
 	# Era.TINT is the UI tint; the lighting has its own richer table.
 	var look: Dictionary = load("res://scripts/world/era_lighting.gd").LOOK
 	if sun != null:
-		_ok("the sun is lit for 2087",
-			sun.light_color.is_equal_approx(look[Era.Id.FUTURE]["sun_color"]),
+		_ok("the key light is lit for 2087",
+			sun.light_color.is_equal_approx(look[Era.Id.FUTURE]["key_color"]),
 			"got %s" % sun.light_color)
 		_ok("2087 is overcast — the key light is weak",
 			sun.light_energy < 1.0, "energy %.2f" % sun.light_energy)
-		TimeShift.request_shift(Era.Id.PAST)
+		await _shift(Era.Id.PAST)
 		await _settle(4)
 		_ok("and relights for 1900 BCE",
-			sun.light_color.is_equal_approx(look[Era.Id.PAST]["sun_color"]),
+			sun.light_color.is_equal_approx(look[Era.Id.PAST]["key_color"]),
 			"got %s" % sun.light_color)
-		_ok("1900 BCE has a low morning sun", sun.rotation_degrees.x > -25.0,
-			"pitch %.1f" % sun.rotation_degrees.x)
-		TimeShift.request_shift(Era.Id.FUTURE)
-		await _settle(4)
+		# ART-DIRECTION.md §3: 07:10 is grazing light, 11:35 is near overhead.
+		# Get these backwards and the two eras stop being different places.
+		_ok("1900 BCE sun is low — 17 to 23 degrees",
+			look[Era.Id.PAST]["key_elevation"] >= 17.0
+			and look[Era.Id.PAST]["key_elevation"] <= 23.0)
+		_ok("2026 sun is high — 65 to 75 degrees",
+			look[Era.Id.PRESENT]["key_elevation"] >= 65.0
+			and look[Era.Id.PRESENT]["key_elevation"] <= 75.0)
+		_ok("and the live sun really is pitched low, not just the table",
+			sun.rotation_degrees.x > -25.0, "pitch %.1f" % sun.rotation_degrees.x)
+
+	# Key-to-fill is solved from the two colours, not typed in, so it is worth
+	# checking that the solve actually lands on the specified ratio.
+	var lit := load("res://scripts/world/era_lighting.gd")
+	for era: Era.Id in Era.ALL:
+		var entry: Dictionary = look[era]
+		var fe: float = lit.fill_energy_for(entry)
+		var got: float = (entry["key_energy"] * (entry["key_color"] as Color).get_luminance()) \
+			/ maxf(0.0001, fe * (entry["fill_color"] as Color).get_luminance())
+		_ok("%s key-to-fill lands on %.2f:1" % [Era.SHORT[era], entry["key_to_fill"]],
+			absf(got - float(entry["key_to_fill"])) < 0.05, "got %.2f:1" % got)
+
+	await _shift(Era.Id.FUTURE)
+	await _settle(4)
 	var fill := lighting.get("fill") as DirectionalLight3D
 	_ok("there is a fill light so shadows are not black", fill != null and fill.light_energy > 0.0)
 	_ok("the fill casts no shadow of its own", fill != null and not fill.shadow_enabled)
@@ -411,17 +441,21 @@ func _run() -> void:
 
 	print("\n-- the rules --")
 	_ok("shifting to the era you are already in is a no-op",
-		not TimeShift.request_shift(Era.Id.FUTURE))
+		not await _shift(Era.Id.FUTURE))
 	TimeShift.unlocked[Era.Id.PAST] = false
-	_ok("a locked era refuses the shift", not TimeShift.request_shift(Era.Id.PAST))
+	_ok("a locked era refuses the shift", not await _shift(Era.Id.PAST))
 	_ok("and the era did not change", TimeShift.current_era == Era.Id.FUTURE)
 	TimeShift.unlocked[Era.Id.PAST] = true
 
 	print("\n-- the fade transition (reduced motion off) --")
 	TimeShift.reduced_motion = false
+	# Not `_shift()` here: this is the one check that has to look at the
+	# transition while it is still running.
 	TimeShift.request_shift(Era.Id.PAST)
 	_ok("a shift in progress is flagged", TimeShift.is_shifting())
-	await _settle(50)
+	while TimeShift.is_shifting():
+		await get_tree().process_frame
+	await _settle(4)
 	_ok("the shift finishes", not TimeShift.is_shifting())
 	_ok("and it landed in PAST", TimeShift.current_era == Era.Id.PAST)
 	TimeShift.reduced_motion = true
@@ -511,7 +545,7 @@ func _run() -> void:
 	var heard := func(_who: String, text: String) -> void: said.append(text)
 	Phone.line_spoken.connect(heard)
 
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	_ok("the call connects", Phone.start("sakshi"))
 	_ok("she cannot ring twice at once", not Phone.start("sakshi"))
@@ -531,7 +565,7 @@ func _run() -> void:
 	said.clear()
 	var learn_me: String = Decipher.order[0]
 	Decipher.advance(learn_me, Era.Id.PAST)
-	TimeShift.request_shift(Era.Id.FUTURE)
+	await _shift(Era.Id.FUTURE)
 	await _settle(4)
 	Phone.start("sakshi")
 	await _settle(80)
@@ -544,7 +578,7 @@ func _run() -> void:
 
 	# Standing in the right era, she should say so instead.
 	said.clear()
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	Phone.start("sakshi")
 	await _settle(80)
@@ -578,7 +612,7 @@ func _run() -> void:
 	var played: Dictionary = {}
 	for path: Array in [[0, "invited Ishita down"], [2, "sent her away"]]:
 		Story.reset()
-		TimeShift.request_shift(Era.Id.PRESENT)
+		await _shift(Era.Id.PRESENT)
 		await _settle(4)
 		Dialogue.play_file(PROLOGUE)
 		played = await _walk_dialogue(path[0])
@@ -675,7 +709,7 @@ func _run() -> void:
 	# only driving the real signal can.
 	Story.reset()
 	TimeShift.reset_knowledge()
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	Dialogue.play_file(PROLOGUE)
 	var safety := 0
@@ -708,7 +742,7 @@ func _run() -> void:
 
 	print("\n-- the scene breathes --")
 	Story.reset()
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 	Dialogue.play_file(PROLOGUE)
 	var talked := 0
@@ -735,10 +769,10 @@ func _run() -> void:
 	# Deliberately with fades ON, because the point of a hard cut is that it
 	# ignores them.
 	TimeShift.reduced_motion = false
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(45)
 	TimeShift.arm_hard_cut()
-	TimeShift.request_shift(Era.Id.PAST)
+	await _shift(Era.Id.PAST)
 	_ok("a hard cut changes era on the very same frame — no fade to sit through",
 		TimeShift.current_era == Era.Id.PAST,
 		"era=%s" % Era.SHORT[TimeShift.current_era])
@@ -768,7 +802,7 @@ func _run() -> void:
 	Story.reset()
 	Decipher.reset()
 	TimeShift.reset_knowledge()
-	TimeShift.request_shift(Era.Id.PRESENT)
+	await _shift(Era.Id.PRESENT)
 	await _settle(4)
 
 	# Build up a run worth losing.
@@ -790,7 +824,7 @@ func _run() -> void:
 	Story.reset()
 	Decipher.reset()
 	TimeShift.reset_knowledge()
-	TimeShift.request_shift(Era.Id.FUTURE)
+	await _shift(Era.Id.FUTURE)
 	await _settle(4)
 	player.global_position = Vector3(-30, 2, -40)
 	await _settle(6)
@@ -838,6 +872,62 @@ func _run() -> void:
 	Story.reset()
 	Decipher.reset()
 	SaveGame.autosave = true
+
+	print("\n-- the art review, where it is checkable --")
+	# docs/ART-DIRECTION.md is the review written down. These are the parts of
+	# it a machine can hold us to; the rest needs an eye.
+
+	# §07 camera: the framing targets, and the rig actually hitting them.
+	var rig := player.get_node("CameraPivot")
+	var cam := rig.get_node("SpringArm3D/Camera3D") as Camera3D
+	_ok("vertical FOV is 50-55 degrees", cam.fov >= 50.0 and cam.fov <= 55.0,
+		"fov %.1f" % cam.fov)
+	_ok("Eva's feet land at 83-89% of image height",
+		rig.frame_feet >= 0.83 and rig.frame_feet <= 0.89)
+	_ok("she stands at 45-50% across", rig.frame_across >= 0.45
+		and rig.frame_across <= 0.50)
+	_ok("follow distance is 3.2-4.2 m outside",
+		rig.follow_distance >= 3.2 and rig.follow_distance <= 4.2)
+	_ok("and 2.0-2.8 m inside", rig.follow_distance_interior >= 2.0
+		and rig.follow_distance_interior <= 2.8)
+	_ok("smoothing is 0.15-0.25 s", rig.follow_smoothing >= 0.15
+		and rig.follow_smoothing <= 0.25)
+	_ok("look-ahead is 0.4-0.8 m", rig.follow_look_ahead >= 0.4
+		and rig.follow_look_ahead <= 0.8)
+	_ok("the camera rests looking DOWN, not up",
+		(rig.get_node("SpringArm3D") as SpringArm3D).rotation.x < 0.0)
+
+	# §07 identity: eight positions, three accessible, five absent.
+	var wheel_mark := load("res://scripts/ui/kaalchakra_mark.gd")
+	_ok("the mark has eight positions", wheel_mark.POSITIONS == 8)
+	_ok("three of them are the eras", Era.ALL.size() == 3)
+	_ok("the fourth is the forbidden one",
+		wheel_mark.FORBIDDEN == Era.ALL.size())
+
+	# §08 the era shift adds up to the specified 900 ms.
+	var total: float = (TimeShift.SHIFT_ENGAGE + TimeShift.SHIFT_BAND_IN
+		+ TimeShift.SHIFT_SWEEP + TimeShift.SHIFT_SETTLE + TimeShift.SHIFT_STILL)
+	_ok("the era shift takes 900 ms", absf(total - 0.9) < 0.001,
+		"%.3f s" % total)
+
+	# §06 the context matrix. Each row of the review's table, asked directly.
+	Chrome.set_puzzle(false)
+	Chrome.poke()
+	_ok("exploring: the joystick is there", Chrome.shows_joystick())
+	_ok("exploring: the location caption may announce", Chrome.shows_location())
+	Chrome.set_puzzle(true)
+	_ok("in a puzzle: the joystick is gone", not Chrome.shows_joystick())
+	_ok("in a puzzle: the Wheel stays if allowed", Chrome.shows_wheel())
+	_ok("in a puzzle: the journal is available", Chrome.shows_journal())
+	Chrome.set_puzzle(false)
+	Dialogue.started.emit("test")
+	_ok("talking: the Wheel is hidden", not Chrome.shows_wheel())
+	_ok("talking: the action button is hidden", not Chrome.shows_action())
+	_ok("talking: no location caption", not Chrome.shows_location())
+	Dialogue.finished.emit("test")
+	_ok("and it all comes back afterwards",
+		Chrome.shows_wheel() and Chrome.shows_action())
+	Chrome.poke()
 
 	print("\n-- every script in the project compiles --")
 	# Eva's rig script had a parse error and the whole suite still passed,

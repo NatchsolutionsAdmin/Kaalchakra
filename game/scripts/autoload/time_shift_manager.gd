@@ -6,7 +6,7 @@
 ##
 ## What it owns:
 ##   * which era is live right now
-##   * the fade-to-black transition that hides the swap
+##   * the era-shift transition that carries the swap
 ##   * which eras are unlocked (story gating, R2.1)
 ##   * `knowledge` — the seed of PersistenceManager: things Eva has learned in
 ##     one era that other eras are allowed to react to (R2.2, the banyan trick)
@@ -16,8 +16,8 @@
 ## and every EraRoot in the level listens and shows or hides itself.
 extends Node
 
-## Emitted at the midpoint of the fade, while the screen is black, so nobody
-## ever sees geometry pop.
+## Emitted while the light band is crossing the screen, so the swap is
+## carried by the transition rather than seen as a pop.
 signal era_changed(from: Era.Id, to: Era.Id)
 ## Emitted when a shift is refused (locked era, or an anchored event).
 signal shift_refused(era: Era.Id, reason: String)
@@ -25,6 +25,22 @@ signal knowledge_gained(id: String)
 signal reduced_motion_changed(enabled: bool)
 
 const FADE_TIME := 0.22
+
+## "The World Remembers" (ART-DIRECTION.md §8). The review's timeline, in
+## seconds, measured from the moment the Wheel is touched:
+##
+##   0.00 - 0.12   Eva engages the selected stop      copper click
+##   0.12 - 0.30   controlled radial light band       dry mechanism resonance
+##   0.30 - 0.62   era-root swap across a fixed image layered change in ambience
+##   0.62 - 0.78   new light, water, material settle  destination ambience
+##   0.78 - 0.90   camera and Wheel return to stillness   final mechanical stop
+const SHIFT_ENGAGE := 0.12
+const SHIFT_BAND_IN := 0.18      # 0.12 -> 0.30
+const SHIFT_SWEEP := 0.32        # 0.30 -> 0.62
+const SHIFT_SETTLE := 0.16       # 0.62 -> 0.78
+const SHIFT_STILL := 0.12        # 0.78 -> 0.90
+
+const BAND_SHADER := "res://shaders/shift_band.gdshader"
 
 var current_era: Era.Id = Era.Id.PRESENT
 
@@ -48,6 +64,10 @@ var _knowledge: Dictionary = {}
 var _shifting := false
 var _hard_cut := false
 var _overlay: ColorRect
+var _band: ColorRect
+var _band_material: ShaderMaterial
+## Where the Wheel sits on screen, in UV. The band sweeps out from it.
+var band_origin := Vector2(0.9, 0.14)
 
 
 func _ready() -> void:
@@ -62,6 +82,19 @@ func _ready() -> void:
 	_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(_overlay)
+
+	# A second, separate overlay for the light band, so the plain black fade
+	# (used by the hard cut and by reduced motion) stays untouched.
+	_band = ColorRect.new()
+	_band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_band.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_band.visible = false
+	var shader := load(BAND_SHADER) as Shader
+	if shader:
+		_band_material = ShaderMaterial.new()
+		_band_material.shader = shader
+		_band.material = _band_material
+	layer.add_child(_band)
 
 
 func _unhandled_input(_event: InputEvent) -> void:
@@ -118,19 +151,70 @@ func _do_shift(era: Era.Id) -> void:
 			await flash.finished
 			_overlay.color = Color(0, 0, 0, 0)
 	elif reduced_motion:
-		current_era = era
-		era_changed.emit(from, era)
-	else:
-		var tween := create_tween()
-		tween.tween_property(_overlay, "color:a", 1.0, FADE_TIME)
-		# The swap happens here, under full black.
-		tween.tween_callback(func() -> void:
+		# The accessible version: a short crossfade and a cue, no sweep.
+		var quiet := create_tween()
+		quiet.tween_property(_overlay, "color:a", 1.0, FADE_TIME * 0.6)
+		quiet.tween_callback(func() -> void:
 			current_era = era
 			era_changed.emit(from, era))
-		tween.tween_property(_overlay, "color:a", 0.0, FADE_TIME)
-		await tween.finished
+		quiet.tween_property(_overlay, "color:a", 0.0, FADE_TIME * 0.6)
+		await quiet.finished
+	else:
+		await _sweep(from, era)
 
 	_shifting = false
+
+
+## The band crossing a held image. Eva and the camera are untouched for the
+## whole 900 ms — that is the entire point, and it is why this is a shader on
+## an overlay rather than anything that moves the world.
+func _sweep(from: Era.Id, era: Era.Id) -> void:
+	if _band_material == null:
+		# No shader: fall back to the plain fade rather than skipping the
+		# swap, which would strand the player in the wrong era.
+		current_era = era
+		era_changed.emit(from, era)
+		return
+
+	var vp := Vector2(get_viewport().get_visible_rect().size)
+	_band_material.set_shader_parameter("aspect", vp.x / maxf(1.0, vp.y))
+	_band_material.set_shader_parameter("origin", band_origin)
+	_band_material.set_shader_parameter("progress", 0.0)
+	_band_material.set_shader_parameter("strength", 0.0)
+	_band.visible = true
+
+	Audio.play_sfx("wheel_engage")
+	var tween := create_tween()
+	tween.set_parallel(false)
+	# 0.00 - 0.12  the detent takes.
+	tween.tween_interval(SHIFT_ENGAGE)
+	# 0.12 - 0.30  the band appears and starts out.
+	tween.tween_callback(func() -> void: Audio.play_sfx("wheel_resonance"))
+	tween.tween_method(_set_band.bind(0.0, 0.30), 0.0, 1.0, SHIFT_BAND_IN)
+	# 0.30 - 0.62  the world changes under it.
+	tween.tween_callback(func() -> void:
+		current_era = era
+		era_changed.emit(from, era))
+	tween.tween_method(_set_band.bind(0.30, 0.92), 0.0, 1.0, SHIFT_SWEEP)
+	# 0.62 - 0.78  light, water and material settle as the band clears.
+	tween.tween_method(_set_band.bind(0.92, 1.25), 0.0, 1.0, SHIFT_SETTLE)
+	# 0.78 - 0.90  back to stillness.
+	tween.tween_callback(func() -> void: Audio.play_sfx("wheel_stop"))
+	tween.tween_interval(SHIFT_STILL)
+	await tween.finished
+
+	_band.visible = false
+
+
+## One step of the sweep. `t` runs 0..1 within the stage; the band's own
+## position runs from `a` to `b`, and its strength eases in at the start and
+## out at the very end so it never pops on or off.
+func _set_band(t: float, a: float, b: float) -> void:
+	var p := lerpf(a, b, t)
+	_band_material.set_shader_parameter("progress", p)
+	# Full strength across the middle; off at both ends.
+	var strength := clampf(p / 0.12, 0.0, 1.0) * clampf((1.25 - p) / 0.22, 0.0, 1.0)
+	_band_material.set_shader_parameter("strength", strength)
 
 
 func is_shifting() -> bool:

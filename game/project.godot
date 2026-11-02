@@ -25,6 +25,7 @@ Phone="*res://scripts/autoload/phone.gd"
 SaveGame="*res://scripts/autoload/save_game.gd"
 Options="*res://scripts/autoload/settings.gd"
 Flow="*res://scripts/autoload/flow.gd"
+Chrome="*res://scripts/autoload/chrome.gd"
 
 [audio]
 

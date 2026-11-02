@@ -1,31 +1,45 @@
-## HUD — era indicator, objective, interaction prompt, the Wheel, banner text.
+## HUD — location caption, objective, interaction prompt, banner, the index.
 ##
-## Built in code rather than as a scene, because the real UI gets a proper
-## art-directed skin later (R6.7) and this is a placeholder that should not
-## pretend otherwise. Everything it shows, it reads from TimeShift and
-## Interactions — the HUD never owns game state.
+## Rebuilt against the art review (ART-DIRECTION.md §6). The old HUD's problem
+## was not that it was ugly, it was that it never went away: an era label, an
+## objective and two lines of keyboard hints sat permanently on top of the
+## picture. The review's rule is that the HUD *announces and then leaves*.
+##
+## So:
+##   - the location caption appears on arrival and fades after a few seconds
+##   - the objective appears when it CHANGES, and otherwise on demand
+##   - the controls crib is gone from play entirely (F1 brings it back at the
+##     desk, which is the only place it was ever for)
+##   - everything else asks `Chrome` whether it is allowed on screen
+##
+## Nothing here owns game state; it reads TimeShift, Story and Interactions.
 extends CanvasLayer
 
-const DIM := UIStyle.INK_DIM
+## How long an announcement stays up before it fades out.
+const CAPTION_SECONDS := 3.6
+const OBJECTIVE_SECONDS := 6.0
+const FADE := 0.35
 
-var _era_short: Label
-var _era_title: Label
+var _caption: VBoxContainer
+var _caption_era: Label
+var _caption_place: Label
+var _objective_box: PanelContainer
 var _objective: Label
 var _prompt: Label
 var _hold_bar: ProgressBar
 var _banner: PanelContainer
 var _banner_label: Label
-var _wheel: PanelContainer
-var _wheel_rows: Dictionary = {}
-var _hint: Label
-
-var _banner_timer: float = 0.0
-var _watched: Interactable = null
-var _top_block: VBoxContainer
 var _index_panel: PanelContainer
 var _index_rows: VBoxContainer
 var _index_header: Label
 var _prompt_box: VBoxContainer
+var _crib: Label
+
+var _banner_timer := 0.0
+var _watched: Interactable = null
+var _scale := 1.0
+var _last_objective := ""
+var _crib_on := false
 
 
 func _ready() -> void:
@@ -34,26 +48,22 @@ func _ready() -> void:
 	TimeShift.era_changed.connect(_on_era_changed)
 	TimeShift.shift_refused.connect(_on_shift_refused)
 	TimeShift.knowledge_gained.connect(func(_id: String) -> void: _refresh_objective())
-	TimeShift.reduced_motion_changed.connect(func(_enabled: bool) -> void: _refresh_hint())
 	Story.objective_changed.connect(func(_t: String) -> void: _refresh_objective())
-	Dialogue.started.connect(func(_id: String) -> void: _set_chrome(false))
-	Dialogue.finished.connect(func(_id: String) -> void: _set_chrome(true))
 	Interactions.focus_changed.connect(_on_focus_changed)
 	Interactions.message.connect(_on_message)
 	Decipher.sign_advanced.connect(func(_id: String, _step: int) -> void: _refresh_index())
 	Decipher.header_readable.connect(_on_header_readable)
+	Chrome.context_changed.connect(func(_to: int) -> void: _apply_context())
 	get_viewport().size_changed.connect(_layout)
-	_apply_era(TimeShift.current_era)
 	_refresh_index()
-	_refresh_objective()
-	_refresh_hint()
-	_on_focus_changed(null)
+	_refresh_objective(true)
+	_apply_context()
 	_layout()
+	_announce_location()
 
 
 func _process(delta: float) -> void:
-	_wheel.visible = Input.is_action_pressed("wheel_open")
-	_index_panel.visible = Input.is_action_pressed("journal")
+	_index_panel.visible = Chrome.shows_journal() and Input.is_action_pressed("journal")
 	if Input.is_action_just_pressed("phone"):
 		if Phone.in_call:
 			Phone.advance()
@@ -62,7 +72,18 @@ func _process(delta: float) -> void:
 	if _banner_timer > 0.0:
 		_banner_timer -= delta
 		if _banner_timer <= 0.0:
-			_banner.visible = false
+			_fade_out(_banner)
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	# The controls crib is a desk-testing tool, not part of the game. The
+	# review's instruction is to hide debug-style information entirely, so it
+	# lives behind a key rather than on screen.
+	var key := event as InputEventKey
+	if key and key.pressed and not key.echo and key.keycode == KEY_F1:
+		_crib_on = not _crib_on
+		_crib.visible = _crib_on
+		_refresh_crib()
 
 
 # --- construction --------------------------------------------------------
@@ -73,50 +94,54 @@ func _build() -> void:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
 
-	# Top-left: era + objective.
-	var top := VBoxContainer.new()
-	top.add_theme_constant_override("separation", 2)
-	root.add_child(top)
-	_top_block = top
+	# Top-left: the location caption. Announces, then leaves.
+	_caption = VBoxContainer.new()
+	_caption.add_theme_constant_override("separation", UIStyle.S1)
+	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_caption.modulate.a = 0.0
+	root.add_child(_caption)
 
-	_era_short = _label("", 30)
-	top.add_child(_era_short)
-	_era_title = _label("", 15, DIM)
-	top.add_child(_era_title)
+	_caption_era = UIStyle.text("", UIStyle.Type.CHAPTER)
+	_caption.add_child(_caption_era)
+	_caption_place = UIStyle.text("", UIStyle.Type.LABEL, UIStyle.TEXT_DIM_A)
+	_caption.add_child(_caption_place)
 
-	var gap := Control.new()
-	gap.custom_minimum_size = Vector2(0, 14)
-	top.add_child(gap)
+	# Below it: the objective, on a document surface so it reads as a note
+	# rather than as floating system text.
+	_objective_box = PanelContainer.new()
+	_objective_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_objective_box.add_theme_stylebox_override("panel", UIStyle.document(UIStyle.S3))
+	_objective_box.modulate.a = 0.0
+	root.add_child(_objective_box)
 
-	_objective = _label("", 17, UIStyle.DUST)
-	_objective.custom_minimum_size = Vector2(540, 0)
+	_objective = UIStyle.text("", UIStyle.Type.BODY, UIStyle.TEXT_DIM_A)
+	_objective.custom_minimum_size = Vector2(UIStyle.COLUMN, 0)
 	_objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	top.add_child(_objective)
+	_objective_box.add_child(_objective)
 
 	# Bottom strip: interaction prompt + hold bar.
-	var prompt_box := VBoxContainer.new()
-	prompt_box.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	prompt_box.alignment = BoxContainer.ALIGNMENT_END
-	prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	prompt_box.add_theme_constant_override("separation", 7)
-	root.add_child(prompt_box)
-	_prompt_box = prompt_box
+	_prompt_box = VBoxContainer.new()
+	_prompt_box.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_prompt_box.alignment = BoxContainer.ALIGNMENT_END
+	_prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_prompt_box.add_theme_constant_override("separation", UIStyle.S2)
+	root.add_child(_prompt_box)
 
-	_prompt = _label("", 20)
+	_prompt = UIStyle.text("", UIStyle.Type.MENU)
 	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	prompt_box.add_child(_prompt)
+	_prompt_box.add_child(_prompt)
 
 	_hold_bar = ProgressBar.new()
-	_hold_bar.custom_minimum_size = Vector2(240, 8)
+	_hold_bar.custom_minimum_size = Vector2(240, 6)
 	_hold_bar.add_theme_stylebox_override("background",
-		UIStyle.panel(Color(0.06, 0.05, 0.05, 0.6), Color(0.66, 0.44, 0.25, 0.35), 4, 0))
+		UIStyle.panel(Color(0.06, 0.08, 0.11, 0.6), UIStyle.BORDER, 3, 0))
 	_hold_bar.add_theme_stylebox_override("fill",
-		UIStyle.panel(UIStyle.OCHRE, UIStyle.HIGHLIGHT, 4, 0))
+		UIStyle.panel(UIStyle.COPPER, UIStyle.OCHRE, 3, 0))
 	_hold_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_hold_bar.show_percentage = false
 	_hold_bar.max_value = 1.0
 	_hold_bar.visible = false
-	prompt_box.add_child(_hold_bar)
+	_prompt_box.add_child(_hold_bar)
 
 	# Centre, pushed down: banner for lines Eva reads.
 	var banner_slot := CenterContainer.new()
@@ -126,44 +151,31 @@ func _build() -> void:
 	root.add_child(banner_slot)
 
 	_banner = PanelContainer.new()
-	_banner.custom_minimum_size = Vector2(700, 0)
+	_banner.custom_minimum_size = Vector2(UIStyle.COLUMN + 120.0, 0)
 	_banner.visible = false
 	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_banner.add_theme_stylebox_override("panel", _panel_style())
+	_banner.add_theme_stylebox_override("panel", UIStyle.document())
 	banner_slot.add_child(_banner)
 
-	_banner_label = _label("", 19)
+	_banner_label = UIStyle.text("", UIStyle.Type.DIALOGUE)
 	_banner_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.add_child(_banner_label)
 
-	# Centre: the Wheel (hold Q). A real eight-spoked radial comes later (R6.3).
-	var wheel_slot := CenterContainer.new()
-	wheel_slot.set_anchors_preset(Control.PRESET_FULL_RECT)
-	wheel_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(wheel_slot)
+	_build_index(root)
 
-	_wheel = PanelContainer.new()
-	_wheel.visible = false
-	_wheel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_wheel.add_theme_stylebox_override("panel", _panel_style())
-	wheel_slot.add_child(_wheel)
+	# Bottom-left, off by default: what to press, for desk testing only.
+	_crib = UIStyle.text("", UIStyle.Type.METADATA, UIStyle.DISABLED)
+	_crib.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_crib.visible = false
+	root.add_child(_crib)
 
-	var wheel_box := VBoxContainer.new()
-	wheel_box.add_theme_constant_override("separation", 9)
-	_wheel.add_child(wheel_box)
 
-	var wheel_title := _label("THE KAALCHAKRA", 14, DIM)
-	wheel_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	wheel_box.add_child(wheel_title)
-
-	for era: Era.Id in Era.ALL:
-		var row := _label("", 19)
-		row.custom_minimum_size = Vector2(360, 0)
-		_wheel_rows[era] = row
-		wheel_box.add_child(row)
-
-	# The sign index — the journal, in its first form (R3.6). Hold I.
+## The sign index. The review asks for it to be elevated from a list into the
+## primary archaeological mechanic, and to compare one observation across
+## three columns: intact, eroded, archive scan. So the three columns ARE the
+## three eras, and a row is one sign's progress through all three mornings.
+func _build_index(root: Control) -> void:
 	var index_slot := CenterContainer.new()
 	index_slot.set_anchors_preset(Control.PRESET_FULL_RECT)
 	index_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -172,43 +184,73 @@ func _build() -> void:
 	_index_panel = PanelContainer.new()
 	_index_panel.visible = false
 	_index_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_index_panel.add_theme_stylebox_override("panel", UIStyle.panel())
+	_index_panel.add_theme_stylebox_override("panel", UIStyle.document(UIStyle.S4))
 	index_slot.add_child(_index_panel)
 
-	var index_box := VBoxContainer.new()
-	index_box.add_theme_constant_override("separation", 7)
-	_index_panel.add_child(index_box)
-	var index_title := _label("THE INDEX", 15, DIM)
-	index_box.add_child(index_title)
-	_index_header = _label("", 19, UIStyle.HIGHLIGHT)
-	index_box.add_child(_index_header)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", UIStyle.S2)
+	_index_panel.add_child(box)
+
+	box.add_child(UIStyle.text("THE INDEX", UIStyle.Type.LABEL, UIStyle.TEXT_DIM_A))
+	_index_header = UIStyle.text("", UIStyle.Type.PANEL_TITLE, UIStyle.OCHRE)
+	box.add_child(_index_header)
+
 	var rule := Control.new()
-	rule.custom_minimum_size = Vector2(0, 8)
-	index_box.add_child(rule)
+	rule.custom_minimum_size = Vector2(0, UIStyle.S2)
+	box.add_child(rule)
+
+	box.add_child(_index_row("SIGN", "INTACT", "ERODED", "ARCHIVE",
+		UIStyle.Type.LABEL, UIStyle.TEXT_DIM_A))
+	box.add_child(_index_row("", "1900 BCE", "2026", "2087",
+		UIStyle.Type.METADATA, UIStyle.DISABLED))
+
+	var rule2 := Control.new()
+	rule2.custom_minimum_size = Vector2(0, UIStyle.S2)
+	box.add_child(rule2)
+
 	_index_rows = VBoxContainer.new()
-	_index_rows.add_theme_constant_override("separation", 3)
-	index_box.add_child(_index_rows)
-
-	# Bottom-left: the controls, so Prabhjot never has to guess.
-	_hint = _label("", 13, DIM)
-	_hint.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	root.add_child(_hint)
+	_index_rows.add_theme_constant_override("separation", UIStyle.S1)
+	box.add_child(_index_rows)
 
 
-## Phones have notches, rounded corners and home indicators. Everything the
-## player has to read gets pushed inside the safe area, and the bottom strip
-## also clears the thumb controls.
+## One row of the index: a name and three era cells.
+func _index_row(name_text: String, a: String, b: String, c: String,
+		role: UIStyle.Type, colour: Color) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", UIStyle.S3)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var who := UIStyle.text(name_text, role, colour, _scale)
+	who.custom_minimum_size = Vector2(230, 0)
+	row.add_child(who)
+	for i: int in 3:
+		var cell := UIStyle.text([a, b, c][i], role, colour, _scale)
+		cell.custom_minimum_size = Vector2(96, 0)
+		cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		row.add_child(cell)
+	return row
+
+
+# --- layout --------------------------------------------------------------
+
+## Phones have notches, rounded corners and home indicators. The review puts
+## the HUD edge at 32px *plus* whatever the device itself steals.
 func _layout() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	_scale = UIStyle.scale_for(vp)
 	var inset := _safe_inset()
-	var pad := 26.0
-	_top_block.offset_left = inset.x + pad
-	_top_block.offset_top = inset.y + pad
-	# High enough to sit above the action and jump buttons.
-	_prompt_box.offset_top = -(inset.w + 212.0)
-	_prompt_box.offset_bottom = -(inset.w + 152.0)
-	_hint.offset_left = inset.x + pad
-	_hint.offset_top = -(inset.w + 58.0)
-	_hint.offset_bottom = -(inset.w + 14.0)
+	var pad := UIStyle.EDGE * _scale
+
+	_caption.offset_left = inset.x + pad
+	_caption.offset_top = inset.y + pad
+	_objective_box.offset_left = inset.x + pad
+	_objective_box.offset_top = inset.y + pad + 86.0 * _scale
+
+	# High enough to sit above the thumb controls.
+	_prompt_box.offset_top = -(inset.w + 212.0 * _scale)
+	_prompt_box.offset_bottom = -(inset.w + 150.0 * _scale)
+	_crib.offset_left = inset.x + pad
+	_crib.offset_top = -(inset.w + 58.0)
+	_crib.offset_bottom = -(inset.w + 14.0)
 
 
 ## Unusable screen edges, in viewport pixels. Zero on a desktop window.
@@ -227,30 +269,51 @@ func _safe_inset() -> Vector4:
 	)
 
 
-func _label(text: String, size: int, colour: Color = UIStyle.INK) -> Label:
-	return UIStyle.label(text, size, colour)
+# --- showing and hiding ---------------------------------------------------
+
+func _fade_in(node: CanvasItem) -> void:
+	node.visible = true
+	create_tween().tween_property(node, "modulate:a", 1.0, FADE)
 
 
-func _panel_style() -> StyleBoxFlat:
-	return UIStyle.panel()
+func _fade_out(node: CanvasItem) -> void:
+	var tween := create_tween()
+	tween.tween_property(node, "modulate:a", 0.0, FADE)
+	tween.tween_callback(func() -> void: node.visible = false)
+
+
+## Show something for a while, then let it go.
+func _flash(node: CanvasItem, seconds: float) -> void:
+	node.visible = true
+	var tween := create_tween()
+	tween.tween_property(node, "modulate:a", 1.0, FADE)
+	tween.tween_interval(seconds)
+	tween.tween_property(node, "modulate:a", 0.0, FADE)
+	tween.tween_callback(func() -> void: node.visible = false)
+
+
+func _apply_context() -> void:
+	var talking := not Chrome.shows_action()
+	_prompt_box.visible = not talking
+	if talking:
+		_index_panel.visible = false
 
 
 # --- reactions -----------------------------------------------------------
 
-func _on_era_changed(_from: Era.Id, to: Era.Id) -> void:
-	_apply_era(to)
+func _on_era_changed(_from: Era.Id, _to: Era.Id) -> void:
+	_announce_location()
 
 
-func _apply_era(era: Era.Id) -> void:
-	_era_short.text = Era.SHORT[era]
-	_era_short.add_theme_color_override("font_color", Era.TINT[era])
-	_era_title.text = Era.TITLE[era]
-	var keys := ["1", "2", "3"]
-	for id: Era.Id in Era.ALL:
-		var row := _wheel_rows[id] as Label
-		var mark := "▶" if id == era else "   "
-		row.text = "%s  [%s]  %-8s %s" % [mark, keys[int(id)], Era.SHORT[id], Era.TITLE[id]]
-		row.add_theme_color_override("font_color", Era.TINT[id] if id == era else DIM)
+## "PAST / 1900 BCE · Dholarath", for a few seconds, on arrival.
+func _announce_location() -> void:
+	if not Chrome.shows_location():
+		return
+	var era := TimeShift.current_era
+	_caption_era.text = UIStyle.tracked(Era.SHORT[era], 1)
+	_caption_era.add_theme_color_override("font_color", Era.TINT[era])
+	_caption_place.text = UIStyle.tracked(Era.TITLE[era].to_upper(), 1)
+	_flash(_caption, CAPTION_SECONDS)
 
 
 func _on_shift_refused(_era: Era.Id, reason: String) -> void:
@@ -268,8 +331,8 @@ func _on_focus_changed(target: Interactable) -> void:
 		_prompt.text = ""
 		return
 	target.hold_progress.connect(_on_hold_progress)
-	var verb := "hold [E]" if target.hold_seconds() > 0.0 else "[E]"
-	_prompt.text = "%s   %s" % [verb, target.prompt_text()]
+	var verb := "hold" if target.hold_seconds() > 0.0 else ""
+	_prompt.text = "%s %s" % [verb, target.prompt_text()] if verb else target.prompt_text()
 
 
 func _on_hold_progress(ratio: float) -> void:
@@ -279,30 +342,36 @@ func _on_hold_progress(ratio: float) -> void:
 
 func _on_message(text: String, seconds: float) -> void:
 	_banner_label.text = text
-	_banner.visible = true
+	_banner.modulate.a = 0.0
+	_fade_in(_banner)
 	_banner_timer = seconds
 
 
-## While a scene is playing, the HUD gets out of the way of the dialogue box.
-func _set_chrome(visible_now: bool) -> void:
-	_prompt_box.visible = visible_now
-	_hint.visible = visible_now
-
-
-## One row per sign: where it is in the chain, and where it has to go next.
+## One row per sign, three cells: where it has been read, and where it has
+## still to be read. A filled cell is a morning this sign has survived into.
 func _refresh_index() -> void:
 	for c: Node in _index_rows.get_children():
 		c.queue_free()
-	var marks := ["·", "○", "◐", "●"]
 	for id: String in Decipher.order:
 		var step: int = Decipher.step_of(id)
 		var entry: Dictionary = Decipher.signs[id]
-		var shown: String = entry["name"] if step >= Decipher.Step.LEARNED else "unread"
-		var tail := ""
-		if step < Decipher.Step.CONFIRMED:
-			tail = "  →  %s" % Era.SHORT[Decipher.era_for_next(id)]
-		var row := _label("  %s  %-22s%s" % [marks[step], shown, tail], 16,
-			UIStyle.INK if step > 0 else DIM)
+		var shown: String = entry["name"] if step >= Decipher.Step.LEARNED else "—"
+		var next_era := Decipher.era_for_next(id) if step < Decipher.Step.CONFIRMED else -1
+		var cells: Array[String] = []
+		for i: int in 3:
+			if step > i:
+				cells.append("●")
+			elif int(next_era) == i:
+				cells.append("○")
+			else:
+				cells.append("·")
+		var row := _index_row(shown, cells[0], cells[1], cells[2],
+			UIStyle.Type.EVIDENCE,
+			UIStyle.TEXT if step > 0 else UIStyle.DISABLED)
+		# The cell she can act on next is the only coloured thing in the row.
+		if next_era >= 0:
+			var cell := row.get_child(1 + int(next_era)) as Label
+			cell.add_theme_color_override("font_color", UIStyle.OCHRE)
 		_index_rows.add_child(row)
 	var p := Decipher.header_progress()
 	_index_header.text = "%s        %d / %d" % [Decipher.header_text(), p.x, p.y]
@@ -312,23 +381,28 @@ func _on_header_readable() -> void:
 	_on_message("WHAT THE WATER MUST NOT TAKE.\n\nIt is not a prayer. It is a manifest.", 9.0)
 
 
-func _refresh_objective() -> void:
-	# Once the script starts setting objectives, they win over the prototype's
-	# hard-coded ones.
-	if not Story.objective.is_empty():
-		_objective.text = Story.objective
-		_on_focus_changed(_watched)
-		return
-	if not TimeShift.knows("keeper_mark"):
-		_objective.text = "2026 has nothing left to read. Turn the Wheel back to 1900 BCE and find what the city wrote down."
-	elif not TimeShift.knows("chamber_opened"):
-		_objective.text = "You know where it is. Return to 2026, climb down the reservoir steps, and dig the basin floor."
-	else:
-		_objective.text = "WHAT THE WATER MUST NOT TAKE.   —   prototype complete."
-	# The prompt text can depend on knowledge too (the dig site changes wording).
+## The objective is shown when it changes, and then gets out of the way.
+func _refresh_objective(silent: bool = false) -> void:
+	var text := Story.objective
+	if text.is_empty():
+		# Prototype fallbacks, until the script sets objectives everywhere.
+		if not TimeShift.knows("keeper_mark"):
+			text = "2026 has nothing left to read. Turn the Wheel back to 1900 BCE and find what the city wrote down."
+		elif not TimeShift.knows("chamber_opened"):
+			text = "You know where it is. Return to 2026, climb down the reservoir steps, and dig the basin floor."
+		else:
+			text = "WHAT THE WATER MUST NOT TAKE.   —   prototype complete."
+	var changed := text != _last_objective
+	_last_objective = text
+	_objective.text = text
+	if changed and not silent:
+		_flash(_objective_box, OBJECTIVE_SECONDS)
+	# The prompt wording can depend on knowledge too.
 	_on_focus_changed(_watched)
 
 
-func _refresh_hint() -> void:
+func _refresh_crib() -> void:
+	if not _crib_on:
+		return
 	var rm := "on" if TimeShift.reduced_motion else "off"
-	_hint.text = "Left thumb to walk, push it to the edge to run  ·  drag the right to look  ·  tap the dial to turn the Wheel, or swipe it\nDesk testing: WASD, Shift, Space, E, 1 / 2 / 3, hold Q  ·  M reduced motion: %s  ·  R respawn" % rm
+	_crib.text = "F1 hides this  ·  WASD, Shift, Space, E, 1 / 2 / 3, hold Q  ·  I index  ·  C phone  ·  M reduced motion: %s  ·  R respawn" % rm

@@ -48,15 +48,17 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_layout)
 	Interactions.focus_changed.connect(_on_focus_changed)
 	Story.contact_available.connect(func(_who: String) -> void: _refresh_phone())
-	Phone.call_started.connect(func(_w: String) -> void: _hide_for_dialogue(true))
-	Phone.call_ended.connect(func(_w: String) -> void: _hide_for_dialogue(false))
-	Dialogue.started.connect(func(_id: String) -> void: _hide_for_dialogue(true))
-	Dialogue.finished.connect(func(_id: String) -> void: _hide_for_dialogue(false))
+	# Who is allowed on screen is Chrome's decision, not four separate
+	# signal handlers' (ART-DIRECTION.md §6).
+	Chrome.context_changed.connect(func(_to: int) -> void: _apply_context())
+	Chrome.idle_changed.connect(func(_idle: bool) -> void: _apply_idle())
 	TimeShift.era_changed.connect(func(_f: Era.Id, _t: Era.Id) -> void: _refresh_wheel())
 	_on_focus_changed(null)
 	_refresh_wheel()
 	_refresh_phone()
 	_layout()
+	_apply_context()
+	_apply_idle()
 
 
 # --- construction --------------------------------------------------------
@@ -140,6 +142,10 @@ func _layout() -> void:
 	_jump.position = Vector2(right - ACTION_SIZE - JUMP_SIZE - 22.0,
 		bottom - JUMP_SIZE - (ACTION_SIZE - JUMP_SIZE) * 0.5)
 	_dial.position = Vector2(right - WHEEL_SIZE, top)
+	# The era-shift band sweeps out from the Wheel, so the Wheel has to tell
+	# the shift where it is. In UV, because the shader works in UV.
+	var dial_centre := _dial.position + Vector2(WHEEL_SIZE, WHEEL_SIZE) * 0.5
+	TimeShift.band_origin = dial_centre / vp
 	_phone.position = Vector2(left_pad, bottom - PHONE_SIZE)
 
 	# The three era buttons fan down-and-left of the dial, inside the screen,
@@ -163,12 +169,33 @@ func _refresh_phone() -> void:
 	_phone.visible = Phone.available("sakshi")
 
 
-func _hide_for_dialogue(hidden: bool) -> void:
-	_root.visible = not hidden
-	if hidden:
+## Thumbs off the controls while someone is speaking — otherwise the tap that
+## advances a line also spins the camera.
+func _apply_context() -> void:
+	var allowed := Chrome.shows_action()
+	_root.visible = allowed
+	if not allowed:
 		_clear_joy()
 		_look_touch = -1
 		Touch.reset()
+		if _wheel_open:
+			_wheel_open = false
+			_refresh_wheel()
+	_dial.visible = Chrome.shows_wheel()
+
+
+## After a few seconds of stillness the controls get out of the picture. They
+## come straight back on the next touch, so nothing is ever unreachable — the
+## left half of the screen still drives the joystick while it is invisible.
+func _apply_idle() -> void:
+	var to: float = 0.0 if Chrome.idle else 1.0
+	for node: Control in [_jump, _phone]:
+		create_tween().tween_property(node, "modulate:a", to, 0.45)
+	# The dial stays legible: it is the one control that is also information.
+	create_tween().tween_property(_dial, "modulate:a",
+		0.55 if Chrome.idle else 1.0, 0.45)
+	if Chrome.idle:
+		_clear_joy()
 
 
 # --- the floating joystick ----------------------------------------------
